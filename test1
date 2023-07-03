@@ -1,1 +1,4 @@
 
+The current request for action 'SaveFiscalization' on controller type 'FiscalizationController' is ambiguous between the following action methods:
+System.Web.Mvc.ActionResult SaveFiscalization(System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String) on type InApps.Controllers.FiscalizationController
+System.Web.Mvc.ActionResult SaveFiscalization(System.Collections.Generic.IEnumerable`1[InApps.Models.EmpModel]) on type InApps.Controllers.FiscalizationController

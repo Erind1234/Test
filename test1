@@ -1,231 +1,404 @@
-tHE VIEW that shows the table for edit
+using InApps.Models;
+using System;
+using System.Web.Mvc;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.Collections.Generic;
+using System.Data;
 
-@model IEnumerable<InApps.Models.EmpModel>
+using static InApps.Models.Fiscal;
+using static InApps.Models.FiscalLog;
 
-<p>
-    @Html.ActionLink("Add New Employee", "AddFiscalization")
-</p>
+using System.Linq;
+using System.Collections;
+using InApps.Repository;
 
-<table class="table">
-    <tr>
+namespace InApps.Controllers
+{
 
-        <th>
-            @Html.DisplayNameFor(model => model.REFCODE)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DATTIMSEND)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.BANKNIPT)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PYMTORDNUM)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PAYERNIPT)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EINFIC)
-        <th>
-            @Html.DisplayNameFor(model => model.PYMTDATTIM)
-        <th>
-            @Html.DisplayNameFor(model => model.PAIDAMT)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.OVERPAIDAMT)
 
-        <th>
-            @Html.DisplayNameFor(model => model.PAIDCUR)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TRANSACTIONCODE)
-        <th>
-            @Html.DisplayNameFor(model => model.PYMTTYPE)
-        <th>
-            @Html.DisplayNameFor(model => model.PYMTSTATUS)
-        <th>
-            @Html.DisplayNameFor(model => model.CODE)
-        <th>
-            @Html.DisplayNameFor(model => model.MESSAGE)
-        <th>
-            @Html.DisplayNameFor(model => model.USR)
-        <th>
-            @Html.DisplayNameFor(model => model.SELLERNIPT)
-        <th>
-            @Html.DisplayNameFor(model => model.INVOICEDATE)
-        <th>
-            @Html.DisplayNameFor(model => model.IBANNR)
-        <th>
-            @Html.DisplayNameFor(model => model.SWIFTNR)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.BANKNAME)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.QRCODEVAL)
-        </th>
-
-        <th>
-            @Html.DisplayNameFor(model => model.STPROFILE)
-        </th>
-        
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
+    public class FiscalizationController : Controller
     {
-        @Html.HiddenFor(model => item.id)
-<tr>
 
-    <td>
-        @Html.DisplayFor(modelItem => item.REFCODE)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.DATTIMSEND)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.BANKNIPT)
-    </td>
-    <th>
-        @Html.DisplayFor(modelItem => item.PYMTORDNUM)
-    </th>
-    <th>
-        @Html.DisplayFor(modelItem => item.PAYERNIPT)
-    </th>
-    <th>
-        @Html.DisplayFor(modelItem => item.EINFIC)
-    <th>
-        @Html.DisplayFor(modelItem => item.PYMTDATTIM)
-    <th>
-        @Html.DisplayFor(modelItem => item.PAIDAMT)
-    </th>
-    <th>
-        @Html.DisplayFor(modelItem => item.OVERPAIDAMT)
+        private EmpRepository empRepo;
 
-    <th>
-        @Html.DisplayFor(modelItem => item.PAIDCUR)
-    </th>
-    <th>
-        @Html.DisplayFor(modelItem => item.TRANSACTIONCODE)
-    <th>
-        @Html.DisplayFor(modelItem => item.PYMTTYPE)
-    <th>
-        @Html.DisplayFor(modelItem => item.PYMTSTATUS)
-    <th>
-        @Html.DisplayFor(modelItem => item.CODE)
-    <th>
-        @Html.DisplayFor(modelItem => item.MESSAGE)
-    <th>
-        @Html.DisplayFor(modelItem => item.USR)
-    <th>
-        @Html.DisplayFor(modelItem => item.SELLERNIPT)
-    <th>
-        @Html.DisplayFor(modelItem => item.INVOICEDATE)
-    <th>
-        @Html.DisplayFor(modelItem => item.IBANNR)
-    <th>
-        @Html.DisplayFor(modelItem => item.SWIFTNR)
-    </th>
-    <th>
-        @Html.DisplayFor(modelItem => item.BANKNAME)
-    </th>
-    <th>
-        @Html.DisplayFor(modelItem => item.QRCODEVAL)
-    </th>
-
-    <th>
-        @Html.DisplayFor(modelItem => item.STPROFILE)
-    </th>
-    <td>
-        @Html.ActionLink("Edit", "EditFiscalizationDetails", new { id = item.id }) |
-        @Html.ActionLink("Delete", "DeleteFiscalization", new { id = item.id }, new { onclick = "return confirm('Are sure wants to delete?');" })
-    </td>
-</tr>
-
-
-
-    }
-
-</table> 
-
-
-
-
-
-
-the repository or the model that has the logic of lisening the all the items from the database
-
-  public List<EmpModel> GetAllFiscalization()
+        public FiscalizationController()
         {
-            connection();
-            List<EmpModel> EmpList = new List<EmpModel>();
-
-
-            SqlCommand com = new SqlCommand("GetFiscalizimi", con);
-            com.CommandType = CommandType.StoredProcedure;
-            SqlDataAdapter da = new SqlDataAdapter(com);
-            DataTable dt = new DataTable();
-
-            con.Open();
-            da.Fill(dt);
-            con.Close();
-            //Bind EmpModel generic list using dataRow     
-            foreach (DataRow dr in dt.Rows)
-            {
-
-                EmpList.Add(
-
-                    new EmpModel
-                    {
-
-                        id = Convert.ToInt32(dr["Id"]),
-                        REFCODE = Convert.ToString(dr["REFCODE"]),
-                        DATTIMSEND = Convert.ToString(dr["DATTIMSEND"]),
-                        BANKNIPT = Convert.ToString(dr["BANKNIPT"]),
-                        PYMTORDNUM = Convert.ToString(dr["PYMTORDNUM"]),
-                        PAYERNIPT = Convert.ToString(dr["PAYERNIPT"]),
-                        EINFIC = Convert.ToString(dr["EINFIC"]),
-                        PYMTDATTIM = Convert.ToString(dr["PYMTDATTIM"]),
-
-                        PAIDAMT = Convert.ToString(dr["PAIDAMT"]),
-                        OVERPAIDAMT = Convert.ToString(dr["OVERPAIDAMT"]),
-
-                        PAIDCUR = Convert.ToString(dr["PAIDCUR"]),
-                        TRANSACTIONCODE = Convert.ToString(dr["TRANSACTIONCODE"]),
-
-                        PYMTTYPE = Convert.ToString(dr["PYMTTYPE"]),
-                        PYMTSTATUS = Convert.ToString(dr["PYMTSTATUS"]),
-                        CODE = Convert.ToString(dr["CODE"]),
-                        MESSAGE = Convert.ToString(dr["MESSAGE"]),
-                        USR = Convert.ToString(dr["USR"]),
-                        SELLERNIPT = Convert.ToString(dr["SELLERNIPT"]),
-                        INVOICEDATE = Convert.ToString(dr["INVOICEDATE"]),
-                        IBANNR = Convert.ToString(dr["IBANNR"]),
-                        SWIFTNR = Convert.ToString(dr["SWIFTNR"]),
-                        BANKNAME = Convert.ToString(dr["BANKNAME"]),
-                        QRCODEVAL = Convert.ToString(dr["QRCODEVAL"]),
-                        STPROFILE = Convert.ToString(dr["STPROFILE"])
-
-                    }
-                    );
-            }
-
-            return EmpList;
+            empRepo = new EmpRepository();
         }
 
 
+        public ActionResult Index()
+        {
+            return View();
+
+        }
+
+        private const string connectionString = "FacilegalConn";
+        [HttpGet]
+        public ActionResult AddFiscalization()
+        {
+            return View();
+        }
 
 
-and the controller that calls the methods
+        [HttpPost]
+        public ActionResult AddFiscalization(string searchBox)
+        {
+            try
+            {
+                string[] splitValues = searchBox.Split(';');
+
+                // Assign split values to ViewBag variables
+                ViewBag.p1 = splitValues.Length > 0 ? splitValues[0] : string.Empty;
+                ViewBag.p2 = splitValues.Length > 1 ? splitValues[1] : string.Empty;
+                ViewBag.p3 = splitValues.Length > 2 ? splitValues[2] : string.Empty;
+                ViewBag.p4 = splitValues.Length > 3 ? splitValues[3] : string.Empty;
+                ViewBag.p5 = splitValues.Length > 4 ? splitValues[4] : string.Empty;
+                ViewBag.p6 = splitValues.Length > 5 ? splitValues[5] : string.Empty;
+                ViewBag.p7 = splitValues.Length > 6 ? splitValues[6] : string.Empty;
+                ViewBag.p8 = splitValues.Length > 7 ? splitValues[7] : string.Empty;
+                ViewBag.p9 = splitValues.Length > 8 ? splitValues[8] : string.Empty;
+                ViewBag.p10 = splitValues.Length >9 ? splitValues[9] : string.Empty;
+                // Populate emp object properties using form data
+                //emp.REFCODE = splitValues.Length > 0 ? splitValues[0] : string.Empty;
+                //emp.PYMTORDNUM = splitValues.Length > 1 ? splitValues[1] : string.Empty;
+                //emp.PAYERNIPT = splitValues.Length > 2 ? splitValues[2] : string.Empty;
+                //emp.EINFIC = splitValues.Length > 3 ? splitValues[3] : string.Empty;
+                //emp.PAIDAMT = splitValues.Length > 4 ? splitValues[4] : string.Empty;
+                //emp.PAIDCUR = splitValues.Length > 5 ? splitValues[5] : string.Empty;
+                //emp.TRANSACTIONCODE = splitValues.Length > 6 ? splitValues[6] : string.Empty;
+                //emp.PYMTTYPE = splitValues.Length > 7 ? splitValues[7] : string.Empty;
+                //emp.BANKNIPT = "2";
+
+                //            emp.DATTIMSEND = "2";
+                //            emp.PYMTDATTIM = "3";
+                //            emp.OVERPAIDAMT = "4";
+                //            emp.PYMTSTATUS = "5";
+                //            emp.CODE = "6";
+                //            emp.MESSAGE = "7";
+                //            emp.USR = "98";
+                //            emp.SELLERNIPT = "6";
+                //            emp.INVOICEDATE = "65555";
+                //            emp.IBANNR = "5";
+                //            emp.SWIFTNR = "5";
+                //            emp.BANKNAME = "5";
+                //            emp.QRCODEVAL = "5";
+                //            emp.STPROFILE = "6";
+
+                return View("");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "An error occurred: " + ex.Message;
+                return View();
+            }
+        }
+
+        [HttpPost]
+        public ActionResult SaveFiscalization(string QRCODEVAL, string STPROFILE, string REFCODE,string PYMTORDNUM, string PAYERNIPT, string EINFIC, string PAIDAMT,string PAIDCUR,string TRANSACTIONCODE, string PYMTTYPE,string BANKNAME)
+        {
+            
+
+            try
+            {
+                EmpModel emp = new EmpModel();
+                emp.QRCODEVAL = "3";
+                emp.STPROFILE = "2";
+
+                emp.REFCODE = REFCODE;
+                emp.PYMTORDNUM = PYMTORDNUM;
+                emp.PAYERNIPT = PAYERNIPT;
+                emp.EINFIC = "EINFIC";
+                emp.PAIDAMT = PAIDAMT;
+                emp.PAIDCUR = PAIDCUR;
+                emp.TRANSACTIONCODE = TRANSACTIONCODE;
+                emp.PYMTTYPE = "PYMTTYPE";
+
+                emp.BANKNIPT = "2";
+
+                emp.DATTIMSEND = "2";
+                emp.PYMTDATTIM = "3";
+                emp.OVERPAIDAMT = "4";
+                emp.PYMTSTATUS = "5";
+                emp.CODE = "6";
+                emp.MESSAGE = "7";
+                emp.USR = "98";
+                emp.SELLERNIPT = "6";
+                emp.INVOICEDATE = "65555";
+                emp.IBANNR = "5";
+                emp.SWIFTNR = "5";
+                emp.BANKNAME = BANKNAME;
+               
 
 
-public ActionResult GetAllFiscalizationDetails()
+
+
+                bool isAdded = empRepo.SaveFiscalization(emp);
+
+                if (isAdded)
+                {
+                    ViewBag.Message = "Fiscalization details saved successfully";
+                }
+                else
+                {
+                    ViewBag.Message = "Failed to save fiscalization details";
+                }
+
+                return View("AddFiscalization");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "An error occurred: " + ex.Message;
+                return View("AddFiscalization");
+            }
+        }
+    
+
+    //[HttpPost]
+    //public ActionResult AddFiscalization(string searchBox, EmpModel emp, string BankNipt)
+    //{
+    //    try
+    //    {
+
+
+    //        string[] splitValues = searchBox.Split(';');
+
+    //        ViewBag.p1 = splitValues.Length > 0 ? splitValues[0] : string.Empty;
+    //        ViewBag.p2 = splitValues.Length > 1 ? splitValues[1] : string.Empty;
+    //        ViewBag.p3 = splitValues.Length > 2 ? splitValues[2] : string.Empty;
+    //        ViewBag.p4 = splitValues.Length > 3 ? splitValues[3] : string.Empty;
+    //        ViewBag.p5 = splitValues.Length > 4 ? splitValues[4] : string.Empty;
+    //        ViewBag.p6 = splitValues.Length > 5 ? splitValues[5] : string.Empty;
+    //        ViewBag.p7 = splitValues.Length > 6 ? splitValues[6] : string.Empty;
+    //        ViewBag.p8 = splitValues.Length > 7 ? splitValues[7] : string.Empty;
+
+    //        if (ModelState.IsValid)
+    //        {
+    //            emp.REFCODE = splitValues.Length > 0 ? splitValues[0] : string.Empty;
+    //            emp.PYMTORDNUM = splitValues.Length > 1 ? splitValues[1] : string.Empty;
+    //            emp.PAYERNIPT = splitValues.Length > 2 ? splitValues[2] : string.Empty;
+    //            emp.EINFIC = splitValues.Length > 3 ? splitValues[3] : string.Empty;
+    //            emp.PAIDAMT = splitValues.Length > 4 ? splitValues[4] : string.Empty;
+    //            emp.PAIDCUR = splitValues.Length > 5 ? splitValues[5] : string.Empty;
+    //            emp.TRANSACTIONCODE = splitValues.Length > 6 ? splitValues[6] : string.Empty;
+    //            emp.PYMTTYPE = splitValues.Length > 7 ? splitValues[7] : string.Empty;
+
+    //            // Set the manually filled textbox value
+    //            emp.BANKNIPT = "2";
+
+    //            emp.DATTIMSEND = "2";
+    //            emp.PYMTDATTIM = "3";
+    //            emp.OVERPAIDAMT = "4";
+    //            emp.PYMTSTATUS = "5";
+    //            emp.CODE = "6";
+    //            emp.MESSAGE = "7";
+    //            emp.USR = "98";
+    //            emp.SELLERNIPT = "6";
+    //            emp.INVOICEDATE = "65555";
+    //            emp.IBANNR = "5";
+    //            emp.SWIFTNR = "5";
+    //            emp.BANKNAME = "5";
+    //            emp.QRCODEVAL = "5";
+    //            emp.STPROFILE = "6";
+
+
+    //        }
+
+    //        return View(emp);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ViewBag.Error = "An error occurred: " + ex.Message;
+    //        return View(emp);
+    //    }
+    //}
+    //private bool SaveDataToDatabase(EmpModel emp)
+    //{
+    //    try
+    //    {
+    //        EmpRepository empRepo = new EmpRepository();
+    //        return empRepo.SaveFiscalization(emp);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        // Handle any exceptions that occur during the saving process
+    //        return false;
+    //    }
+    //}
+
+
+
+
+
+    // GET: Employee/GetAllEmpDetails    
+    public ActionResult GetAllFiscalizationDetails()
             {
 
                 EmpRepository EmpRepo = new EmpRepository();
                 ModelState.Clear();
                 return View(EmpRepo.GetAllFiscalization());
             }
+        // GET: Employee/AddEmployee
+        // 
+        [HttpPost]
+        public ActionResult SaveFiscalization(IEnumerable<EmpModel> model)
+        {
+            // Save the data to the database here
+
+            // Retrieve the filtered data based on the REFCode
+            EmpRepository empRepo = new EmpRepository();
+            var filteredData = empRepo.GetFiscalizationByREFCode(model.FirstOrDefault()?.REFCODE);
+
+            return View("GetAllFiscalizationDetails", filteredData);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // GET: Employee/EditEmpDetails/5    
+        public ActionResult EditFiscalizationDetails(int id)
+            {
+                EmpRepository EmpRepo = new EmpRepository();
+
+
+
+                return View(EmpRepo.GetAllFiscalization().Find(Emp => Emp.id == id));
+
+            }
+
+            // POST: Employee/EditEmpDetails/5    
+            [HttpPost]
+
+            public ActionResult UpdateFiscalization(int id, EmpModel obj)
+            {
+                try
+                {
+                    EmpRepository EmpRepo = new EmpRepository();
+
+                    EmpRepo.UpdateFiscalization(obj);
+
+
+
+
+                    return RedirectToAction("GetAllFiscalizationDetails");
+                }
+                catch
+                {
+                    return View();
+                }
+            }
+
+            // GET: Employee/DeleteEmp/5    
+            public ActionResult DeleteFiscalization(int id)
+            {
+                try
+                {
+                    EmpRepository EmpRepo = new EmpRepository();
+                    if (EmpRepo.DeleteFiscalization(id))
+                    {
+                        ViewBag.AlertMsg = "Employee details deleted successfully";
+
+                    }
+                    return RedirectToAction("GetAllFiscalizationDetails");
+
+                }
+                catch
+                {
+                    return View();
+                }
+            }
+
+
+        }
+    }
+
+
+
+
+
+
+
+
+        //Une 
+        //[HttpPost]
+        //public ActionResult Search(string searchBox)
+        //{
+        //    ArrayList searchTerms = new ArrayList();
+        //    if (!string.IsNullOrEmpty(searchBox))
+        //    {
+        //        string[] terms = searchBox.Split(';');
+
+//        ViewBag.p1 = terms[0];
+//        ViewBag.p2 = terms[1];
+//        ViewBag.p3 = terms[2];
+//        ViewBag.p4 = terms[3];
+//        ViewBag.p5 = terms[4];
+//        ViewBag.p6 = terms[5];
+//        ViewBag.p7 = terms[6];
+//        ViewBag.p8 = terms[7];
+//        foreach (string term in terms)
+//        {
+//            searchTerms.Add(term);
+//        }
+
+//    }
+//    return View(searchTerms);
+//}
+
+
+
+// GET: Employee/AddEmployee    
+//public ActionResult AddEmployee()
+//{
+//    return View();
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

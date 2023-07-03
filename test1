@@ -1,2 +1,231 @@
-sdasdasd
-sadkaskdmnjklasdas
+tHE VIEW that shows the table for edit
+
+@model IEnumerable<InApps.Models.EmpModel>
+
+<p>
+    @Html.ActionLink("Add New Employee", "AddFiscalization")
+</p>
+
+<table class="table">
+    <tr>
+
+        <th>
+            @Html.DisplayNameFor(model => model.REFCODE)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DATTIMSEND)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BANKNIPT)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PYMTORDNUM)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PAYERNIPT)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EINFIC)
+        <th>
+            @Html.DisplayNameFor(model => model.PYMTDATTIM)
+        <th>
+            @Html.DisplayNameFor(model => model.PAIDAMT)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OVERPAIDAMT)
+
+        <th>
+            @Html.DisplayNameFor(model => model.PAIDCUR)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TRANSACTIONCODE)
+        <th>
+            @Html.DisplayNameFor(model => model.PYMTTYPE)
+        <th>
+            @Html.DisplayNameFor(model => model.PYMTSTATUS)
+        <th>
+            @Html.DisplayNameFor(model => model.CODE)
+        <th>
+            @Html.DisplayNameFor(model => model.MESSAGE)
+        <th>
+            @Html.DisplayNameFor(model => model.USR)
+        <th>
+            @Html.DisplayNameFor(model => model.SELLERNIPT)
+        <th>
+            @Html.DisplayNameFor(model => model.INVOICEDATE)
+        <th>
+            @Html.DisplayNameFor(model => model.IBANNR)
+        <th>
+            @Html.DisplayNameFor(model => model.SWIFTNR)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BANKNAME)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.QRCODEVAL)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.STPROFILE)
+        </th>
+        
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        @Html.HiddenFor(model => item.id)
+<tr>
+
+    <td>
+        @Html.DisplayFor(modelItem => item.REFCODE)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.DATTIMSEND)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.BANKNIPT)
+    </td>
+    <th>
+        @Html.DisplayFor(modelItem => item.PYMTORDNUM)
+    </th>
+    <th>
+        @Html.DisplayFor(modelItem => item.PAYERNIPT)
+    </th>
+    <th>
+        @Html.DisplayFor(modelItem => item.EINFIC)
+    <th>
+        @Html.DisplayFor(modelItem => item.PYMTDATTIM)
+    <th>
+        @Html.DisplayFor(modelItem => item.PAIDAMT)
+    </th>
+    <th>
+        @Html.DisplayFor(modelItem => item.OVERPAIDAMT)
+
+    <th>
+        @Html.DisplayFor(modelItem => item.PAIDCUR)
+    </th>
+    <th>
+        @Html.DisplayFor(modelItem => item.TRANSACTIONCODE)
+    <th>
+        @Html.DisplayFor(modelItem => item.PYMTTYPE)
+    <th>
+        @Html.DisplayFor(modelItem => item.PYMTSTATUS)
+    <th>
+        @Html.DisplayFor(modelItem => item.CODE)
+    <th>
+        @Html.DisplayFor(modelItem => item.MESSAGE)
+    <th>
+        @Html.DisplayFor(modelItem => item.USR)
+    <th>
+        @Html.DisplayFor(modelItem => item.SELLERNIPT)
+    <th>
+        @Html.DisplayFor(modelItem => item.INVOICEDATE)
+    <th>
+        @Html.DisplayFor(modelItem => item.IBANNR)
+    <th>
+        @Html.DisplayFor(modelItem => item.SWIFTNR)
+    </th>
+    <th>
+        @Html.DisplayFor(modelItem => item.BANKNAME)
+    </th>
+    <th>
+        @Html.DisplayFor(modelItem => item.QRCODEVAL)
+    </th>
+
+    <th>
+        @Html.DisplayFor(modelItem => item.STPROFILE)
+    </th>
+    <td>
+        @Html.ActionLink("Edit", "EditFiscalizationDetails", new { id = item.id }) |
+        @Html.ActionLink("Delete", "DeleteFiscalization", new { id = item.id }, new { onclick = "return confirm('Are sure wants to delete?');" })
+    </td>
+</tr>
+
+
+
+    }
+
+</table> 
+
+
+
+
+
+
+the repository or the model that has the logic of lisening the all the items from the database
+
+  public List<EmpModel> GetAllFiscalization()
+        {
+            connection();
+            List<EmpModel> EmpList = new List<EmpModel>();
+
+
+            SqlCommand com = new SqlCommand("GetFiscalizimi", con);
+            com.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter da = new SqlDataAdapter(com);
+            DataTable dt = new DataTable();
+
+            con.Open();
+            da.Fill(dt);
+            con.Close();
+            //Bind EmpModel generic list using dataRow     
+            foreach (DataRow dr in dt.Rows)
+            {
+
+                EmpList.Add(
+
+                    new EmpModel
+                    {
+
+                        id = Convert.ToInt32(dr["Id"]),
+                        REFCODE = Convert.ToString(dr["REFCODE"]),
+                        DATTIMSEND = Convert.ToString(dr["DATTIMSEND"]),
+                        BANKNIPT = Convert.ToString(dr["BANKNIPT"]),
+                        PYMTORDNUM = Convert.ToString(dr["PYMTORDNUM"]),
+                        PAYERNIPT = Convert.ToString(dr["PAYERNIPT"]),
+                        EINFIC = Convert.ToString(dr["EINFIC"]),
+                        PYMTDATTIM = Convert.ToString(dr["PYMTDATTIM"]),
+
+                        PAIDAMT = Convert.ToString(dr["PAIDAMT"]),
+                        OVERPAIDAMT = Convert.ToString(dr["OVERPAIDAMT"]),
+
+                        PAIDCUR = Convert.ToString(dr["PAIDCUR"]),
+                        TRANSACTIONCODE = Convert.ToString(dr["TRANSACTIONCODE"]),
+
+                        PYMTTYPE = Convert.ToString(dr["PYMTTYPE"]),
+                        PYMTSTATUS = Convert.ToString(dr["PYMTSTATUS"]),
+                        CODE = Convert.ToString(dr["CODE"]),
+                        MESSAGE = Convert.ToString(dr["MESSAGE"]),
+                        USR = Convert.ToString(dr["USR"]),
+                        SELLERNIPT = Convert.ToString(dr["SELLERNIPT"]),
+                        INVOICEDATE = Convert.ToString(dr["INVOICEDATE"]),
+                        IBANNR = Convert.ToString(dr["IBANNR"]),
+                        SWIFTNR = Convert.ToString(dr["SWIFTNR"]),
+                        BANKNAME = Convert.ToString(dr["BANKNAME"]),
+                        QRCODEVAL = Convert.ToString(dr["QRCODEVAL"]),
+                        STPROFILE = Convert.ToString(dr["STPROFILE"])
+
+                    }
+                    );
+            }
+
+            return EmpList;
+        }
+
+
+
+
+and the controller that calls the methods
+
+
+public ActionResult GetAllFiscalizationDetails()
+            {
+
+                EmpRepository EmpRepo = new EmpRepository();
+                ModelState.Clear();
+                return View(EmpRepo.GetAllFiscalization());
+            }
+
+
+

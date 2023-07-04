@@ -1,0 +1,6 @@
+Severity	Code	Description	Project	File	Line	Suppression State
+Error	CS0029	Cannot implicitly convert type 'bool' to 'InApps.Models.EmpModel'	InApps	C:\Users\B010\Desktop\InApps\InApps\Controllers\FiscalizationController.cs	132	Active
+Severity	Code	Description	Project	File	Line	Suppression State
+Error	CS0029	Cannot implicitly convert type 'InApps.Models.EmpModel' to 'bool'	InApps	C:\Users\B010\Desktop\InApps\InApps\Models\EmpRepository.cs	81	Active
+Severity	Code	Description	Project	File	Line	Suppression State
+Error	CS0037	Cannot convert null to 'bool' because it is a non-nullable value type	InApps	C:\Users\B010\Desktop\InApps\InApps\Models\EmpRepository.cs	87	Active

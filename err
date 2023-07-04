@@ -1,9 +1,3 @@
-System.InvalidOperationException: 'The partial view '_FiscalizationDetails' was not found or no view engine supports the searched locations. The following locations were searched:
-~/Views/Fiscalization/_FiscalizationDetails.aspx
-~/Views/Fiscalization/_FiscalizationDetails.ascx
-~/Views/Shared/_FiscalizationDetails.aspx
-~/Views/Shared/_FiscalizationDetails.ascx
-~/Views/Fiscalization/_FiscalizationDetails.cshtml
-~/Views/Fiscalization/_FiscalizationDetails.vbhtml
-~/Views/Shared/_FiscalizationDetails.cshtml
-~/Views/Shared/_FiscalizationDetails.vbhtml'
+System.NullReferenceException: 'Object reference not set to an instance of an object.'
+
+System.Web.Mvc.WebViewPage<TModel>.Model.get returned null.

@@ -1,1 +1,11 @@
- ViewBag.savedData = "  " + emp.id + "  " + emp.USR + "  " + emp.REFCODE + "  " + emp.INVOICEDATE +  "  " + emp.USR + "  ";
+
+                if (isAdded)
+                {
+                    // Set the ViewBag.savedData to display the saved row data in the popup window
+                    //ViewBag.savedData = "REFCODE: " + emp.REFCODE + ",  PYMTORDNUM: " + emp.PYMTORDNUM + ", PAYERNIPT: " + emp.PAYERNIPT;
+                    ViewBag.savedData = "<table><tr><th>Header1</th><th>Header2</th></tr><tr><td>" + emp.id + "</td><td>" + emp.USR + "</td></tr><tr><td>" + emp.REFCODE + "</td><td>" + emp.INVOICEDATE + "</td></tr></table>";
+
+
+
+
+                }

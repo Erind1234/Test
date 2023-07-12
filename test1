@@ -16,3 +16,26 @@ if (isAdded)
                         "</tr>" +
                         "</table>";
 }
+
+
+if (isAdded)
+{
+    // Set the ViewBag.savedData to display the saved row data in the popup window
+    string tableHtml = "<table style='border-collapse: collapse;'>" +
+                       "<tr>" +
+                       "<th style='border: 1px solid black; padding: 8px;'>Header1</th>" +
+                       "<th style='border: 1px solid black; padding: 8px;'>Header2</th>" +
+                       "<th style='border: 1px solid black; padding: 8px;'>Header3</th>" +
+                       "</tr>" +
+                       "<tr>" +
+                       "<td style='border: 1px solid black; padding: 8px;'>V1</td>" +
+                       "<td style='border: 1px solid black; padding: 8px;'>V2</td>" +
+                       "<td style='border: 1px solid black; padding: 8px;'>V3</td>" +
+                       "</tr>" +
+                       "</table>";
+
+    ViewBag.savedData = new HtmlString(tableHtml);
+}
+
+
+

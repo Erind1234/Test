@@ -1,2 +1,1 @@
-Msg 8101, Level 16, State 1, Procedure AddNewFiscalizimDetails1, Line 31
-An explicit value for the identity column in table 'Fiscalizim' can only be specified when a column list is used and IDENTITY_INSERT is ON.
+{"Explicit value must be specified for identity column in table 'Fiscalizimi' either when IDENTITY_INSERT is set to ON or when a replication user is inserting into a NOT FOR REPLICATION identity column."}

@@ -1,2 +1,1 @@
-{"Explicit value must be specified for identity column in table 'Fiscalizimi' either when IDENTITY_INSERT is set to ON or when a replication user is inserting into a NOT FOR REPLICATION identity column."}
-ALTER TABLE Fiscalizimi ALTER COLUMN ID INT IDENTITY(1,1) NOT NULL;
+<button onclick="editTable()">Edit</button>@ViewBag.savedData</p>

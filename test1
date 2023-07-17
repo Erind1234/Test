@@ -1,2 +1,6 @@
-Severity	Code	Description	Project	File	Line	Suppression State
-Error	CS0165	Use of unassigned local variable 'empModels'	1_Views_Fiscalization_Index.cshtml	C:\Users\B010\Desktop\InApps\InApps\Views\Fiscalization\Index.cshtml	422	Active
+System.NullReferenceException
+  HResult=0x80004003
+  Message=Object reference not set to an instance of an object.
+  Source=App_Web_index.cshtml.e83d7895.pj9i9umk
+  StackTrace:
+   at ASP._Page_Views_Fiscalization_Index_cshtml.Execute() in C:\Users\B010\Desktop\InApps\InApps\Views\Fiscalization\Index.cshtml:line 383

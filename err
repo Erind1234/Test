@@ -1,2 +1,8 @@
-Severity	Code	Description	Project	File	Line	Suppression State
-Error	CS7036	There is no argument given that corresponds to the required formal parameter 'connectionString' of 'EmpRepository.DeleteData(string, string)'	InApps	C:\Users\B010\Desktop\InApps\InApps\Controllers\FiscalizationController.cs	176	Active
+  private SqlConnection con;
+        //To Handle connection related activities    
+        private void connection()
+        {
+            string constr = ConfigurationManager.ConnectionStrings["FacilegalConn"].ToString();
+            con = new SqlConnection(constr);
+
+        }

@@ -1,11 +1,2 @@
 Severity	Code	Description	Project	File	Line	Suppression State
-Error	CS1003	Syntax error, ',' expected	2_Views_Fiscalization_Index.cshtml	C:\Users\B010\Desktop\InApps\InApps\Views\Fiscalization\Index.cshtml	1	Active
-
-
-Severity	Code	Description	Project	File	Line	Suppression State
-Error	CS0246	The type or namespace name 'model' could not be found (are you missing a using directive or an assembly reference?)	2_Views_Fiscalization_Index.cshtml	C:\Users\B010\Desktop\InApps\InApps\Views\Fiscalization\Index.cshtml	1	Active
-
-
-Severity	Code	Description	Project	File	Line	Suppression State
-Error	CS0246	The type or namespace name 'Model' could not be found (are you missing a using directive or an assembly reference?)	2_Views_Fiscalization_Index.cshtml	C:\Users\B010\Desktop\InApps\InApps\Views\Fiscalization\Index.cshtml	1	Active
-
+Error	CS1061	'EmpRepository' does not contain a definition for 'DeleteEmployee' and no accessible extension method 'DeleteEmployee' accepting a first argument of type 'EmpRepository' could be found (are you missing a using directive or an assembly reference?)	InApps	C:\Users\B010\Desktop\InApps\InApps\Controllers\FiscalizationController.cs	176	Active

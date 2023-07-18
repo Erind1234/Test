@@ -1,4 +1,22 @@
-    private SqlConnection con;
+        public void DeleteEmployee(int id)
+        {
+            using (SqlConnection con = new SqlConnection())
+            {
+                SqlCommand cmd = new SqlCommand("DeleteFiscalizationByIddd", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", id);
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
+
+
+
+        private SqlConnection con;
+     
+
         //To Handle connection related activities    
         private void connection()
         {

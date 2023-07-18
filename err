@@ -1,8 +1,57 @@
-  private SqlConnection con;
-        //To Handle connection related activities    
-        private void connection()
+code in the controller for delete data
+  [HttpPost]
+        public ActionResult DeleteFiscalization(string id)
         {
-            string constr = ConfigurationManager.ConnectionStrings["FacilegalConn"].ToString();
-            con = new SqlConnection(constr);
+            try
+            {
+                // Implement the deletion logic here based on the given ID
+                // For example, you can use the EmpRepository to delete the record
+                empRepo.DeleteData(id, connectionString);
 
+                ViewBag.savedData = "Data has been deleted successfully.";
+                return View("Index");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "An error occurred while deleting data: " + ex.Message;
+                return View("Index");
+            }
         }
+
+code in the EmpRepository class
+
+
+        public void DeleteEmployee(int id)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("DeleteFiscalizationByIddd", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", id);
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
+
+script i putted on thje index.html for delete the data that the user just saved in the db bz pressing the button delete
+
+ // Function to handle the click event of the "Delete" button
+            $("#btnDelete").on("click", function () {
+                var rowId = $("#rowId").val();
+                if (rowId !== "") {
+                    $.ajax({
+                        url: "/Fiscalization/DeleteFiscalization", // Replace with the correct URL for deleting the row
+                        type: "POST",
+                        data: { id: rowId },
+                        success: function (data) {
+                            // Reload the page to update the table after deletion
+                            window.location.reload();
+                        },
+                        error: function () {
+                            alert("Failed to delete the row.");
+                        }
+                    });
+                }
+            });

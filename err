@@ -1,11 +1,11 @@
-
-                if (isAdded)
-                {
-                    // Set the ViewBag.savedData to display the saved row data in the popup window
-                    //ViewBag.savedData = "REFCODE: " + emp.REFCODE + ",  PYMTORDNUM: " + emp.PYMTORDNUM + ", PAYERNIPT: " + emp.PAYERNIPT;
-                    ViewBag.savedData = "<table><tr><th>Header1</th><th>Header2</th></tr><tr><td>" + emp.id + "</td><td>" + emp.USR + "</td></tr><tr><td>" + emp.REFCODE + "</td><td>" + emp.INVOICEDATE + "</td></tr></table>";
+Severity	Code	Description	Project	File	Line	Suppression State
+Error	CS1003	Syntax error, ',' expected	2_Views_Fiscalization_Index.cshtml	C:\Users\B010\Desktop\InApps\InApps\Views\Fiscalization\Index.cshtml	1	Active
 
 
+Severity	Code	Description	Project	File	Line	Suppression State
+Error	CS0246	The type or namespace name 'model' could not be found (are you missing a using directive or an assembly reference?)	2_Views_Fiscalization_Index.cshtml	C:\Users\B010\Desktop\InApps\InApps\Views\Fiscalization\Index.cshtml	1	Active
 
 
-                }
+Severity	Code	Description	Project	File	Line	Suppression State
+Error	CS0246	The type or namespace name 'Model' could not be found (are you missing a using directive or an assembly reference?)	2_Views_Fiscalization_Index.cshtml	C:\Users\B010\Desktop\InApps\InApps\Views\Fiscalization\Index.cshtml	1	Active
+

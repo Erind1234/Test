@@ -1,6 +1,3 @@
-System.NullReferenceException
-  HResult=0x80004003
-  Message=Object reference not set to an instance of an object.
-  Source=App_Web_index.cshtml.e83d7895.jwn7kadk
-  StackTrace:
-   at ASP._Page_Views_Fiscalization_Index_cshtml.Execute() in C:\Users\B010\Desktop\InApps\InApps\Views\Fiscalization\Index.cshtml:line 356
+System.NullReferenceException: 'Object reference not set to an instance of an object.'
+
+System.Web.Mvc.WebViewPage<TModel>.Model.get returned null.

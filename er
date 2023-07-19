@@ -1,0 +1,2 @@
+Severity	Code	Description	Project	File	Line	Suppression State
+Error	CS0103	The name 'emp' does not exist in the current context	1_Views_Fiscalization_Index.cshtml	C:\Users\B010\Desktop\InApps\InApps\Views\Fiscalization\Index.cshtml	380	Active

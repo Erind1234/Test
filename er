@@ -1,3 +1,14 @@
-System.NullReferenceException: 'Object reference not set to an instance of an object.'
 
-System.Web.Mvc.WebViewPage<TModel>.Model.get returned null.
+The best overloaded method match for 'string.IsNullOrEmpty(string)' has some invalid arguments
+Description: An unhandled exception occurred during the execution of the current web request. Please review the stack trace for more information about the error and where it originated in the code.
+
+Exception Details: Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: The best overloaded method match for 'string.IsNullOrEmpty(string)' has some invalid arguments
+
+Source Error:
+
+
+Line 395:
+Line 396:
+Line 397:    @if (!string.IsNullOrEmpty(ViewBag.rowId))
+Line 398:    {
+Line 399:        using (Html.BeginForm("DeleteFiscalization", "Fiscalization", FormMethod.Post))

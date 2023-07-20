@@ -34,7 +34,53 @@
 
 
 
- <td>  
-                @Html.ActionLink("Edit", "EditEmpDetails", new { id = item.Empid }) |  
-                @Html.ActionLink("Delete", "DeleteEmp", new { id = item.Empid }, new { onclick = "return confirm('Are sure wants to delete?');" })  
-            </td>
+@model InApps.Models.EmpModel
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Popup</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .popup-container {
+            position: fixed;
+            top: 100;
+            left: 100;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .popup-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="popup-container">
+        <div class="popup-content">
+            <span class="close-button">&times;</span>
+            <h2>Saved Fiscalization Details</h2>
+            <table>
+                <tr>
+                   
+
+                   
+                </tr>
+              </table></div>
+                </body>
+</html>

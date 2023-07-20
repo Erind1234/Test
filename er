@@ -1,14 +1,40 @@
+   string tableHtml = "<table style='border-collapse: collapse;'>" +
+                                       "<tr>" +
+                                        "<th style='border: 1px solid black; padding: 8px;'></th>" +
+                                    
+                                       "<th style='border: 1px solid black; padding: 8px;'>ID</th>" +
+                                       "<th style='border: 1px solid black; padding: 8px;'>User</th>" +
+                                       "<th style='border: 1px solid black; padding: 8px;'>Referenca</th>" +
+                                          "<th style='border: 1px solid black; padding: 8px;'>Nr urdher</th>" +
+                                       "<th style='border: 1px solid black; padding: 8px;'>NIPT Bleres</th>" +
+                   
+                                          "<th style='border: 1px solid black; padding: 8px;'>NIVF</th>" +
+                                       "<th style='border: 1px solid black; padding: 8px;'>Shuma</th>" +
+                                       "<th style='border: 1px solid black; padding: 8px;'>Monedha</th>" +
+                                          "<th style='border: 1px solid black; padding: 8px;'>Shitesi</th>" +
+                                       "<th style='border: 1px solid black; padding: 8px;'>Lloji</th>" +
+                                       "<th style='border: 1px solid black; padding: 8px;'>Nipt Shites</th>" +
+                                       "</tr>" +
+                                       "<tr>" +
+                                        "<td style='border: 1px solid black; padding: 8px;'><button onclick='editTable()'>Edit</button></td>" +
+                                     
+                                       "<td style='border: 1px solid black; padding: 8px;'>" + emp.id + "</td>" +
+                                       "<td style='border: 1px solid black; padding: 8px;'>" + emp.USR + "</td>" +
+                                       "<td style='border: 1px solid black; padding: 8px;'>" + emp.REFCODE + "</td>" +
+                                       "<td style='border: 1px solid black; padding: 8px;'>" + emp.PYMTORDNUM + "</td>" +
+                                       "<td style='border: 1px solid black; padding: 8px;'>" + emp.PAYERNIPT + "</td>" +
+                                       "<td style='border: 1px solid black; padding: 8px;'>" + emp.NIVF + "</td>" +
+                                       "<td style='border: 1px solid black; padding: 8px;'>" + emp.PAIDAMT + "</td>" +
+                                       "<td style='border: 1px solid black; padding: 8px;'>" + emp.PAIDCUR + "</td>" +
+                                       "<td style='border: 1px solid black; padding: 8px;'>" + emp.TRANSACTIONCODE + "</td>" +
+                                       "<td style='border: 1px solid black; padding: 8px;'>" + emp.PYMTTYPE + "</td>" +
+                                       "<td style='border: 1px solid black; padding: 8px;'>" + emp.SELLERNIPT + "</td>" +
+                                       "</tr>" +
+                                       "</table>";
 
-The best overloaded method match for 'string.IsNullOrEmpty(string)' has some invalid arguments
-Description: An unhandled exception occurred during the execution of the current web request. Please review the stack trace for more information about the error and where it originated in the code.
-
-Exception Details: Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: The best overloaded method match for 'string.IsNullOrEmpty(string)' has some invalid arguments
-
-Source Error:
 
 
-Line 395:
-Line 396:
-Line 397:    @if (!string.IsNullOrEmpty(ViewBag.rowId))
-Line 398:    {
-Line 399:        using (Html.BeginForm("DeleteFiscalization", "Fiscalization", FormMethod.Post))
+ <td>  
+                @Html.ActionLink("Edit", "EditEmpDetails", new { id = item.Empid }) |  
+                @Html.ActionLink("Delete", "DeleteEmp", new { id = item.Empid }, new { onclick = "return confirm('Are sure wants to delete?');" })  
+            </td>

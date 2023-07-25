@@ -1,72 +1,131 @@
-
- protected void cmdSave_Click(object sender, EventArgs e)
-    {
-        try
+[HttpPost]
+        public ActionResult SaveFiscalization(string QRCODEVAL,string IBANNR, string STPROFILE, string REFCODE, string PYMTORDNUM, string PAYERNIPT, string EINFIC, string PAIDAMT, string PAIDCUR, string TRANSACTIONCODE, string PYMTTYPE, string BANKNAME,string NIVF, string INVOICEDATE)
         {
-            int RNiptNumra;
-            if (txtRefCode.Text.Trim() == String.Empty)
+            try
             {
-                lblMessage.Text = "Referenca jo e sakte!";
-                return;
-            }
-            if (txtNIPT.Text.Trim().Length<10)
-            {
-                lblMessage.Text="NIPT i Bleresit jo i sakte!";
-                return;
-            }
-            bool NiptNumra =int.TryParse(txtNIPT.Text.Trim().Substring(1, txtNIPT.Text.Trim().Length - 2),out RNiptNumra);
-            string FilterReference = txtRefCode.Text.Trim();
-            string statusiissue = cboPymtStatus.SelectedItem.Value.Substring(0, 7) == "PAYMENT" ? "PAYMENT" : cboPymtStatus.SelectedItem.Value;
-            if (!(char.IsLetter(txtNIPT.Text.Trim()[0]) && char.IsLetter(txtNIPT.Text.Trim()[txtNIPT.Text.Trim().Length - 1]) && NiptNumra))
-            {
-                lblMessage.Text="NIPT i Bleresit jo i sakte!";
-                return;
-            }
-            if (Session["FISID"] == String.Empty || Session["FISID"] == null)
-            {
-                dtsFisNotify.InsertCommand = @"insert into UFILTIR.FISKALIZIM (REFCODE,PYMTORDNUM,PAYERNIPT,EINFIC,PAIDAMT,OVERPAIDAMT,PAIDCUR,TRANSACTIONCODE,PYMTTYPE,PYMTSTATUS,USR,SELLERNIPT,INVOICEDATE,IBANNR,SWIFTNR,BANKNAME,QRCODEVAL,STPROFILE) VALUES(" +
-                                            "'" + txtRefCode.Text.Trim() + "','" + txtPymtOrdNum.Text.Trim() + "','" + txtNIPT.Text.Trim().ToUpper() + "','" + txtNIVF.Text.Trim() + "'," + (txtPaidAmt.Text.Trim() == String.Empty ? 0 : Convert.ToDecimal(txtPaidAmt.Text.Trim())) + "," +
-                                            (txtOverPaidAmt.Text.Trim() == String.Empty ? 0 : Convert.ToDecimal(txtOverPaidAmt.Text.Trim())) + ",'" + cboCurrency.SelectedItem.Text + "','" + txtTransactionCode.Text.Trim() + "','" + cboPymtType.SelectedItem.Text + "','" + statusiissue + "','" + Session["Username"] +
-                                            "','" + txtNIPTShites.Text.Trim() + "','" + lblInvoiceDate.Text.Trim() + "','" + lblIBAN.Text.Trim() + "','" + lblSWIFT.Text.Trim() + "','" + lblEmriBankesDesc.Text.Trim() + "','" + txtScan.Text.Trim() + "','" + cboPymtStatus.SelectedItem.Text + "')";
-                dtsFisNotify.Insert();
 
-                dtsFisNotify.InsertCommand = @"insert into ufiltir.fislog (usrname,llojiVep,FisID,FisScan,FisNIVF,fisNIPT,fisRefCode,fisType,fisStatus,fisPaidAmt,fisOrdNum) values(" +
-                "'" + Session["Username"] + "','I',0,'" + txtScan.Text.Trim() + "','" + txtNIVF.Text.Trim() + "','" + txtNIPT.Text.Trim() + "','" + txtRefCode.Text.Trim() + "','" + cboPymtType.SelectedItem.Text + "','" + statusiissue + "'," + (txtPaidAmt.Text.Trim() == String.Empty ? 0 : Convert.ToDecimal(txtPaidAmt.Text.Trim())) + ",'" + txtPymtOrdNum.Text.Trim() + "')";
-                dtsFisNotify.Insert();
+                EmpModel emp = new EmpModel();
 
-            }
-            else
-            {
-                dtsFisNotify.UpdateCommand = @"UPDATE UFILTIR.FISKALIZIM set REFCODE='" + txtRefCode.Text.Trim() + "',PYMTORDNUM='" + txtPymtOrdNum.Text.Trim() + "',PAYERNIPT='" + txtNIPT.Text.Trim().ToUpper() + "'," +
-                                            "EINFIC='" + txtNIVF.Text.Trim() + "',PAIDAMT=" + (txtPaidAmt.Text.Trim() == String.Empty ? 0 : Convert.ToDecimal(txtPaidAmt.Text.Trim())) + "," +
-                                            "OVERPAIDAMT=" + (txtOverPaidAmt.Text.Trim() == String.Empty ? 0 : Convert.ToDecimal(txtOverPaidAmt.Text.Trim())) + ",PAIDCUR='" + cboCurrency.SelectedItem.Text + "',TRANSACTIONCODE='" +
-                                            txtTransactionCode.Text.Trim() + "',PYMTTYPE='" + cboPymtType.SelectedItem.Text + "',PYMTSTATUS='" + statusiissue + "',USR='" + Session["Username"] + 
-                                            "',SELLERNIPT='" + txtNIPTShites.Text.Trim() + "',INVOICEDATE='" + lblInvoiceDate.Text.Trim() + "',IBANNR='" +  lblIBAN.Text.Trim() + "',SWIFTNR='" + lblSWIFT.Text.Trim() +"',BANKNAME='" + lblEmriBankesDesc.Text.Trim() +
-                                            "',STPROFILE='"  + cboPymtStatus.SelectedItem.Text +
-                                            "' where ID=" + Session["FISID"];
-                dtsFisNotify.Update();
+                emp.QRCODEVAL = "Null";
+                emp.STPROFILE = "Null";
+                emp.NIVF = NIVF;
+                emp.REFCODE = REFCODE;
+                emp.PYMTORDNUM = PYMTORDNUM;
+                emp.PAYERNIPT = PAYERNIPT;
+                emp.EINFIC = "Null";
+                emp.PAIDAMT = PAIDAMT;
+                emp.PAIDCUR = PAIDCUR;
+                emp.TRANSACTIONCODE = TRANSACTIONCODE;
+                emp.PYMTTYPE = "Null";
+                 emp.BANKNIPT = "Null";
+                 emp.DATTIMSEND = "Null";
+                emp.PYMTDATTIM = "Null";
+                emp.OVERPAIDAMT = "Null";
+                emp.PYMTSTATUS = "Null";
+                emp.CODE = "Null";  
+                emp.MESSAGE = "Null";
+                emp.USR = "Null";
+                emp.SELLERNIPT = "Null";
+                emp.INVOICEDATE = INVOICEDATE ;
+                emp.IBANNR = IBANNR;
+                emp.SWIFTNR = "Null";
+                emp.BANKNAME = "BANKNAME";
+                bool isAdded = empRepo.SaveFiscalization(emp);
 
-                dtsFisNotify.InsertCommand = @"insert into ufiltir.fislog (usrname,llojiVep,FisID,FisScan,FisNIVF,fisNIPT,fisRefCode,fisType,fisStatus,fisPaidAmt,fisOrdNum) values(" +
-                "'" + Session["Username"] + "','U','" + Session["FISID"] + "','" + txtScan.Text.Trim() + "','" + txtNIVF.Text.Trim() + "','" + txtNIPT.Text.Trim() + "','" + txtRefCode.Text.Trim() + "','" + cboPymtType.SelectedItem.Text + "','" + statusiissue + "'," + (txtPaidAmt.Text.Trim() == String.Empty ? 0 : Convert.ToDecimal(txtPaidAmt.Text.Trim())) + ",'" + txtPymtOrdNum.Text.Trim() + "')";
-                dtsFisNotify.Insert();
 
-            }
+                //if (isAdded)
+                ////{
 
-            ResetScreen();
-            gvwTrans.Visible = true;
-            dtsFisNotify.SelectCommand = "Select * from UFILTIR.FISKALIZIM where REFCODE ='" + FilterReference + "'";
-            gvwTrans.DataBind();
-            Session["FISID"] = String.Empty;
-        
-        }
-        catch (Exception ex)
-        {
-            lblMessage.Text += ex.Message;
-            return;
-        }
-        finally
-        {
+                    //// Set the ViewBag.savedData to display the saved row data in the popup window
+                    //string tableHtml = "<table style='border-collapse: collapse;'>" +
+                    //                   "<tr>" +
+                    //                    "<th style='border: 1px solid black; padding: 8px;'></th>" +
 
-        }
+                    //                   "<th style='border: 1px solid black; padding: 8px;'>ID</th>" +
+                    //                   "<th style='border: 1px solid black; padding: 8px;'>User</th>" +
+                    //                   "<th style='border: 1px solid black; padding: 8px;'>Referenca</th>" +
+                    //                      "<th style='border: 1px solid black; padding: 8px;'>Nr urdher</th>" +
+                    //                   "<th style='border: 1px solid black; padding: 8px;'>NIPT Bleres</th>" +
 
+                    //                      "<th style='border: 1px solid black; padding: 8px;'>NIVF</th>" +
+                    //                   "<th style='border: 1px solid black; padding: 8px;'>Shuma</th>" +
+                    //                   "<th style='border: 1px solid black; padding: 8px;'>Monedha</th>" +
+                    //                      "<th style='border: 1px solid black; padding: 8px;'>Shitesi</th>" +
+                    //                   "<th style='border: 1px solid black; padding: 8px;'>Lloji</th>" +
+                    //                   "<th style='border: 1px solid black; padding: 8px;'>Nipt Shites</th>" +
+                    //                   "</tr>" +
+                    //                   "<tr>" +
+                    //                    "<td style='border: 1px solid black; padding: 8px;'><button onclick='editTable()'>Edit</button></td>" +
+
+                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.id + "</td>" +
+                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.USR + "</td>" +
+                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.REFCODE + "</td>" +
+                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.PYMTORDNUM + "</td>" +
+                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.PAYERNIPT + "</td>" +
+                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.NIVF + "</td>" +
+                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.PAIDAMT + "</td>" +
+                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.PAIDCUR + "</td>" +
+                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.TRANSACTIONCODE + "</td>" +
+                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.PYMTTYPE + "</td>" +
+                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.SELLERNIPT + "</td>" +
+                    //                   "</tr>" +
+                    //                   "</table>";
+
+                    //ViewBag.savedData = new HtmlString(tableHtml);
+        //            return View("Popup", emp);
+        //        }
+        //        else
+        //        {
+        //            ViewBag.Message = "Failed to save fiscalization details";
+        //        }
+
+        //        return View("Popup");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ViewBag.Error = "An error occurred: " + ex.Message;
+        //        return View("Index");
+        //    }
+        //}
+
+        EmpModel emp = empRepo.GetEmpModelByRefCode(REFCODE);
+
+                if (emp == null)
+                {
+                    // Handle the case where the record with the specified RefCode is not found
+                    ViewBag.Error = "Failed to retrieve the added record from the database.";
+                    return View("Index");
     }
+
+    // Store the added record in TempData to retrieve it later for editing
+    TempData["AddedEmp"] = emp;
+
+                // Redirect to the Index action to display the table
+                return RedirectToAction("Index");
+}
+            catch (Exception ex)
+{
+    ViewBag.Error = "An error occurred: " + ex.Message;
+    return View("Index");
+}
+        }
+
+        public ActionResult EditFiscalization()
+{
+    // Retrieve the added record from TempData
+    EmpModel emp = TempData["AddedEmp"] as EmpModel;
+
+    if (emp == null)
+    {
+        // Handle the case where the added record is not found
+        ViewBag.Error = "Failed to retrieve the added record.";
+        return View("Index");
+    }
+
+    return View("Popup", emp); // Pass the retrieved data to the Popup view
+}
+
+
+
+
+       

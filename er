@@ -1,131 +1,14 @@
-[HttpPost]
-        public ActionResult SaveFiscalization(string QRCODEVAL,string IBANNR, string STPROFILE, string REFCODE, string PYMTORDNUM, string PAYERNIPT, string EINFIC, string PAIDAMT, string PAIDCUR, string TRANSACTIONCODE, string PYMTTYPE, string BANKNAME,string NIVF, string INVOICEDATE)
-        {
-            try
-            {
+Server Error in '/' Application.
+The method or operation is not implemented.
+Description: An unhandled exception occurred during the execution of the current web request. Please review the stack trace for more information about the error and where it originated in the code.
 
-                EmpModel emp = new EmpModel();
+Exception Details: System.NotImplementedException: The method or operation is not implemented.
 
-                emp.QRCODEVAL = "Null";
-                emp.STPROFILE = "Null";
-                emp.NIVF = NIVF;
-                emp.REFCODE = REFCODE;
-                emp.PYMTORDNUM = PYMTORDNUM;
-                emp.PAYERNIPT = PAYERNIPT;
-                emp.EINFIC = "Null";
-                emp.PAIDAMT = PAIDAMT;
-                emp.PAIDCUR = PAIDCUR;
-                emp.TRANSACTIONCODE = TRANSACTIONCODE;
-                emp.PYMTTYPE = "Null";
-                 emp.BANKNIPT = "Null";
-                 emp.DATTIMSEND = "Null";
-                emp.PYMTDATTIM = "Null";
-                emp.OVERPAIDAMT = "Null";
-                emp.PYMTSTATUS = "Null";
-                emp.CODE = "Null";  
-                emp.MESSAGE = "Null";
-                emp.USR = "Null";
-                emp.SELLERNIPT = "Null";
-                emp.INVOICEDATE = INVOICEDATE ;
-                emp.IBANNR = IBANNR;
-                emp.SWIFTNR = "Null";
-                emp.BANKNAME = "BANKNAME";
-                bool isAdded = empRepo.SaveFiscalization(emp);
+Source Error:
 
 
-                //if (isAdded)
-                ////{
-
-                    //// Set the ViewBag.savedData to display the saved row data in the popup window
-                    //string tableHtml = "<table style='border-collapse: collapse;'>" +
-                    //                   "<tr>" +
-                    //                    "<th style='border: 1px solid black; padding: 8px;'></th>" +
-
-                    //                   "<th style='border: 1px solid black; padding: 8px;'>ID</th>" +
-                    //                   "<th style='border: 1px solid black; padding: 8px;'>User</th>" +
-                    //                   "<th style='border: 1px solid black; padding: 8px;'>Referenca</th>" +
-                    //                      "<th style='border: 1px solid black; padding: 8px;'>Nr urdher</th>" +
-                    //                   "<th style='border: 1px solid black; padding: 8px;'>NIPT Bleres</th>" +
-
-                    //                      "<th style='border: 1px solid black; padding: 8px;'>NIVF</th>" +
-                    //                   "<th style='border: 1px solid black; padding: 8px;'>Shuma</th>" +
-                    //                   "<th style='border: 1px solid black; padding: 8px;'>Monedha</th>" +
-                    //                      "<th style='border: 1px solid black; padding: 8px;'>Shitesi</th>" +
-                    //                   "<th style='border: 1px solid black; padding: 8px;'>Lloji</th>" +
-                    //                   "<th style='border: 1px solid black; padding: 8px;'>Nipt Shites</th>" +
-                    //                   "</tr>" +
-                    //                   "<tr>" +
-                    //                    "<td style='border: 1px solid black; padding: 8px;'><button onclick='editTable()'>Edit</button></td>" +
-
-                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.id + "</td>" +
-                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.USR + "</td>" +
-                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.REFCODE + "</td>" +
-                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.PYMTORDNUM + "</td>" +
-                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.PAYERNIPT + "</td>" +
-                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.NIVF + "</td>" +
-                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.PAIDAMT + "</td>" +
-                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.PAIDCUR + "</td>" +
-                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.TRANSACTIONCODE + "</td>" +
-                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.PYMTTYPE + "</td>" +
-                    //                   "<td style='border: 1px solid black; padding: 8px;'>" + emp.SELLERNIPT + "</td>" +
-                    //                   "</tr>" +
-                    //                   "</table>";
-
-                    //ViewBag.savedData = new HtmlString(tableHtml);
-        //            return View("Popup", emp);
-        //        }
-        //        else
-        //        {
-        //            ViewBag.Message = "Failed to save fiscalization details";
-        //        }
-
-        //        return View("Popup");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ViewBag.Error = "An error occurred: " + ex.Message;
-        //        return View("Index");
-        //    }
-        //}
-
-        EmpModel emp = empRepo.GetEmpModelByRefCode(REFCODE);
-
-                if (emp == null)
-                {
-                    // Handle the case where the record with the specified RefCode is not found
-                    ViewBag.Error = "Failed to retrieve the added record from the database.";
-                    return View("Index");
-    }
-
-    // Store the added record in TempData to retrieve it later for editing
-    TempData["AddedEmp"] = emp;
-
-                // Redirect to the Index action to display the table
-                return RedirectToAction("Index");
-}
-            catch (Exception ex)
-{
-    ViewBag.Error = "An error occurred: " + ex.Message;
-    return View("Index");
-}
-        }
-
-        public ActionResult EditFiscalization()
-{
-    // Retrieve the added record from TempData
-    EmpModel emp = TempData["AddedEmp"] as EmpModel;
-
-    if (emp == null)
-    {
-        // Handle the case where the added record is not found
-        ViewBag.Error = "Failed to retrieve the added record.";
-        return View("Index");
-    }
-
-    return View("Popup", emp); // Pass the retrieved data to the Popup view
-}
-
-
-
-
-       
+Line 80:         internal EmpModel GetEmpModelById(int id)
+Line 81:         {
+Line 82:             throw new NotImplementedException();
+Line 83:         }
+Line 84: 

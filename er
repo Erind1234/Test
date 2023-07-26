@@ -1,14 +1,2 @@
-Server Error in '/' Application.
-The method or operation is not implemented.
-Description: An unhandled exception occurred during the execution of the current web request. Please review the stack trace for more information about the error and where it originated in the code.
-
-Exception Details: System.NotImplementedException: The method or operation is not implemented.
-
-Source Error:
-
-
-Line 80:         internal EmpModel GetEmpModelById(int id)
-Line 81:         {
-Line 82:             throw new NotImplementedException();
-Line 83:         }
-Line 84: 
+HTTP Error 404.0 - Not Found
+The resource you are looking for has been removed, had its name changed, or is temporarily unavailable.

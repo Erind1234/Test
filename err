@@ -1,12 +1,44 @@
-HTTP Error 404.0 - Not Found
-The resource you are looking for has been removed, had its name changed, or is temporarily unavailable.
+CREATE PROCEDURE GetEmpModelById
+    @id INT
+AS
+BEGIN
+    SELECT *
+    FROM Fiscalizimi 
+    WHERE ID = @id
+END
 
-Most likely causes:
-The directory or file specified does not exist on the Web server.
-The URL contains a typographical error.
-A custom filter or module, such as URLScan, restricts access to the file.
 
-Things you can try:
-Create the content on the Web server.
-Review the browser URL.
-Check the failed request tracing log and see which module is calling SetStatus. For more information, click here.
+
+
+the table code
+
+
+CREATE TABLE [dbo].[Fiscalizimi] (
+    [ID]              INT           IDENTITY (1, 1) NOT NULL,
+    [REFCODE]         NVARCHAR (50) NULL,
+    [DATTIMSEND]      NVARCHAR (50) NULL,
+    [BANKNIPT]        NVARCHAR (50) NULL,
+    [PYMTORDNUM]      NVARCHAR (50) NULL,
+    [PAYERNIPT]       NVARCHAR (50) NULL,
+    [EINFIC]          NVARCHAR (50) NULL,
+    [PYMTDATTIM]      NVARCHAR (50) NULL,
+    [PAIDAMT]         NVARCHAR (50) NULL,
+    [OVERPAIDAMT]     NVARCHAR (50) NULL,
+    [PAIDCUR]         NVARCHAR (50) NULL,
+    [TRANSACTIONCODE] NVARCHAR (50) NULL,
+    [PYMTTYPE]        NVARCHAR (50) NULL,
+    [PYMTSTATUS]      NVARCHAR (50) NULL,
+    [CODE]            NVARCHAR (50) NULL,
+    [MESSAGE]         NVARCHAR (50) NULL,
+    [USR]             NVARCHAR (50) NULL,
+    [SELLERNIPT]      NVARCHAR (50) NULL,
+    [INVOICEDATE]     NVARCHAR (50) NULL,
+    [IBANNR]          NVARCHAR (50) NULL,
+    [SWIFTNR]         NVARCHAR (50) NULL,
+    [BANKNAME]        NVARCHAR (50) NULL,
+    [QRCODEVAL]       NVARCHAR (50) NULL,
+    [NIVF]            NVARCHAR (50) NULL,
+    [STPROFILE]       NVARCHAR (50) NULL,
+    PRIMARY KEY CLUSTERED ([ID] ASC)
+);
+

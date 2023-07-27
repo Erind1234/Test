@@ -1,17 +1,21 @@
-Could not find stored procedure 'GetEmpModelById'.
+Server Error in '/' Application.
+The view 'Error' or its master was not found or no view engine supports the searched locations. The following locations were searched:
+~/Views/Fiscalization/Error.aspx
+~/Views/Fiscalization/Error.ascx
+~/Views/Shared/Error.aspx
+~/Views/Shared/Error.ascx
+~/Views/Fiscalization/Error.cshtml
+~/Views/Fiscalization/Error.vbhtml
+~/Views/Shared/Error.cshtml
+~/Views/Shared/Error.vbhtml
 Description: An unhandled exception occurred during the execution of the current web request. Please review the stack trace for more information about the error and where it originated in the code.
 
-Exception Details: System.Data.SqlClient.SqlException: Could not find stored procedure 'GetEmpModelById'.
-
-Source Error:
-
-
-Line 188:            {
-Line 189:                // Handle the exception (log, throw, etc.)
-Line 190:                throw ex;
-Line 191:            }
-Line 192:            finally
-
-Source File: C:\Users\B010\Desktop\InApps\InApps\Models\EmpRepository.cs    Line: 190
-
-Stack Trace:
+Exception Details: System.InvalidOperationException: The view 'Error' or its master was not found or no view engine supports the searched locations. The following locations were searched:
+~/Views/Fiscalization/Error.aspx
+~/Views/Fiscalization/Error.ascx
+~/Views/Shared/Error.aspx
+~/Views/Shared/Error.ascx
+~/Views/Fiscalization/Error.cshtml
+~/Views/Fiscalization/Error.vbhtml
+~/Views/Shared/Error.cshtml
+~/Views/Shared/Error.vbhtml

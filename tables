@@ -53,7 +53,7 @@ namespace InApps.Repository
             com.Parameters.AddWithValue("@QRCODEVAL", emp.QRCODEVAL);
             com.Parameters.AddWithValue("@NIVF", emp.NIVF);
             com.Parameters.AddWithValue("@STPROFILE", emp.STPROFILE);
-
+            int newId = Convert.ToInt32(com.ExecuteScalar());
             int i = com.ExecuteNonQuery();
             con.Close();
             if (i >= 1)
@@ -193,7 +193,29 @@ namespace InApps.Repository
                 con.Close();
             }
         }
+        public bool DeleteFiscalization(int ID)
+        {
+            try
+            {
+                connection();
+                con.Open();
 
-    }
+                SqlCommand com = new SqlCommand("DeleteFiscalizationDetails", con);
+                com.CommandType = CommandType.StoredProcedure;
+                com.Parameters.AddWithValue("@ID", ID);
+
+                int i = com.ExecuteNonQuery();
+                con.Close();
+
+                return i >= 1;
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception (log, throw, etc.)
+                throw ex;
+            }
+        }
+    
+}
 }
 

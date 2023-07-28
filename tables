@@ -1,8 +1,1 @@
-Severity	Code	Description	Project	File	Line	Suppression State
-Error	CS0246	The type or namespace name 'EmpModel' could not be found (are you missing a using directive or an assembly reference?)	5_Views_Fiscalization_Popup.cshtml	C:\Users\B010\Desktop\InApps\InApps\Views\Fiscalization\Popup.cshtml	1	Active
- i have writen this in first line : @model List<EmpModel>
-
-and in other html i have wrriten this : @model InApps.Models.EmpModel
-
-
-i think i have a problem in declaring in this way
+The model item passed into the dictionary is of type 'InApps.Models.EmpModel', but this dictionary requires a model item of type 'System.Collections.Generic.List`1[InApps.Models.EmpModel]'.

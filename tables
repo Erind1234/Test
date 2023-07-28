@@ -1,1 +1,2 @@
-The model item passed into the dictionary is of type 'InApps.Models.EmpModel', but this dictionary requires a model item of type 'System.Collections.Generic.List`1[InApps.Models.EmpModel]'.
+Severity	Code	Description	Project	File	Line	Suppression State
+Message	IDE0060	Remove unused parameter 'EINFIC' if it is not part of a shipped public API	InApps	C:\Users\B010\Desktop\InApps\InApps\Controllers\FiscalizationController.cs	88	Active

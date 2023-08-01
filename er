@@ -1,28 +1,14 @@
-// GET: Employee/EditEmpDetails/5    
-    public ActionResult EditEmpDetails(int id)    
-    {    
-        EmpRepository EmpRepo = new EmpRepository();    
-  
-          
-  
-        return View(EmpRepo.GetAllEmployees().Find(Emp => Emp.Empid == id));    
-  
-    }    
-  
-    // POST: Employee/EditEmpDetails/5    
-    [HttpPost]    
-      
-    public ActionResult EditEmpDetails(int id,EmpModel obj)    
-    {    
-        try    
-        {    
-                EmpRepository EmpRepo = new EmpRepository();    
-                  
-                EmpRepo.UpdateEmployee(obj);
-            return RedirectToAction("GetAllEmpDetails");    
-        }    
-        catch    
-        {    
-            return View();    
-        }    
-    }    
+Server Error in '/' Application.
+Cannot implicitly convert type 'InApps.Models.EmpModel' to 'System.Collections.IEnumerable'. An explicit conversion exists (are you missing a cast?)
+Description: An unhandled exception occurred during the execution of the current web request. Please review the stack trace for more information about the error and where it originated in the code.
+
+Exception Details: Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: Cannot implicitly convert type 'InApps.Models.EmpModel' to 'System.Collections.IEnumerable'. An explicit conversion exists (are you missing a cast?)
+
+Source Error:
+
+
+Line 63:                     </tr>
+Line 64:                     <tr>
+Line 65:                         @foreach (var item in Model)
+Line 66:                         {
+Line 67:                             <td style="border: 1px solid black; padding: 8px;"></td>

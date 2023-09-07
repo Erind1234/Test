@@ -1,30 +1,144 @@
-CREATE TABLE [dbo].[Fiscalizimi] (
-    [NR]              INT           IDENTITY (1, 1) NOT NULL,
-    [ID]              NVARCHAR (50) NULL,
-    [REFCODE]         NVARCHAR (50) NULL,
-    [DATTIMSEND]      NVARCHAR (50) NULL,
-    [BANKNIPT]        NVARCHAR (50) NULL,
-    [PYMTORDNUM]      NVARCHAR (50) NULL,
-    [PAYERNIPT]       NVARCHAR (50) NULL,
-    [EINFIC]          NVARCHAR (50) NULL,
-    [PYMTDATTIM]      NVARCHAR (50) NULL,
-    [PAIDAMT]         NVARCHAR (50) NULL,
-    [OVERPAIDAMT]     NVARCHAR (50) NULL,
-    [PAIDCUR]         NVARCHAR (50) NULL,
-    [TRANSACTIONCODE] NVARCHAR (50) NULL,
-    [PYMTTYPE]        NVARCHAR (50) NULL,
-    [PYMTSTATUS]      NVARCHAR (50) NULL,
-    [CODE]            NVARCHAR (50) NULL,
-    [MESSAGE]         NVARCHAR (50) NULL,
-    [USR]             NVARCHAR (50) NULL,
-    [SELLERNIPT]      NVARCHAR (50) NULL,
-    [INVOICEDATE]     NVARCHAR (50) NULL,
-    [IBANNR]          NVARCHAR (50) NULL,
-    [SWIFTNR]         NVARCHAR (50) NULL,
-    [BANKNAME]        NVARCHAR (50) NULL,
-    [QRCODEVAL]       NVARCHAR (50) NULL,
-    [NIVF]            NVARCHAR (50) NULL,
-    [STPROFILE]       NVARCHAR (50) NULL,
-    PRIMARY KEY CLUSTERED ([NR] ASC)
-);
+Create procedure [dbo].[Update]  
+(  
+     @NR INT,
+     @Id  NVARCHAR (50),
+    @REFCODE    NVARCHAR (50) ,
+    @DATTIMSEND    NVARCHAR (50) ,
+    @BANKNIPT NVARCHAR (50),
+     @PYMTORDNUM NVARCHAR (50) ,
+     @PAYERNIPT NVARCHAR (50) ,
+     @EINFIC    NVARCHAR (50) ,
+    @PYMTDATTIM    NVARCHAR (50) ,
+   @PAIDAMT NVARCHAR (50) ,
+    @OVERPAIDAMT NVARCHAR (50) ,
+    @PAIDCUR    NVARCHAR (50) ,
+   @TRANSACTIONCODE NVARCHAR (50) ,
+     @PYMTTYPE    NVARCHAR (50) ,
+    @PYMTSTATUS    NVARCHAR (50) ,
+   @CODE NVARCHAR (50) ,
+   @MESSAGE     NVARCHAR (50) ,
+    @USR   NVARCHAR (50) ,
+    @SELLERNIPT NVARCHAR (50) ,
+  @INVOICEDATE NVARCHAR (50) ,
+   @IBANNR NVARCHAR (50) ,
+   @SWIFTNR NVARCHAR (50) ,
+   @BANKNAME NVARCHAR (50) ,
+   @QRCODEVAL NVARCHAR (50) ,
+   @NIVF NVARCHAR (50) ,
+   @STPROFILE NVARCHAR (50) 
+)  
+as  
+begin  
+   Update Fiscalizimi   
+   set ID=@Id,
+   REFCODE=@REFCODE,  
+   DATTIMSEND=@DATTIMSEND,  
+   BANKNIPT=@BANKNIPT,  
+   PYMTORDNUM=@PYMTORDNUM,  
+   PAYERNIPT=@PAYERNIPT,  
+   EINFIC=@EINFIC,  
+   PYMTDATTIM=@PYMTDATTIM,  
+   PAIDAMT=@PAIDAMT,  
+   OVERPAIDAMT=@OVERPAIDAMT,  
+   PAIDCUR=@PAIDCUR,  
+   TRANSACTIONCODE=@TRANSACTIONCODE,  
+   PYMTTYPE=@PYMTTYPE,
+   PYMTSTATUS=@PYMTSTATUS,  
+   CODE=@CODE, 
+    MESSAGE=@MESSAGE, 
+      USR=@USR,
+   SELLERNIPT=@SELLERNIPT, 
+   INVOICEDATE=@INVOICEDATE,
+    IBANNR=@IBANNR, 
+    SWIFTNR=@SWIFTNR, 
+    BANKNAME=@BANKNAME, 
+    QRCODEVAL=@QRCODEVAL, 
+    STPROFILE=@STPROFILE,
+    NIVF=@NIVF
+   where NR=@NR;
+End ;
 
+
+
+the controller
+ // GET: Employee/EditEmpDetails/5    
+        public ActionResult EditEmpDetails(string ID)
+        {
+            EmpRepository EmpRepo = new EmpRepository();
+
+
+
+            return View();
+
+        }
+
+        // POST: Employee/EditEmpDetails/5    
+        [HttpPost]
+
+        public ActionResult EditEmpDetails(string ID, EmpModel emp)
+        {
+            try
+            {
+                EmpRepository EmpRepo = new EmpRepository();
+
+                EmpRepo.Update(emp);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+the emprepository
+
+
+        public bool Update(EmpModel emp)
+        {
+
+            connection();
+            SqlCommand com = new SqlCommand("Update", con);
+
+            com.CommandType = CommandType.StoredProcedure;
+            //com.Parameters.AddWithValue("@NR", emp.NR);
+            com.Parameters.AddWithValue("@ID", emp.ID);
+            com.Parameters.AddWithValue("@REFCODE", emp.REFCODE);
+            com.Parameters.AddWithValue("@PYMTORDNUM", emp.PYMTORDNUM);
+           
+         
+
+            com.Parameters.AddWithValue("@DATTIMSEND", emp.DATTIMSEND);
+            com.Parameters.AddWithValue("@BANKNIPT", emp.BANKNIPT);
+            com.Parameters.AddWithValue("@PAYERNIPT", emp.PAYERNIPT);
+            com.Parameters.AddWithValue("@EINFIC", emp.EINFIC);
+            com.Parameters.AddWithValue("@PYMTDATTIM", emp.PYMTDATTIM);
+            com.Parameters.AddWithValue("@PAIDAMT", emp.PAIDAMT);
+            com.Parameters.AddWithValue("@OVERPAIDAMT", emp.OVERPAIDAMT);
+            com.Parameters.AddWithValue("@PAIDCUR", emp.PAIDCUR);
+            com.Parameters.AddWithValue("@TRANSACTIONCODE", emp.TRANSACTIONCODE);
+            com.Parameters.AddWithValue("@PYMTTYPE", emp.PYMTTYPE);
+            com.Parameters.AddWithValue("@PYMTSTATUS", emp.PYMTSTATUS);
+            com.Parameters.AddWithValue("@CODE", emp.CODE);
+            com.Parameters.AddWithValue("@MESSAGE", emp.MESSAGE);
+            com.Parameters.AddWithValue("@USR", emp.USR);
+            com.Parameters.AddWithValue("@SELLERNIPT", emp.SELLERNIPT);
+            com.Parameters.AddWithValue("@INVOICEDATE", emp.INVOICEDATE);
+            com.Parameters.AddWithValue("@IBANNR", emp.IBANNR);
+            com.Parameters.AddWithValue("@SWIFTNR", emp.SWIFTNR);
+            com.Parameters.AddWithValue("@BANKNAME", emp.BANKNAME);
+            com.Parameters.AddWithValue("@QRCODEVAL", emp.QRCODEVAL);
+            com.Parameters.AddWithValue("@NIVF", emp.NIVF);
+            com.Parameters.AddWithValue("@STPROFILE", emp.STPROFILE);
+            con.Open();
+            int i = com.ExecuteNonQuery();
+            con.Close();
+            if (i >= 1)
+            {
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }

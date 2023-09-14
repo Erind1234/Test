@@ -1,3 +1,29 @@
+public EmpModel GetLastInsertedEmp()
+{
+    connection();
+    con.Open();
+
+    SqlCommand com = new SqlCommand("SELECT TOP 1 * FROM [dbo].[Fiscal] ORDER BY ID DESC", con);
+
+    SqlDataReader reader = com.ExecuteReader();
+    EmpModel emp = new EmpModel();
+
+    if (reader.Read())
+    {
+        // Map the data from the database to the EmpModel object
+        emp.ID = Convert.ToInt32(reader["ID"]);
+        emp.REFCODE = reader["REFCODE"].ToString();
+        // Map other properties as needed
+    }
+
+    con.Close();
+    return emp;
+}
+********************
+
+
+
+
 using System;
 using System.Collections.Generic;
 using System.Configuration;

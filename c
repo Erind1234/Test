@@ -1,3 +1,128 @@
+using InApps.Models;
+using InApps.Repository;
+using System;
+using System.Web.Mvc;
+
+public class FiscalizationController : Controller
+{
+    private EmpRepository empRepo;
+
+    public FiscalizationController()
+    {
+        empRepo = new EmpRepository();
+    }
+
+    // GET: Fiscalization/Index
+    public ActionResult Index()
+    {
+        // Retrieve a list of EmpModels from the database and pass it to the view
+        var empList = empRepo.GetEmpList();
+        return View(empList);
+    }
+
+    // GET: Fiscalization/Create
+    public ActionResult Create()
+    {
+        return View();
+    }
+
+    // POST: Fiscalization/Create
+    [HttpPost]
+    public ActionResult Create(string QRCODEVAL, string IBANNR, string STPROFILE, string REFCODE, string PYMTORDNUM, string PAYERNIPT, string EINFIC, string PAIDAMT, string PAIDCUR, string TRANSACTIONCODE, string PYMTTYPE, string BANKNAME, string NIVF, string INVOICEDATE)
+    {
+        try
+        {
+            Guid myuuid = Guid.NewGuid();
+            string myuuidAsString = myuuid.ToString();
+
+            EmpModel emp = new EmpModel();
+            emp.ID = myuuidAsString;
+            emp.QRCODEVAL = QRCODEVAL;
+            emp.STPROFILE = STPROFILE;
+            emp.NIVF = NIVF;
+            emp.REFCODE = REFCODE;
+            emp.PYMTORDNUM = PYMTORDNUM;
+            emp.PAYERNIPT = PAYERNIPT;
+            emp.EINFIC = EINFIC;
+            emp.PAIDAMT = PAIDAMT;
+            emp.PAIDCUR = PAIDCUR;
+            emp.TRANSACTIONCODE = TRANSACTIONCODE;
+            emp.PYMTTYPE = PYMTTYPE;
+            emp.BANKNIPT = "Null";
+            emp.DATTIMSEND = "Null";
+            emp.PYMTDATTIM = "Null";
+            emp.OVERPAIDAMT = "Null";
+            emp.PYMTSTATUS = "Null";
+            emp.CODE = "Null";
+            emp.MESSAGE = "Null";
+            emp.USR = "Null";
+            emp.SELLERNIPT = "Null";
+            emp.INVOICEDATE = INVOICEDATE;
+            emp.IBANNR = IBANNR;
+            emp.SWIFTNR = "Null";
+            emp.BANKNAME = "BANKNAME";
+
+            bool isAdded = empRepo.SaveFiscalization(emp);
+
+            if (isAdded)
+            {
+                EmpModel lastInsertedEmp = empRepo.GetLastInsertedEmp();
+                return View("Popup", lastInsertedEmp);
+            }
+            else
+            {
+                ViewBag.Message = "Failed to save fiscalization details";
+            }
+
+            return View("Popup");
+        }
+        catch (Exception ex)
+        {
+            ViewBag.Error = "An error occurred: " + ex.Message;
+            return View("Index");
+        }
+    }
+
+    // GET: Fiscalization/Edit/5
+    public ActionResult Edit(string id)
+    {
+        EmpModel emp = empRepo.GetEmpModelById(id);
+        return View(emp);
+    }
+
+    // POST: Fiscalization/Edit/5
+    [HttpPost]
+    public ActionResult Edit(EmpModel emp)
+    {
+        try
+        {
+            if (ModelState.IsValid)
+            {
+                // Update the data in the database
+                bool updated = empRepo.Update(emp);
+
+                if (updated)
+                {
+                    // Redirect to the Index or another appropriate view
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Update failed");
+                    return View();
+                }
+            }
+            return View(emp);
+        }
+        catch (Exception e)
+        {
+            return View();
+        }
+    }
+}
+*******************************
+
+
 public EmpModel GetLastInsertedEmp()
 {
     connection();

@@ -1,71 +1,46 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using InApps.Models; // Import the necessary model
-
-namespace InApps.Repository
+public class EmpRepository
 {
-    public class EmpRepository
+    private const string connectionString = "FacilegalConn";
+
+    // Define a method to retrieve the last saved employee
+    public EmpModel GetLastSavedEmployee()
     {
-        private readonly string connectionString;
+        EmpModel emp = null;
 
-        public EmpRepository()
+        try
         {
-            // Initialize your database connection string here
-            connectionString = "Your_Connection_String_Here";
-        }
-
-        // Define a method to search for employees based on some criteria
-        public List<EmpModel> SearchEmpList(string searchCriteria)
-        {
-            List<EmpModel> empList = new List<EmpModel>();
-
-            try
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                connection.Open();
+
+                // Define your SQL query to retrieve the last saved employee
+                string query = "SELECT TOP 1 * FROM YourEmployeeTable ORDER BY ID DESC";
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
-                    connection.Open();
-                    // Define your SQL query here to search for employees based on the search criteria
-                    string query = "SELECT * FROM YourEmployeeTable WHERE YourSearchColumn = @SearchCriteria";
-
-                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.AddWithValue("@SearchCriteria", searchCriteria);
-
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        if (reader.Read())
                         {
-                            while (reader.Read())
+                            // Map the data from the database to your EmpModel class
+                            emp = new EmpModel
                             {
-                                // Map the data from the database to your EmpModel class
-                                EmpModel emp = new EmpModel
-                                {
-                                    // Map your columns here
-                                    // Example: ID = reader["ID"].ToString(),
-                                };
-
-                                empList.Add(emp);
-                            }
+                                // Map your columns here
+                                // Example: ID = reader["ID"].ToString(),
+                            };
                         }
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                // Handle exceptions here
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-
-            return empList;
         }
-
-        // Define your SaveFiscalization method as shown in the previous response
-        public bool SaveFiscalization(EmpModel emp)
+        catch (Exception ex)
         {
-            // Implement your SaveFiscalization method here
-            // This should insert the provided 'emp' object into your database
-            // Return true if the operation is successful, otherwise return false
-            // Handle exceptions as needed
+            // Handle exceptions here
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
+
+        return emp;
     }
+
+    // Other methods and repository code...
 }

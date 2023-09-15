@@ -1,60 +1,65 @@
 using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace InApps.Models
-{
-    public class EmpModel
-    {
-        public int ID { get; set; }
-        public string REFCODE { get; set; }
-        public string DATTIMSEND { get; set; }
-        public string BANKNIPT { get; set; }
-        public string PYMTORDNUM { get; set; }
-        public string PAYERNIPT { get; set; }
-        public string EINFIC { get; set; }
-        public string PYMTDATTIM { get; set; }
-        public string PAIDAMT { get; set; }
-        public string OVERPAIDAMT { get; set; }
-        public string PAIDCUR { get; set; }
-        public string TRANSACTIONCODE { get; set; }
-        public string PYMTTYPE { get; set; }
-        public string PYMTSTATUS { get; set; }
-        public string CODE { get; set; }
-        public string MESSAGE { get; set; }
-        public string USR { get; set; }
-        public string SELLERNIPT { get; set; }
-        public string INVOICEDATE { get; set; }
-        public string IBANNR { get; set; }
-        public string SWIFTNR { get; set; }
-        public string BANKNAME { get; set; }
-        public string QRCODEVAL { get; set; }
-        public string NIVF { get; set; }
-        public string STPROFILE { get; set; }
-    }
-}
-************************
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace InApps.Repository
 {
     public class EmpRepository
     {
-        // Your other repository methods
+        private readonly string connectionString; // Set your database connection string here
 
-        // Implement a search method
-        public List<EmpModel> SearchEmpList(string searchTerm)
+        public EmpRepository()
         {
-            // Assuming you have a list of employees named empList, replace this with your actual data source
-            List<EmpModel> empList = GetEmpList(); // You should replace this with your actual data retrieval method
+            connectionString = "Your_Connection_String_Here";
+        }
 
-            // Perform a case-insensitive search based on a property, e.g., Name
-            var filteredEmployees = empList
-                .Where(emp => emp.Name != null && emp.Name.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) >= 0)
-                .ToList();
+        public bool SaveFiscalization(EmpModel emp)
+        {
+            // Implement the logic to save fiscalization data to the database
+            // Return true if the data is successfully saved; otherwise, return false
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    SqlCommand cmd = new SqlCommand("INSERT INTO YourTableName (ID, QRCODEVAL, STPROFILE, NIVF, REFCODE, PYMTORDNUM, PAYERNIPT, EINFIC, PAIDAMT, PAIDCUR, TRANSACTIONCODE, PYMTTYPE, BANKNIPT, DATTIMSEND, PYMTDATTIM, OVERPAIDAMT, PYMTSTATUS, CODE, MESSAGE, USR, SELLERNIPT, INVOICEDATE, IBANNR, SWIFTNR, BANKNAME) VALUES (@ID, @QRCODEVAL, @STPROFILE, @NIVF, @REFCODE, @PYMTORDNUM, @PAYERNIPT, @EINFIC, @PAIDAMT, @PAIDCUR, @TRANSACTIONCODE, @PYMTTYPE, @BANKNIPT, @DATTIMSEND, @PYMTDATTIM, @OVERPAIDAMT, @PYMTSTATUS, @CODE, @MESSAGE, @USR, @SELLERNIPT, @INVOICEDATE, @IBANNR, @SWIFTNR, @BANKNAME)", connection);
 
-            return filteredEmployees;
+                    cmd.Parameters.AddWithValue("@ID", emp.ID);
+                    cmd.Parameters.AddWithValue("@QRCODEVAL", emp.QRCODEVAL);
+                    cmd.Parameters.AddWithValue("@STPROFILE", emp.STPROFILE);
+                    cmd.Parameters.AddWithValue("@NIVF", emp.NIVF);
+                    cmd.Parameters.AddWithValue("@REFCODE", emp.REFCODE);
+                    cmd.Parameters.AddWithValue("@PYMTORDNUM", emp.PYMTORDNUM);
+                    cmd.Parameters.AddWithValue("@PAYERNIPT", emp.PAYERNIPT);
+                    cmd.Parameters.AddWithValue("@EINFIC", emp.EINFIC);
+                    cmd.Parameters.AddWithValue("@PAIDAMT", emp.PAIDAMT);
+                    cmd.Parameters.AddWithValue("@PAIDCUR", emp.PAIDCUR);
+                    cmd.Parameters.AddWithValue("@TRANSACTIONCODE", emp.TRANSACTIONCODE);
+                    cmd.Parameters.AddWithValue("@PYMTTYPE", emp.PYMTTYPE);
+                    cmd.Parameters.AddWithValue("@BANKNIPT", emp.BANKNIPT);
+                    cmd.Parameters.AddWithValue("@DATTIMSEND", emp.DATTIMSEND);
+                    cmd.Parameters.AddWithValue("@PYMTDATTIM", emp.PYMTDATTIM);
+                    cmd.Parameters.AddWithValue("@OVERPAIDAMT", emp.OVERPAIDAMT);
+                    cmd.Parameters.AddWithValue("@PYMTSTATUS", emp.PYMTSTATUS);
+                    cmd.Parameters.AddWithValue("@CODE", emp.CODE);
+                    cmd.Parameters.AddWithValue("@MESSAGE", emp.MESSAGE);
+                    cmd.Parameters.AddWithValue("@USR", emp.USR);
+                    cmd.Parameters.AddWithValue("@SELLERNIPT", emp.SELLERNIPT);
+                    cmd.Parameters.AddWithValue("@INVOICEDATE", emp.INVOICEDATE);
+                    cmd.Parameters.AddWithValue("@IBANNR", emp.IBANNR);
+                    cmd.Parameters.AddWithValue("@SWIFTNR", emp.SWIFTNR);
+                    cmd.Parameters.AddWithValue("@BANKNAME", emp.BANKNAME);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    return rowsAffected > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception here for debugging purposes
+                return false;
+            }
         }
     }
 }

@@ -1,43 +1,60 @@
-@model InApps.Models.EmpModel
+[HttpPost]
+public ActionResult UpdateFiscalization(EmpModel emp)
+{
+    try
+    {
+        if (ModelState.IsValid)
+        {
+            bool isUpdated = empRepo.UpdateFiscalization(emp);
 
-@{
-    ViewBag.Title = "Edit Fiscalization";
+            if (isUpdated)
+            {
+                return RedirectToAction("Index"); // Redirect to the index page after successful update
+            }
+            else
+            {
+                ViewBag.Message = "Failed to update fiscalization details";
+                return View("Edit", emp); // Return to the edit view with an error message
+            }
+        }
+
+        return View("Edit", emp); // If ModelState is not valid, return to the edit view
+    }
+    catch (Exception ex)
+    {
+        ViewBag.Error = "An error occurred: " + ex.Message;
+        return View("Edit", emp); // Return to the edit view with an error message
+    }
 }
 
-<h2>Edit Fiscalization</h2>
 
-@using (Html.BeginForm("UpdateFiscalization", "Fiscalization", FormMethod.Post))
+*****
+REP
+public bool UpdateFiscalization(EmpModel emp)
 {
-    @Html.HiddenFor(model => model.ID)
+    try
+    {
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            SqlCommand cmd = new SqlCommand("UPDATE [dbo].[Fiscal] SET REFCODE = @REFCODE, PYMTORDNUM = @PYMTORDNUM, DATTIMSEND = @DATTIMSEND, BANKNIPT = @BANKNIPT, PAYERNIPT = @PAYERNIPT, /* Add more columns here */ WHERE ID = @ID", connection);
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.REFCODE)
-        @Html.TextBoxFor(model => model.REFCODE, new { @class = "form-control" })
-    </div>
+            cmd.Parameters.AddWithValue("@ID", emp.ID);
+            cmd.Parameters.AddWithValue("@REFCODE", emp.REFCODE);
+            cmd.Parameters.AddWithValue("@PYMTORDNUM", emp.PYMTORDNUM);
+            cmd.Parameters.AddWithValue("@DATTIMSEND", emp.DATTIMSEND);
+            cmd.Parameters.AddWithValue("@BANKNIPT", emp.BANKNIPT);
+            cmd.Parameters.AddWithValue("@PAYERNIPT", emp.PAYERNIPT);
+            /* Add more parameters for other columns */
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.PYMTORDNUM)
-        @Html.TextBoxFor(model => model.PYMTORDNUM, new { @class = "form-control" })
-    </div>
+            int rowsAffected = cmd.ExecuteNonQuery();
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.DATTIMSEND)
-        @Html.TextBoxFor(model => model.DATTIMSEND, new { @class = "form-control" })
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.BANKNIPT)
-        @Html.TextBoxFor(model => model.BANKNIPT, new { @class = "form-control" })
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.PAYERNIPT)
-        @Html.TextBoxFor(model => model.PAYERNIPT, new { @class = "form-control" })
-    </div>
-
-    <!-- Add more fields for editing here -->
-
-    <div class="form-group">
-        <input type="submit" value="Update" class="btn btn-primary" />
-    </div>
+            return rowsAffected > 0;
+        }
+    }
+    catch (Exception ex)
+    {
+        // Log the exception here for debugging purposes
+        return false;
+    }
 }

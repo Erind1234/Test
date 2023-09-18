@@ -30,31 +30,95 @@ public ActionResult UpdateFiscalization(EmpModel emp)
 
 *****
 REP
-public bool UpdateFiscalization(EmpModel emp)
-{
-    try
-    {
-        using (SqlConnection connection = new SqlConnection(connectionString))
-        {
-            connection.Open();
-            SqlCommand cmd = new SqlCommand("UPDATE [dbo].[Fiscal] SET REFCODE = @REFCODE, PYMTORDNUM = @PYMTORDNUM, DATTIMSEND = @DATTIMSEND, BANKNIPT = @BANKNIPT, PAYERNIPT = @PAYERNIPT, /* Add more columns here */ WHERE ID = @ID", connection);
 
-            cmd.Parameters.AddWithValue("@ID", emp.ID);
-            cmd.Parameters.AddWithValue("@REFCODE", emp.REFCODE);
-            cmd.Parameters.AddWithValue("@PYMTORDNUM", emp.PYMTORDNUM);
-            cmd.Parameters.AddWithValue("@DATTIMSEND", emp.DATTIMSEND);
-            cmd.Parameters.AddWithValue("@BANKNIPT", emp.BANKNIPT);
-            cmd.Parameters.AddWithValue("@PAYERNIPT", emp.PAYERNIPT);
-            /* Add more parameters for other columns */
-
-            int rowsAffected = cmd.ExecuteNonQuery();
-
-            return rowsAffected > 0;
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Popup</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .popup-container {
+            position: fixed;
+            top: 100;
+            left: 100;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.5);
         }
-    }
-    catch (Exception ex)
-    {
-        // Log the exception here for debugging purposes
-        return false;
-    }
-}
+
+        .popup-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<div class="popup-content">
+    <span class="close-button">&times;</span>
+    <h2>Edit Fiscalization Details</h2>
+
+</div>
+
+<body>
+    <div class="popup-container">
+        <div class="popup-content">
+            <span class="close-button">&times;</span>
+            <h2>Saved Fiscalization Details</h2>
+            
+                <table style="border-collapse: collapse;">
+
+                    <tr>
+                        <th style="border: 1px solid black; padding: 8px;"></th>
+                        <th style="border: 1px solid black; padding: 16px;">ID</th>
+                        <th style="border: 1px solid black; padding: 8px;">User</th>
+                        <th style="border: 1px solid black; padding: 8px;">Referenca</th>
+                        <th style="border: 1px solid black; padding: 8px;">Nr urdher</th>
+                        <th style="border: 1px solid black; padding: 8px;">NIPT Bleres</th>
+                        <th style="border: 1px solid black; padding: 8px;">NIVF</th>
+                        <th style="border: 1px solid black; padding: 8px;">Shuma</th>
+                        <th style="border: 1px solid black; padding: 8px;">Monedha</th>
+                        <th style="border: 1px solid black; padding: 8px;">Shitesi</th>
+                        <th style="border: 1px solid black; padding: 8px;">Lloji</th>
+                        <th style="border: 1px solid black; padding: 8px;">Nipt Shites</th>
+                    </tr>
+                    <tr>
+                       
+                            <td style="border: 1px solid black; padding: 8px;"></td>
+                            <td style="border: 1px solid black; padding: 16px;">@Model.ID</td>
+                            
+                            <td style="border: 1px solid black; padding: 8px;">@Model.USR</td>
+                            <td style="border: 1px solid black; padding: 8px;">@Model.REFCODE</td>
+                            <td style="border: 1px solid black; padding: 8px;">@Model.PYMTORDNUM</td>
+                            <td style="border: 1px solid black; padding: 8px;">@Model.PAYERNIPT</td>
+                            <td style="border: 1px solid black; padding: 8px;">@Model.NIVF</td>
+                            <td style="border: 1px solid black; padding: 8px;">@Model.PAIDAMT</td>
+                            <td style="border: 1px solid black; padding: 8px;">@Model.PAIDCUR</td>
+                            <td style="border: 1px solid black; padding: 8px;">@Model.TRANSACTIONCODE</td>
+                            <td style="border: 1px solid black; padding: 8px;">@Model.PYMTTYPE</td>
+                            <td style="border: 1px solid black; padding: 8px;">@Model.SELLERNIPT</td>
+                            @*<td><a href="@Url.Action("Details", "Fiscalization", new { ID = Model.ID })">Edit</a></td>*@
+                            <td>@Html.ActionLink("Edit", "EditEmpDetails", new { ID = Model.ID })</td>
+                        </tr>
+                </table>
+
+
+
+
+
+
+
+            </div>
+</body>
+</html>

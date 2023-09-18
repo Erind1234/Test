@@ -1,149 +1,242 @@
-using InApps.Models;
 using System;
-using System.Web.Mvc;
-using System.Data.SqlClient;
-using System.Configuration;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
-using InApps.Repository;
+using System.Data.SqlClient;
+using InApps.Models;
 
-namespace InApps.Controllers
+namespace InApps.Repository
 {
-    public class FiscalizationController : Controller
+    public class EmpRepository
     {
-        private EmpRepository empRepo;
+        private readonly string connectionString;
 
-        public FiscalizationController()
+        public EmpRepository()
         {
-            empRepo = new EmpRepository();
+            connectionString = ConfigurationManager.ConnectionStrings["FacilegalConn"].ConnectionString;
         }
-        public ActionResult Index(string searchBox)
+
+        public bool SaveFiscalization(EmpModel emp)
         {
             try
             {
-                string[] splitValues = searchBox.Split(';');
-
-                // Assign split values to ViewBag variables
-                ViewBag.p1 = splitValues.Length > 0 ? splitValues[0] : string.Empty;
-                ViewBag.p2 = splitValues.Length > 1 ? splitValues[1] : string.Empty;
-                ViewBag.p3 = splitValues.Length > 2 ? splitValues[2] : string.Empty;
-                ViewBag.p4 = splitValues.Length > 3 ? splitValues[3] : string.Empty;
-                ViewBag.p5 = splitValues.Length > 4 ? splitValues[4] : string.Empty;
-                ViewBag.p6 = splitValues.Length > 5 ? splitValues[5] : string.Empty;
-                ViewBag.p7 = splitValues.Length > 6 ? splitValues[6] : string.Empty;
-                ViewBag.p8 = splitValues.Length > 7 ? splitValues[7] : string.Empty;
-                ViewBag.p9 = splitValues.Length > 8 ? splitValues[8] : string.Empty;
-                ViewBag.p10 = splitValues.Length > 9 ? splitValues[9] : string.Empty;
-
-
-                return View("");
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Error = "An error occurred: " + ex.Message;
-                return View();
-            }
-        }
-    
-        // GET: Display the index view
-        public ActionResult Index()
-        {
-            EmpModel emp = new EmpModel();
-            return View(emp);
-        }
-
-        // GET: Display the AddFiscalization view
-        [HttpGet]
-        public ActionResult AddFiscalization()
-        {
-            return View();
-        }
-
-        // POST: Handle the form submission for saving fiscalization data
-        [HttpPost]
-        public ActionResult SaveFiscalization(EmpModel emp)
-        {
-            try
-            {
-                // Assuming your EmpModel has properties matching the form fields
-                bool isAdded = empRepo.SaveFiscalization(emp);
-
-                if (isAdded)
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    // Redirect to a view that shows the saved data or a success message
-                    return RedirectToAction("FiscalizationDetails", new { id = emp.ID });
-                }
-                else
-                {
-                    ViewBag.Message = "Failed to save fiscalization details";
-                    return View("AddFiscalization");
-                }
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Error = "An error occurred: " + ex.Message;
-                return View("AddFiscalization");
-            }
-        }
+                    connection.Open();
+                    string query = @"INSERT INTO [dbo].[Fiscal] (QRCODEVAL, STPROFILE, NIVF, REFCODE, PYMTORDNUM, PAYERNIPT, EINFIC, PAIDAMT, PAIDCUR, TRANSACTIONCODE, PYMTTYPE, BANKNIPT, DATTIMSEND, PYMTDATTIM, OVERPAIDAMT, PYMTSTATUS, CODE, MESSAGE, USR, SELLERNIPT, INVOICEDATE, IBANNR, SWIFTNR, BANKNAME)
+                                     VALUES (@QRCODEVAL, @STPROFILE, @NIVF, @REFCODE, @PYMTORDNUM, @PAYERNIPT, @EINFIC, @PAIDAMT, @PAIDCUR, @TRANSACTIONCODE, @PYMTTYPE, @BANKNIPT, @DATTIMSEND, @PYMTDATTIM, @OVERPAIDAMT, @PYMTSTATUS, @CODE, @MESSAGE, @USR, @SELLERNIPT, @INVOICEDATE, @IBANNR, @SWIFTNR, @BANKNAME)";
 
-        // GET: Display the details of a fiscalization record
-        public ActionResult FiscalizationDetails(int id)
-        {
-            EmpModel emp = empRepo.GetEmployeeById(id);
-
-            if (emp != null)
-            {
-                return View(emp);
-            }
-            else
-            {
-                ViewBag.Message = "Fiscalization record not found";
-                return RedirectToAction("Index");
-            }
-        }
-
-        // GET: Display the edit view for a fiscalization record
-        public ActionResult EditFiscalization(int id)
-        {
-            EmpModel emp = empRepo.GetEmployeeById(id);
-
-            if (emp != null)
-            {
-                return View(emp);
-            }
-            else
-            {
-                ViewBag.Message = "Fiscalization record not found";
-                return RedirectToAction("Index");
-            }
-        }
-        [HttpPost]
-        public ActionResult UpdateFiscalization(EmpModel emp)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    bool isUpdated = empRepo.UpdateFiscalization(emp);
-
-                    if (isUpdated)
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
-                        return RedirectToAction("Index"); // Redirect to the index page after successful update
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Failed to update fiscalization details";
-                        return View("Edit", emp); // Return to the edit view with an error message
+                        cmd.Parameters.AddWithValue("@QRCODEVAL", emp.QRCODEVAL);
+                        cmd.Parameters.AddWithValue("@STPROFILE", emp.STPROFILE);
+                        cmd.Parameters.AddWithValue("@NIVF", emp.NIVF);
+                        cmd.Parameters.AddWithValue("@REFCODE", emp.REFCODE);
+                        cmd.Parameters.AddWithValue("@PYMTORDNUM", emp.PYMTORDNUM);
+                        cmd.Parameters.AddWithValue("@PAYERNIPT", emp.PAYERNIPT);
+                        cmd.Parameters.AddWithValue("@EINFIC", emp.EINFIC);
+                        cmd.Parameters.AddWithValue("@PAIDAMT", emp.PAIDAMT);
+                        cmd.Parameters.AddWithValue("@PAIDCUR", emp.PAIDCUR);
+                        cmd.Parameters.AddWithValue("@TRANSACTIONCODE", emp.TRANSACTIONCODE);
+                        cmd.Parameters.AddWithValue("@PYMTTYPE", emp.PYMTTYPE);
+                        cmd.Parameters.AddWithValue("@BANKNIPT", emp.BANKNIPT);
+                        cmd.Parameters.AddWithValue("@DATTIMSEND", emp.DATTIMSEND);
+                        cmd.Parameters.AddWithValue("@PYMTDATTIM", emp.PYMTDATTIM);
+                        cmd.Parameters.AddWithValue("@OVERPAIDAMT", emp.OVERPAIDAMT);
+                        cmd.Parameters.AddWithValue("@PYMTSTATUS", emp.PYMTSTATUS);
+                        cmd.Parameters.AddWithValue("@CODE", emp.CODE);
+                        cmd.Parameters.AddWithValue("@MESSAGE", emp.MESSAGE);
+                        cmd.Parameters.AddWithValue("@USR", emp.USR);
+                        cmd.Parameters.AddWithValue("@SELLERNIPT", emp.SELLERNIPT);
+                        cmd.Parameters.AddWithValue("@INVOICEDATE", emp.INVOICEDATE);
+                        cmd.Parameters.AddWithValue("@IBANNR", emp.IBANNR);
+                        cmd.Parameters.AddWithValue("@SWIFTNR", emp.SWIFTNR);
+                        cmd.Parameters.AddWithValue("@BANKNAME", emp.BANKNAME);
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        return rowsAffected > 0;
                     }
                 }
-
-                return View("Edit", emp); // If ModelState is not valid, return to the edit view
             }
             catch (Exception ex)
             {
-                ViewBag.Error = "An error occurred: " + ex.Message;
-                return View("Edit", emp); // Return to the edit view with an error message
+                Console.WriteLine("An error occurred: " + ex.Message);
+                return false;
             }
         }
+
+        internal EmpModel GetEmployeeById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateFiscalization(EmpModel emp)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = @"UPDATE [dbo].[Fiscal] SET QRCODEVAL = @QRCODEVAL, STPROFILE = @STPROFILE, /* Update other fields here */
+                                     WHERE ID = @ID";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@ID", emp.ID);
+                        cmd.Parameters.AddWithValue("@QRCODEVAL", emp.QRCODEVAL);
+                        cmd.Parameters.AddWithValue("@STPROFILE", emp.STPROFILE);
+                        cmd.Parameters.AddWithValue("@NIVF", emp.NIVF);
+                        cmd.Parameters.AddWithValue("@REFCODE", emp.REFCODE);
+                        cmd.Parameters.AddWithValue("@PYMTORDNUM", emp.PYMTORDNUM);
+                        cmd.Parameters.AddWithValue("@PAYERNIPT", emp.PAYERNIPT);
+                        cmd.Parameters.AddWithValue("@EINFIC", emp.EINFIC);
+                        cmd.Parameters.AddWithValue("@PAIDAMT", emp.PAIDAMT);
+                        cmd.Parameters.AddWithValue("@PAIDCUR", emp.PAIDCUR);
+                        cmd.Parameters.AddWithValue("@TRANSACTIONCODE", emp.TRANSACTIONCODE);
+                        cmd.Parameters.AddWithValue("@PYMTTYPE", emp.PYMTTYPE);
+                        cmd.Parameters.AddWithValue("@BANKNIPT", emp.BANKNIPT);
+                        cmd.Parameters.AddWithValue("@DATTIMSEND", emp.DATTIMSEND);
+                        cmd.Parameters.AddWithValue("@PYMTDATTIM", emp.PYMTDATTIM);
+                        cmd.Parameters.AddWithValue("@OVERPAIDAMT", emp.OVERPAIDAMT);
+                        cmd.Parameters.AddWithValue("@PYMTSTATUS", emp.PYMTSTATUS);
+                        cmd.Parameters.AddWithValue("@CODE", emp.CODE);
+                        cmd.Parameters.AddWithValue("@MESSAGE", emp.MESSAGE);
+                        cmd.Parameters.AddWithValue("@USR", emp.USR);
+                        cmd.Parameters.AddWithValue("@SELLERNIPT", emp.SELLERNIPT);
+                        cmd.Parameters.AddWithValue("@INVOICEDATE", emp.INVOICEDATE);
+                        cmd.Parameters.AddWithValue("@IBANNR", emp.IBANNR);
+                        cmd.Parameters.AddWithValue("@SWIFTNR", emp.SWIFTNR);
+                        cmd.Parameters.AddWithValue("@BANKNAME", emp.BANKNAME);
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+                return false;
+            }
+        }
+
+        public EmpModel GetFiscalizationById(int id)
+        {
+            EmpModel emp = null;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT * FROM [dbo].[Fiscal] WHERE ID = @ID";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@ID", id);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                emp = new EmpModel
+                                {
+                                    ID = Convert.ToInt32(reader["ID"]),
+                                    QRCODEVAL = reader["QRCODEVAL"].ToString(),
+                                    STPROFILE = reader["STPROFILE"].ToString(),
+                                    PYMTORDNUM = reader["PYMTORDNUM"].ToString(),
+                                    DATTIMSEND = reader["DATTIMSEND"].ToString(),
+                                    BANKNIPT = reader["BANKNIPT"].ToString(),
+                                    PAYERNIPT = reader["PAYERNIPT"].ToString(),
+                                    EINFIC = reader["EINFIC"].ToString(),
+                                    PYMTDATTIM = reader["PYMTDATTIM"].ToString(),
+                                    PAIDAMT = reader["PAIDAMT"].ToString(),
+                                    OVERPAIDAMT = reader["OVERPAIDAMT"].ToString(),
+                                    PAIDCUR = reader["PAIDCUR"].ToString(),
+                                    TRANSACTIONCODE = reader["TRANSACTIONCODE"].ToString(),
+                                    PYMTTYPE = reader["PYMTTYPE"].ToString(),
+                                    PYMTSTATUS = reader["PYMTSTATUS"].ToString(),
+                                    CODE = reader["CODE"].ToString(),
+                                    MESSAGE = reader["MESSAGE"].ToString(),
+                                    USR = reader["USR"].ToString(),
+                                    SELLERNIPT = reader["SELLERNIPT"].ToString(),
+                                    INVOICEDATE = reader["INVOICEDATE"].ToString(),
+                                    IBANNR = reader["IBANNR"].ToString(),
+                                    SWIFTNR = reader["SWIFTNR"].ToString(),
+                                    BANKNAME = reader["BANKNAME"].ToString(),
+                                    NIVF = reader["NIVF"].ToString()
+                                    
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+            return emp;
+        }
+
+        public List<EmpModel> SearchFiscalizations(string searchBox)
+        {
+            List<EmpModel> fiscalizations = new List<EmpModel>();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    // Define your SQL query to search fiscalizations based on searchBox
+                    string query = "SELECT * FROM [dbo].[Fiscal] WHERE /* Your search criteria here */";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                EmpModel emp = new EmpModel
+                                {
+                                    ID = Convert.ToInt32(reader["ID"]),
+                                   
+                                    QRCODEVAL = reader["QRCODEVAL"].ToString(),
+                                    STPROFILE = reader["STPROFILE"].ToString(),
+                                    PYMTORDNUM = reader["PYMTORDNUM"].ToString(),
+                                    DATTIMSEND = reader["DATTIMSEND"].ToString(),
+                                    BANKNIPT = reader["BANKNIPT"].ToString(),
+                                    PAYERNIPT = reader["PAYERNIPT"].ToString(),
+                                    EINFIC = reader["EINFIC"].ToString(),
+                                    PYMTDATTIM = reader["PYMTDATTIM"].ToString(),
+                                    PAIDAMT = reader["PAIDAMT"].ToString(),
+                                    OVERPAIDAMT = reader["OVERPAIDAMT"].ToString(),
+                                    PAIDCUR = reader["PAIDCUR"].ToString(),
+                                    TRANSACTIONCODE = reader["TRANSACTIONCODE"].ToString(),
+                                    PYMTTYPE = reader["PYMTTYPE"].ToString(),
+                                    PYMTSTATUS = reader["PYMTSTATUS"].ToString(),
+                                    CODE = reader["CODE"].ToString(),
+                                    MESSAGE = reader["MESSAGE"].ToString(),
+                                    USR = reader["USR"].ToString(),
+                                    SELLERNIPT = reader["SELLERNIPT"].ToString(),
+                                    INVOICEDATE = reader["INVOICEDATE"].ToString(),
+                                    IBANNR = reader["IBANNR"].ToString(),
+                                    SWIFTNR = reader["SWIFTNR"].ToString(),
+                                    BANKNAME = reader["BANKNAME"].ToString(),
+                                    NIVF = reader["NIVF"].ToString()
+                                };
+                                fiscalizations.Add(emp);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+            return fiscalizations;
+        }
+
+       
+
+
     }
 }

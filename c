@@ -1,120 +1,43 @@
-using InApps.Models;
-using System;
-using System.Web.Mvc;
-using System.Data.SqlClient;
-using System.Configuration;
-using System.Collections.Generic;
-using System.Data;
-using InApps.Repository;
+@model InApps.Models.EmpModel
 
-namespace InApps.Controllers
+@{
+    ViewBag.Title = "Edit Fiscalization";
+}
+
+<h2>Edit Fiscalization</h2>
+
+@using (Html.BeginForm("UpdateFiscalization", "Fiscalization", FormMethod.Post))
 {
-    public class FiscalizationController : Controller
-    {
-        private EmpRepository empRepo;
+    @Html.HiddenFor(model => model.ID)
 
-        public FiscalizationController()
-        {
-            empRepo = new EmpRepository();
-        }
+    <div class="form-group">
+        @Html.LabelFor(model => model.REFCODE)
+        @Html.TextBoxFor(model => model.REFCODE, new { @class = "form-control" })
+    </div>
 
-        // GET: Display the index view
-        public ActionResult Index()
-        {
-            EmpModel emp = new EmpModel();
-            return View(emp);
-        }
+    <div class="form-group">
+        @Html.LabelFor(model => model.PYMTORDNUM)
+        @Html.TextBoxFor(model => model.PYMTORDNUM, new { @class = "form-control" })
+    </div>
 
-        // GET: Display the AddFiscalization view
-        [HttpGet]
-        public ActionResult AddFiscalization()
-        {
-            return View();
-        }
+    <div class="form-group">
+        @Html.LabelFor(model => model.DATTIMSEND)
+        @Html.TextBoxFor(model => model.DATTIMSEND, new { @class = "form-control" })
+    </div>
 
-        // POST: Handle the form submission for saving fiscalization data
-        [HttpPost]
-        public ActionResult SaveFiscalization(EmpModel emp)
-        {
-            try
-            {
-                // Assuming your EmpModel has properties matching the form fields
-                bool isAdded = empRepo.SaveFiscalization(emp);
+    <div class="form-group">
+        @Html.LabelFor(model => model.BANKNIPT)
+        @Html.TextBoxFor(model => model.BANKNIPT, new { @class = "form-control" })
+    </div>
 
-                if (isAdded)
-                {
-                    // Redirect to a view that shows the saved data or a success message
-                    return RedirectToAction("FiscalizationDetails", new { id = emp.ID });
-                }
-                else
-                {
-                    ViewBag.Message = "Failed to save fiscalization details";
-                    return View("AddFiscalization");
-                }
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Error = "An error occurred: " + ex.Message;
-                return View("AddFiscalization");
-            }
-        }
+    <div class="form-group">
+        @Html.LabelFor(model => model.PAYERNIPT)
+        @Html.TextBoxFor(model => model.PAYERNIPT, new { @class = "form-control" })
+    </div>
 
-        // GET: Display the details of a fiscalization record
-        public ActionResult FiscalizationDetails(int id)
-        {
-            EmpModel emp = empRepo.GetEmployeeById(id);
+    <!-- Add more fields for editing here -->
 
-            if (emp != null)
-            {
-                return View(emp);
-            }
-            else
-            {
-                ViewBag.Message = "Fiscalization record not found";
-                return RedirectToAction("Index");
-            }
-        }
-
-        // GET: Display the edit view for a fiscalization record
-        public ActionResult EditFiscalization(int id)
-        {
-            EmpModel emp = empRepo.GetEmployeeById(id);
-
-            if (emp != null)
-            {
-                return View(emp);
-            }
-            else
-            {
-                ViewBag.Message = "Fiscalization record not found";
-                return RedirectToAction("Index");
-            }
-        }
-
-        // POST: Handle the form submission for updating fiscalization data
-        [HttpPost]
-        public ActionResult UpdateFiscalization(EmpModel emp)
-        {
-            try
-            {
-                bool isUpdated = empRepo.UpdateFiscalization(emp);
-
-                if (isUpdated)
-                {
-                    // Redirect to a view that shows the updated data or a success message
-                    return RedirectToAction("FiscalizationDetails", new { id = emp.ID });
-                }
-                else
-                {
-                    ViewBag.Message = "Failed to update fiscalization details";
-                    return View("EditFiscalization", emp);
-                }
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Error = "An error occurred: " + ex.Message;
-                return View("EditFiscalization", emp);
-            }
-        }
-    }
+    <div class="form-group">
+        <input type="submit" value="Update" class="btn btn-primary" />
+    </div>
 }

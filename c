@@ -1,126 +1,125 @@
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
 using InApps.Models;
+using System;
+using System.Web.Mvc;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.Collections.Generic;
+using System.Data;
 
-namespace InApps.Repository
+using static InApps.Models.Fiscal;
+using static InApps.Models.FiscalLog;
+
+using System.Linq;
+using System.Collections;
+using InApps.Repository;
+using System.Web;
+
+namespace InApps.Controllers
 {
-    public class EmpRepository
+    public class FiscalizationController : Controller
     {
-        private readonly string connectionString;
+        private EmpRepository empRepo;
 
-        public EmpRepository()
+        public FiscalizationController()
         {
-            connectionString = ConfigurationManager.ConnectionStrings["FacilegalConn"].ConnectionString;
+            empRepo = new EmpRepository();
         }
 
-        // Get a list of all employees
-        public List<EmpModel> GetAllEmployees()
+        public ActionResult Index()
         {
-            List<EmpModel> empList = new List<EmpModel>();
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT * FROM [dbo].[Fiscal]", connection))
-                {
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            EmpModel emp = new EmpModel
-                            {
-                                ID = Convert.ToInt32(reader["ID"]),
-                                REFCODE = reader["REFCODE"].ToString(),
-                                PYMTORDNUM = reader["PYMTORDNUM"].ToString(),
-                                DATTIMSEND = reader["DATTIMSEND"].ToString(),
-                                BANKNIPT = reader["BANKNIPT"].ToString(),
-                                PAYERNIPT = reader["PAYERNIPT"].ToString(),
-                                EINFIC = reader["EINFIC"].ToString(),
-                                PYMTDATTIM = reader["PYMTDATTIM"].ToString(),
-                                PAIDAMT = reader["PAIDAMT"].ToString(),
-                                OVERPAIDAMT = reader["OVERPAIDAMT"].ToString(),
-                                PAIDCUR = reader["PAIDCUR"].ToString(),
-                                TRANSACTIONCODE = reader["TRANSACTIONCODE"].ToString(),
-                                PYMTTYPE = reader["PYMTTYPE"].ToString(),
-                                PYMTSTATUS = reader["PYMTSTATUS"].ToString(),
-                                CODE = reader["CODE"].ToString(),
-                                MESSAGE = reader["MESSAGE"].ToString(),
-                                USR = reader["USR"].ToString(),
-                                SELLERNIPT = reader["SELLERNIPT"].ToString(),
-                                INVOICEDATE = reader["INVOICEDATE"].ToString(),
-                                IBANNR = reader["IBANNR"].ToString(),
-                                SWIFTNR = reader["SWIFTNR"].ToString(),
-                                BANKNAME = reader["BANKNAME"].ToString(),
-                                QRCODEVAL = reader["QRCODEVAL"].ToString(),
-                                NIVF = reader["NIVF"].ToString(),
-                                STPROFILE = reader["STPROFILE"].ToString()
-                            };
-                            empList.Add(emp);
-                        }
-                    }
-                }
-            }
-
-            return empList;
+            EmpModel emp = new EmpModel();
+            return View(emp);
         }
 
-        // Save fiscalization data to the database
-        public bool SaveFiscalization(EmpModel emp)
+        private const string connectionString = "FacilegalConn";
+
+        [HttpGet]
+        public ActionResult AddFiscalization()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Index(string searchBox)
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                string[] splitValues = searchBox.Split(';');
+
+                // Assign split values to ViewBag variables
+                ViewBag.p1 = splitValues.Length > 0 ? splitValues[0] : string.Empty;
+                ViewBag.p2 = splitValues.Length > 1 ? splitValues[1] : string.Empty;
+                ViewBag.p3 = splitValues.Length > 2 ? splitValues[2] : string.Empty;
+                ViewBag.p4 = splitValues.Length > 3 ? splitValues[3] : string.Empty;
+                ViewBag.p5 = splitValues.Length > 4 ? splitValues[4] : string.Empty;
+                ViewBag.p6 = splitValues.Length > 5 ? splitValues[5] : string.Empty;
+                ViewBag.p7 = splitValues.Length > 6 ? splitValues[6] : string.Empty;
+                ViewBag.p8 = splitValues.Length > 7 ? splitValues[7] : string.Empty;
+                ViewBag.p9 = splitValues.Length > 8 ? splitValues[8] : string.Empty;
+                ViewBag.p10 = splitValues.Length > 9 ? splitValues[9] : string.Empty;
+
+                List<EmpModel> searchResults = empRepo.SearchEmpList(searchBox);
+
+                return View("searchResults", searchResults);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "An error occurred: " + ex.Message;
+                return View();
+            }
+        }
+
+        public ActionResult SaveFiscalization(string QRCODEVAL, string IBANNR, string STPROFILE, string REFCODE, string PYMTORDNUM, string PAYERNIPT, string EINFIC, string PAIDAMT, string PAIDCUR, string TRANSACTIONCODE, string PYMTTYPE, string BANKNAME, string NIVF, string INVOICEDATE)
+        {
+            try
+            {
+                EmpModel emp = new EmpModel();
+
+                emp.QRCODEVAL = "Null";
+                emp.STPROFILE = "Null";
+                emp.NIVF = NIVF;
+                emp.REFCODE = REFCODE;
+                emp.PYMTORDNUM = PYMTORDNUM;
+                emp.PAYERNIPT = PAYERNIPT;
+                emp.EINFIC = "Null";
+                emp.PAIDAMT = PAIDAMT;
+                emp.PAIDCUR = PAIDCUR;
+                emp.TRANSACTIONCODE = TRANSACTIONCODE;
+                emp.PYMTTYPE = "Null";
+                emp.BANKNIPT = "Null";
+                emp.DATTIMSEND = "Null";
+                emp.PYMTDATTIM = "Null";
+                emp.OVERPAIDAMT = "Null";
+                emp.PYMTSTATUS = "Null";
+                emp.CODE = "Null";
+                emp.MESSAGE = "Null";
+                emp.USR = "Null";
+                emp.SELLERNIPT = "Null";
+                emp.INVOICEDATE = INVOICEDATE;
+                emp.IBANNR = IBANNR;
+                emp.SWIFTNR = "Null";
+                emp.BANKNAME = "BANKNAME";
+
+                bool isAdded = empRepo.SaveFiscalization(emp);
+
+                if (isAdded)
                 {
-                    connection.Open();
-                    using (SqlCommand cmd = new SqlCommand("INSERT INTO [dbo].[Fiscal] (REFCODE, PYMTORDNUM, DATTIMSEND, BANKNIPT, PAYERNIPT, EINFIC, PYMTDATTIM, PAIDAMT, OVERPAIDAMT, PAIDCUR, TRANSACTIONCODE, PYMTTYPE, PYMTSTATUS, CODE, MESSAGE, USR, SELLERNIPT, INVOICEDATE, IBANNR, SWIFTNR, BANKNAME, QRCODEVAL, NIVF, STPROFILE) VALUES (@REFCODE, @PYMTORDNUM, @DATTIMSEND, @BANKNIPT, @PAYERNIPT, @EINFIC, @PYMTDATTIM, @PAIDAMT, @OVERPAIDAMT, @PAIDCUR, @TRANSACTIONCODE, @PYMTTYPE, @PYMTSTATUS, @CODE, @MESSAGE, @USR, @SELLERNIPT, @INVOICEDATE, @IBANNR, @SWIFTNR, @BANKNAME, @QRCODEVAL, @NIVF, @STPROFILE)", connection))
-                    {
-                        cmd.Parameters.AddWithValue("@REFCODE", emp.REFCODE);
-                        cmd.Parameters.AddWithValue("@PYMTORDNUM", emp.PYMTORDNUM);
-                        cmd.Parameters.AddWithValue("@DATTIMSEND", emp.DATTIMSEND);
-                        cmd.Parameters.AddWithValue("@BANKNIPT", emp.BANKNIPT);
-                        cmd.Parameters.AddWithValue("@PAYERNIPT", emp.PAYERNIPT);
-                        cmd.Parameters.AddWithValue("@EINFIC", emp.EINFIC);
-                        cmd.Parameters.AddWithValue("@PYMTDATTIM", emp.PYMTDATTIM);
-                        cmd.Parameters.AddWithValue("@PAIDAMT", emp.PAIDAMT);
-                        cmd.Parameters.AddWithValue("@OVERPAIDAMT", emp.OVERPAIDAMT);
-                        cmd.Parameters.AddWithValue("@PAIDCUR", emp.PAIDCUR);
-                        cmd.Parameters.AddWithValue("@TRANSACTIONCODE", emp.TRANSACTIONCODE);
-                        cmd.Parameters.AddWithValue("@PYMTTYPE", emp.PYMTTYPE);
-                        cmd.Parameters.AddWithValue("@PYMTSTATUS", emp.PYMTSTATUS);
-                        cmd.Parameters.AddWithValue("@CODE", emp.CODE);
-                        cmd.Parameters.AddWithValue("@MESSAGE", emp.MESSAGE);
-                        cmd.Parameters.AddWithValue("@USR", emp.USR);
-                        cmd.Parameters.AddWithValue("@SELLERNIPT", emp.SELLERNIPT);
-                        cmd.Parameters.AddWithValue("@INVOICEDATE", emp.INVOICEDATE);
-                        cmd.Parameters.AddWithValue("@IBANNR", emp.IBANNR);
-                        cmd.Parameters.AddWithValue("@SWIFTNR", emp.SWIFTNR);
-                        cmd.Parameters.AddWithValue("@BANKNAME", emp.BANKNAME);
-                        cmd.Parameters.AddWithValue("@QRCODEVAL", emp.QRCODEVAL);
-                        cmd.Parameters.AddWithValue("@NIVF", emp.NIVF);
-                        cmd.Parameters.AddWithValue("@STPROFILE", emp.STPROFILE);
-
-                        int rowsAffected = cmd.ExecuteNonQuery();
-
-                        return rowsAffected > 0; // Return true if data is saved successfully
-                    }
+                    EmpModel lastSavedEmp = empRepo.GetLastSavedEmployee();
+                    return View("Popup", lastSavedEmp);
+                }
+                else
+                {
+                    ViewBag.Message = "Failed to save fiscalization details";
+                    return View("Popup");
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception here for debugging purposes
-                return false;
+                ViewBag.Error = "An error occurred: " + ex.Message;
+                return View("Index");
             }
         }
 
-        // Other methods and repository code...
-
-        internal List<EmpModel> SearchEmpList(string searchBox)
-        {
-            // Implement the search logic here
-            throw new NotImplementedException();
-        }
+        // Other methods and controller code...
     }
 }

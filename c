@@ -1,4 +1,9 @@
- SqlCommand getIdCommand = new SqlCommand("SELECT SCOPE_IDENTITY()", con);
-    emp.ID = Convert.ToInt32(getIdCommand.ExecuteScalar());
+SqlCommand getIdCommand = new SqlCommand("SELECT SCOPE_IDENTITY() AS NewID", con);
+            SqlDataReader reader = getIdCommand.ExecuteReader();
 
-    con.Close();
+            if (reader.Read() && reader["NewID"] != DBNull.Value)
+            {
+                emp.ID = Convert.ToInt32(reader["NewID"]);
+            }
+
+            reader.Close();

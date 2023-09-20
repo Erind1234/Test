@@ -1,164 +1,78 @@
-using InApps.Models;
-using System;
-using System.Web.Mvc;
-using System.Data.SqlClient;
-using System.Configuration;
-using System.Collections.Generic;
-using System.Data;
-using static InApps.Models.Fiscal;
-using static InApps.Models.FiscalLog;
-using System.Linq;
-using System.Collections;
-using InApps.Repository;
-using System.Web;
-
-namespace InApps.Controllers
-{
-
-
-    public class FiscalizationController : Controller
-    {
-
-        private EmpRepository empRepo;
-
-        public FiscalizationController()
-        {
-            empRepo = new EmpRepository();
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Popup</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .popup-container {
+            position: fixed;
+            top: 100;
+            left: 100;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.5);
         }
 
-
-        //public ActionResult Index()
-        //{
-        //    return View();
-
-        //}
-
-
-        public ActionResult Index()
-        {
-            EmpModel emp = new EmpModel();
-
-            return View(emp);
-
+        .popup-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
-
-        private const string connectionString = "FacilegalConn";
-        [HttpGet]
-        public ActionResult AddFiscalization()
-        {
-            return View();
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
         }
+    </style>
+</head>
 
+<body>
+    <div class="popup-container">
+        <div class="popup-content">
+            <span class="close-button">&times;</span>
+            <h2>Saved Fiscalization Details</h2>
 
-        [HttpPost]
-        public ActionResult Index(string searchBox)
-        {
-            try
-            {
-                string[] splitValues = searchBox.Split(';');
-
-                // Assign split values to ViewBag variables
-                ViewBag.p1 = splitValues.Length > 0 ? splitValues[0] : string.Empty;
-                ViewBag.p2 = splitValues.Length > 1 ? splitValues[1] : string.Empty;
-                ViewBag.p3 = splitValues.Length > 2 ? splitValues[2] : string.Empty;
-                ViewBag.p4 = splitValues.Length > 3 ? splitValues[3] : string.Empty;
-                ViewBag.p5 = splitValues.Length > 4 ? splitValues[4] : string.Empty;
-                ViewBag.p6 = splitValues.Length > 5 ? splitValues[5] : string.Empty;
-                ViewBag.p7 = splitValues.Length > 6 ? splitValues[6] : string.Empty;
-                ViewBag.p8 = splitValues.Length > 7 ? splitValues[7] : string.Empty;
-                ViewBag.p9 = splitValues.Length > 8 ? splitValues[8] : string.Empty;
-                ViewBag.p10 = splitValues.Length > 9 ? splitValues[9] : string.Empty;
-
-
-                return View("");
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Error = "An error occurred: " + ex.Message;
-                return View();
-            }
-        }
-
-
-
-        [HttpPost]
-        public ActionResult SaveFiscalization(EmpModel emp)
-        {
-            try
-            {
-                int newlyInsertedID = empRepo.SaveFiscalization(emp);
-
-                if (newlyInsertedID > 0)
-                {
-                    // Redirect to an edit view for the newly inserted row
-                    return RedirectToAction("Popup");
-                }
-                else
-                {
-                    ViewBag.Message = "Failed to save fiscalization details.";
-                }
-
-                return View("Popup");
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Error = "An error occurred: " + ex.Message;
-                return View("Index");
-            }
-        }
-
-        
-
-        [HttpGet]
-        public ActionResult EditFiscalization(int ID)
-        {
-            // Fetch the fiscalization record by ID from the database
-            EmpModel emp = empRepo.GetFiscalizationById(ID);
-
-            if (emp == null)
-            {
-                return HttpNotFound();
-            }
-
-            return View(emp);
-        }
-
-        [HttpPost]
-        public ActionResult UpdateFiscalization(EmpModel emp)
-        {
-            try
-            {
-                
-                    bool isUpdated = empRepo.UpdateFiscalization(emp);
-
-                    if (isUpdated)
-                    {
-                        return View("Popup",emp); // Redirect to the list of fiscalizations
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Failed to update fiscalization details.";
-                    }
-                return View("Index");
-                }
-
-
-            catch (Exception ex)
-            {
-                ViewBag.Error = "An error occurred: " + ex.Message;
-                return View("Index", emp);
-            }
-       }
-
-
-
-
-
-
-
-
-
-
-    }
-}
+            <table style="border-collapse: collapse;">
+                <tr>
+                    <th style="border: 1px solid black; padding: 8px;"></th>
+                    <th style="border: 1px solid black; padding: 16px;">ID</th>
+                    <th style="border: 1px solid black; padding: 8px;">User</th>
+                    <th style="border: 1px solid black; padding: 8px;">Referenca</th>
+                    <th style="border: 1px solid black; padding: 8px;">Nr urdher</th>
+                    <th style="border: 1px solid black; padding: 8px;">NIPT Bleres</th>
+                    <th style="border: 1px solid black; padding: 8px;">NIVF</th>
+                    <th style="border: 1px solid black; padding: 8px;">Shuma</th>
+                    <th style="border: 1px solid black; padding: 8px;">Monedha</th>
+                    <th style="border: 1px solid black; padding: 8px;">Shitesi</th>
+                    <th style="border: 1px solid black; padding: 8px;">Lloji</th>
+                    <th style="border: 1px solid black; padding: 8px;">Nipt Shites</th>
+                    <th style="border: 1px solid black; padding: 8px;">Edit</th> <!-- Add Edit column -->
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black; padding: 8px;"></td>
+                    <td style="border: 1px solid black; padding: 16px;">@Model.ID</td>
+                    <td style="border: 1px solid black; padding: 8px;">@Model.USR</td>
+                    <td style="border: 1px solid black; padding: 8px;">@Model.REFCODE</td>
+                    <td style="border: 1px solid black; padding: 8px;">@Model.PYMTORDNUM</td>
+                    <td style="border: 1px solid black; padding: 8px;">@Model.PAYERNIPT</td>
+                    <td style="border: 1px solid black; padding: 8px;">@Model.NIVF</td>
+                    <td style="border: 1px solid black; padding: 8px;">@Model.PAIDAMT</td>
+                    <td style="border: 1px solid black; padding: 8px;">@Model.PAIDCUR</td>
+                    <td style="border: 1px solid black; padding: 8px;">@Model.TRANSACTIONCODE</td>
+                    <td style="border: 1px solid black; padding: 8px;">@Model.PYMTTYPE</td>
+                    <td style="border: 1px solid black; padding: 8px;">@Model.SELLERNIPT</td>
+                    <td style="border: 1px solid black; padding: 8px;">
+                        <a href="@Url.Action("EditFiscalization", "Fiscalization", new { ID = Model.ID })" class="btn btn-primary">Edit</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

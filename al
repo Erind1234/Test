@@ -1,55 +1,48 @@
-public class FiscalizationController : Controller
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using InApps.Models;
+
+namespace InApps.Repository
 {
-    // ... (your existing code)
-
-    [HttpPost]
-    public ActionResult Index(string searchBox, string refCodeSearchBox)
+    public class EmpRepository
     {
-        try
+        private readonly string connectionString = "YourConnectionString";
+
+        public List<EmpModel> SearchByRefcode(string refcode)
         {
-            List<EmpModel> matchingRows = null;
+            List<EmpModel> results = new List<EmpModel>();
 
-            if (!string.IsNullOrEmpty(refCodeSearchBox))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                // Perform a search by REFCODE and return matching rows
-                matchingRows = empRepo.GetFiscalizationByREFCODE(refCodeSearchBox);
-            }
-            else if (!string.IsNullOrEmpty(searchBox))
-            {
-                string[] splitValues = searchBox.Split(';');
-                // Assign split values to ViewBag variables
-                ViewBag.p1 = splitValues.Length > 0 ? splitValues[0] : string.Empty;
-                ViewBag.p2 = splitValues.Length > 1 ? splitValues[1] : string.Empty;
-                // ... (other ViewBag assignments)
-            }
-            else
-            {
-                // Handle other cases or return all rows
-                matchingRows = empRepo.GetAllFiscalizations();
+                using (SqlCommand cmd = new SqlCommand("YourStoredProcedureName", connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // Add parameters to the stored procedure
+                    cmd.Parameters.Add(new SqlParameter("@Refcode", refcode));
+
+                    connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            EmpModel emp = new EmpModel
+                            {
+                                // Map the data from the reader to your EmpModel properties
+                                // For example: Property1 = reader["ColumnName1"].ToString()
+                            };
+                            results.Add(emp);
+                        }
+                    }
+                }
             }
 
-            return View(matchingRows); // Return the matching rows to the view
+            return results;
         }
-        catch (Exception ex)
-        {
-            ViewBag.Error = "An error occurred: " + ex.Message;
-            return View();
-        }
-    }
 
-    // ... (your existing code)
-
-    public List<EmpModel> GetFiscalizationByREFCODE(string refCode)
-    {
-        // Implement the logic to retrieve fiscalization records by REFCODE from the database
-        // Example: return dbContext.Fiscalizations.Where(f => f.REFCODE == refCode).ToList();
+        // Other repository methods for CRUD operations...
     }
-
-    public List<EmpModel> GetAllFiscalizations()
-    {
-        // Implement the logic to retrieve all fiscalization records from the database
-        // Example: return dbContext.Fiscalizations.ToList();
-    }
-    
-    // ... (your existing code)
 }

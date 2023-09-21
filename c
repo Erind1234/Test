@@ -1,17 +1,22 @@
-[HttpPost]
-        public ActionResult SearchByRefcode(string searchBox)
-        {
-            try
-            {
-                // Call the stored procedure to search by REFCODE
-                List<EmpModel> searchResults = empRepo.SearchByRefcode(searchBox);
+while (reader.Read())
+{
+    EmpModel emp = new EmpModel
+    {
+        Property1 = reader["Column1"] != DBNull.Value ? reader["Column1"].ToString() : string.Empty,
+        Property2 = reader["Column2"] != DBNull.Value ? reader["Column2"].ToString() : string.Empty,
+        // Map other properties similarly...
+    };
+    results.Add(emp);
+}
 
-                // Pass the search results to a view
-                return View("SearchResults", searchResults);
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Error = "An error occurred: " + ex.Message;
-                return View("Index");
-            }
-        }
+
+
+
+CREATE PROCEDURE YourStoredProcedureName
+    @Refcode NVARCHAR(255)
+AS
+BEGIN
+    SELECT Column1, Column2, Column3
+    FROM YourTable
+    WHERE Refcode = @Refcode;
+END

@@ -1,169 +1,190 @@
-@model InApps.Models.EmpModel
+using InApps.Models;
+using System;
+using System.Web.Mvc;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.Collections.Generic;
+using System.Data;
+using static InApps.Models.Fiscal;
+using static InApps.Models.FiscalLog;
+using System.Linq;
+using System.Collections;
+using InApps.Repository;
+using System.Web;
 
-@{
-    ViewBag.Title = "Index";
-}
+namespace InApps.Controllers
+{
 
-<style>
-    /* Add CSS styles for freezing the table and the popup */
-    .fixed-table {
-        position: fixed;
-        top: 400px;
-        left: 400px;
-        width: 100%;
-        height: 600px; /* Adjust the height as per your needs */
-        overflow-y: auto;
-    }
 
-    .popup {
-        position: fixed;
-        bottom: 500px; /* Adjust the position as per your needs */
-        left: 600px; /* Adjust the position as per your needs */
-        background-color: white;
-        padding: 40px;
-        border: 1px solid black;
-    }
-</style>
-
-<div class="content-body">
-    <div class="container-fluid">
-        <div class="row page-titles mx-0">
-            <div class="col-sm-6 p-md-0">
-                <div class="welcome-text">
-                    <h4>Register Fiscal Data</h4>
-                    <p class="mb-0"></p>
-                </div>
-            </div>
-            <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="javascript:void(0)">Register Fiscal Data</a></li>
-                    <li class="breadcrumb-item active"><a href="javascript:void(0)">Index</a></li>
-                </ol>
-            </div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <form method="post" id="fiscal">
-            <div class="table-responsive" style="align-content:center"></div>
-        </form>
-    </div>
-
-    <h1>Fiscalization</h1>
-
-    @using (Html.BeginForm("Index", "Fiscalization", FormMethod.Post))
+    public class FiscalizationController : Controller
     {
-        <input type="text" name="searchBox" />
-        <input type="submit" value="Search" />
-    }
 
-    <div>
-        <input type="text" id="refcodeSearchBox" />
-        <button id="searchByRefcode">Search by REFCODE</button>
-    </div>
+        private EmpRepository empRepo;
 
-    <div id="resultTable" style="display: none;">
-        <!-- Table content will be displayed here -->
-    </div>
-
-    <div class="fixed-table">
-        @if (!string.IsNullOrEmpty(ViewBag.p1))
+        public FiscalizationController()
         {
-            using (Html.BeginForm("SaveFiscalization", "Fiscalization", FormMethod.Post))
+            empRepo = new EmpRepository();
+        }
+
+
+        //public ActionResult Index()
+        //{
+        //    return View();
+
+        //}
+
+
+        public ActionResult Index()
+        {
+            EmpModel emp = new EmpModel();
+
+            return View(emp);
+
+        }
+
+
+        private const string connectionString = "FacilegalConn";
+        [HttpGet]
+        public ActionResult AddFiscalization()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public ActionResult Index(string searchBox)
+        {
+            try
             {
-                <div style="display: flex; justify-content: center; align-items: center; height: 50vh;">
-                    <div style="text-align: center; background-color: #e7e7ff;">
-                        <table>
-                            <tr>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td>@Html.Label("Numri Urdhrit")</td>
-                                <td>@Html.TextBox("PYMTORDNUM")</td>
-                                <td>@Html.Label("Invoice Date:")</td>
-                                <td>@Html.TextBoxFor(model => model.INVOICEDATE, new { @Value = ViewBag.p4 })</td>
-                            </tr>
-                            <!-- Add more form fields as needed -->
+                string[] splitValues = searchBox.Split(';');
 
-                            <tr>
-                                <td>@Html.Label("Referenca e Teller:")</td>
-                                <td>@Html.TextBox("REFCODE")</td>
-                            </tr>
+                // Assign split values to ViewBag variables
+                ViewBag.p1 = splitValues.Length > 0 ? splitValues[0] : string.Empty;
+                ViewBag.p2 = splitValues.Length > 1 ? splitValues[1] : string.Empty;
+                ViewBag.p3 = splitValues.Length > 2 ? splitValues[2] : string.Empty;
+                ViewBag.p4 = splitValues.Length > 3 ? splitValues[3] : string.Empty;
+                ViewBag.p5 = splitValues.Length > 4 ? splitValues[4] : string.Empty;
+                ViewBag.p6 = splitValues.Length > 5 ? splitValues[5] : string.Empty;
+                ViewBag.p7 = splitValues.Length > 6 ? splitValues[6] : string.Empty;
+                ViewBag.p8 = splitValues.Length > 7 ? splitValues[7] : string.Empty;
+                ViewBag.p9 = splitValues.Length > 8 ? splitValues[8] : string.Empty;
+                ViewBag.p10 = splitValues.Length > 9 ? splitValues[9] : string.Empty;
 
-                            <!-- Add more form fields as needed -->
 
-                            <tr>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td>&nbsp;</td>
-                            </tr>
-                        </table>
-                        <div class="form-group">
-                            <div class="col-md-offset-2 col-md-10">
-                                <input type="submit" value="Ruaj" class="btn btn-default" />
-                                <button type="button" onclick="deleteRow()" class="btn btn-default">Delete</button>
-                                <input type="reset" value="Skanim i Ri" class="btn btn-default" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                return View("");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "An error occurred: " + ex.Message;
+                return View();
             }
         }
-    </div>
 
-    <div class="popup" id="popupWindow" style="display: none;">
-        <h3>Saved Data</h3>
-        <p> @ViewBag.savedData</p>
-    </div>
 
-    <script>
-        // Function to handle the click event of the "Save" button
-        function showPopup() {
-            document.getElementById("popupWindow").style.display = "block";
-        }
 
-        // Function to handle the click event of the "Edit" button
-        function editTable() {
-            history.back();
-        }
+        [HttpPost]
+        public ActionResult SaveFiscalization(EmpModel emp)
+        {
+            try
+            {
+                int newlyInsertedID = empRepo.SaveFiscalization(emp);
 
-        // Show the popup window when the page loads if the savedData exists
-        window.onload = function () {
-            var savedData = "@ViewBag.savedData";
-            if (savedData) {
-                showPopup();
-            }
-        }
-        
-        // Function to handle the click event of the "Search by REFCODE" button
-        $(document).ready(function () {
-            $("#searchByRefcode").click(function () {
-                var refcode = $("#refcodeSearchBox").val();
-                if (refcode) {
-                    $.ajax({
-                        url: "/Fiscalization/SearchByRefcode",
-                        data: { refcode: refcode },
-                        type: "GET",
-                        dataType: "html",
-                        success: function (data) {
-                            $("#resultTable").html(data);
-                            $("#resultTable").show();
-                        },
-                        error: function () {
-                            alert("An error occurred while fetching data.");
-                        }
-                    });
+                if (newlyInsertedID > 0)
+                {
+
+
+                    // Redirect to an edit view for the newly inserted row
+                    emp.ID = newlyInsertedID;
+                    return View("Popup",emp);
                 }
-            });
-        });
-    </script>
+                else
+                {
+                    ViewBag.Message = "Failed to save fiscalization details.";
+                }
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
-    <script src="~/Scripts/jquery.validate.min.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-</div>
+                return View("Popup");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "An error occurred: " + ex.Message;
+                return View("Index");
+            }
+        }
+
+        
+
+        [HttpGet]
+        public ActionResult EditFiscalization(int ID)
+        {
+            // Fetch the fiscalization record by ID from the database
+            EmpModel emp = empRepo.GetFiscalizationById(ID);
+
+            if (emp == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(emp);
+        }
+         
+        [HttpPost]
+        public ActionResult UpdateFiscalization(EmpModel emp)
+        {
+            try
+            {
+                
+                    bool isUpdated = empRepo.UpdateFiscalization(emp);
+
+                    if (isUpdated)
+                    {
+                        return View("Popup",emp); // Redirect to the list of fiscalizations
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Failed to update fiscalization details.";
+                    }
+                return View("Index");
+                }
+
+
+            catch (Exception ex)
+            {
+                ViewBag.Error = "An error occurred: " + ex.Message;
+                return View("Index", emp);
+            }
+       }
+
+        [HttpPost]
+        public ActionResult DeleteFiscalization(int ID)
+        {
+            try
+            {
+                bool isDeleted = empRepo.DeleteFiscalization(ID);
+
+                if (isDeleted)
+                {
+                    // Return a success response
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    // Return an error response
+                    return Json(new { success = false, message = "Failed to delete fiscalization record." });
+                }
+            }
+            catch (Exception ex)
+            {
+                // Return an error response in case of exceptions
+                return Json(new { success = false, message = "An error occurred: " + ex.Message });
+            }
+        }
+
+
+
+
+
+
+
+
+    }
+}

@@ -1,9 +1,39 @@
+@model List<Fiscal>  <!-- Use the appropriate model class here -->
 
-CREATE PROCEDURE REF
-    @Refcode NVARCHAR(255)
-AS
-BEGIN
-    SELECT ID, USR, REFCODE,INVOICEDATE,PYMTORDNUM,PAYERNIPT,NIVF,PAIDAMT,PAIDCUR,TRANSACTIONCODE,PYMTTYPE,SELLERNIPT
-    FROM Fiscal
-    WHERE Refcode = @Refcode;
-END
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>USR</th>
+            <th>REFCODE</th>
+            <th>INVOICEDATE</th>
+            <th>PYMTORDNUM</th>
+            <th>PAYERNIPT</th>
+            <th>NIVF</th>
+            <th>PAIDAMT</th>
+            <th>PAIDCUR</th>
+            <th>TRANSACTIONCODE</th>
+            <th>PYMTTYPE</th>
+            <th>SELLERNIPT</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ID</td>
+                <td>@item.USR</td>
+                <td>@item.REFCODE</td>
+                <td>@item.INVOICEDATE</td>
+                <td>@item.PYMTORDNUM</td>
+                <td>@item.PAYERNIPT</td>
+                <td>@item.NIVF</td>
+                <td>@item.PAIDAMT</td>
+                <td>@item.PAIDCUR</td>
+                <td>@item.TRANSACTIONCODE</td>
+                <td>@item.PYMTTYPE</td>
+                <td>@item.SELLERNIPT</td>
+            </tr>
+        }
+    </tbody>
+</table>

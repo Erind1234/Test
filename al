@@ -1,2 +1,9 @@
-<td><input type="text" name="PYMTORDNUM" value="@ViewBag.p2" class="form-control" /></td>
-<td><input type="text" name="INVOICEDATE" value="@ViewBag.p4" class="form-control" /></td>
+
+CREATE PROCEDURE REF
+    @Refcode NVARCHAR(255)
+AS
+BEGIN
+    SELECT ID, USR, REFCODE,INVOICEDATE,PYMTORDNUM,PAYERNIPT,NIVF,PAIDAMT,PAIDCUR,TRANSACTIONCODE,PYMTTYPE,SELLERNIPT
+    FROM Fiscal
+    WHERE Refcode = @Refcode;
+END

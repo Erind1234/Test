@@ -1,17 +1,25 @@
-[HttpPost]
-public ActionResult SearchByRefcode(string searchBox)
-{
-    try
-    {
-        // Call the stored procedure to search by REFCODE
-        List<EmpModel> searchResults = empRepo.SearchByRefcode(searchBox);
+@model List<InApps.Models.EmpModel>
 
-        // Pass the search results to a partial view
-        return PartialView("_SearchResults", searchResults);
-    }
-    catch (Exception ex)
-    {
-        ViewBag.Error = "An error occurred: " + ex.Message;
-        return View("Index");
-    }
-}
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>USR</th>
+            <th>REFCODE</th>
+            <th>INVOICEDATE</th>
+            <!-- Add other table headers as needed -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ID</td>
+                <td>@item.USR</td>
+                <td>@item.REFCODE</td>
+                <td>@item.INVOICEDATE</td>
+                <!-- Add other table cells based on your EmpModel properties -->
+            </tr>
+        }
+    </tbody>
+</table>

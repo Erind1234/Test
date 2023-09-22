@@ -1,39 +1,18 @@
-@model List<Fiscal>  <!-- Use the appropriate model class here -->
-
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>USR</th>
-            <th>REFCODE</th>
-            <th>INVOICEDATE</th>
-            <th>PYMTORDNUM</th>
-            <th>PAYERNIPT</th>
-            <th>NIVF</th>
-            <th>PAIDAMT</th>
-            <th>PAIDCUR</th>
-            <th>TRANSACTIONCODE</th>
-            <th>PYMTTYPE</th>
-            <th>SELLERNIPT</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+ [HttpPost]
+        public ActionResult SearchByRefcode(string refcodeSearchBox)
         {
-            <tr>
-                <td>@item.ID</td>
-                <td>@item.USR</td>
-                <td>@item.REFCODE</td>
-                <td>@item.INVOICEDATE</td>
-                <td>@item.PYMTORDNUM</td>
-                <td>@item.PAYERNIPT</td>
-                <td>@item.NIVF</td>
-                <td>@item.PAIDAMT</td>
-                <td>@item.PAIDCUR</td>
-                <td>@item.TRANSACTIONCODE</td>
-                <td>@item.PYMTTYPE</td>
-                <td>@item.SELLERNIPT</td>
-            </tr>
+            try
+            {
+                // Call the stored procedure to search by REFCODE
+                List<EmpModel> searchResults = empRepo.SearchByRefcode(refcodeSearchBox);
+
+                // Pass the search results to a partial view
+                return PartialView("_SearchResults", searchResults);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "An error occurred: " + ex.Message;
+                return View("Index");
+            }
         }
-    </tbody>
-</table>
+

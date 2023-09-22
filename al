@@ -1,20 +1,17 @@
-<script>
-    // Function to handle the click event of the "Search by REFCODE" button
-    $(document).ready(function () {
-        $("#searchByRefcode").click(function () {
-            var refcode = $("#refcodeSearchBox").val();
-            $.ajax({
-                url: "@Url.Action("SearchByRefcode", "Fiscalization")",
-                type: "POST",
-                data: { searchBox: refcode },
-                success: function (result) {
-                    $("#resultTable").html(result);
-                    $("#resultTable").show();
-                },
-                error: function (error) {
-                    console.error(error);
-                }
-            });
-        });
-    });
-</script>
+[HttpPost]
+public ActionResult SearchByRefcode(string searchBox)
+{
+    try
+    {
+        // Call the stored procedure to search by REFCODE
+        List<EmpModel> searchResults = empRepo.SearchByRefcode(searchBox);
+
+        // Pass the search results to a partial view
+        return PartialView("_SearchResults", searchResults);
+    }
+    catch (Exception ex)
+    {
+        ViewBag.Error = "An error occurred: " + ex.Message;
+        return View("Index");
+    }
+}

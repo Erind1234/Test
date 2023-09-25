@@ -1,39 +1,244 @@
-<div class="table-container" id="resultTable1" style="display: none;">
-    <!-- Table content will be displayed here -->
-    @if (!string.IsNullOrEmpty(ViewBag.p1))
-    {
-        using (Html.BeginForm("SaveFiscalization", "Fiscalization", FormMethod.Post))
-        {
-            <div style="display: flex; justify-content: center; align-items: center; height: 80vh;">
-                <div style="text-align: center; background-color: #e7e7ff;">
-                    <table>
-                        <!-- Your table content here -->
-                    </table>
+@model InApps.Models.EmpModel
 
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="Ruaj" class="btn btn-default" />
-                            <button type="button" onclick="deleteRow()" class="btn btn-default">Delete</button>
-                            <input type="reset" value="Skanim i Ri" class="btn btn-default" />
-                        </div>
+
+    <style>
+        /* Add CSS styles for centering the content */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Add CSS styles for the search boxes */
+        .search-box {
+            width: 300px; /* Adjust the width as needed */
+        }
+
+        /* Add CSS styles for the table container */
+        .table-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px; /* Adjust the margin as needed */
+        }
+
+        /* Add CSS styles for the table */
+        .fixed-table {
+            width: 90%;
+            max-height: 200px; /* Adjust the max-height as needed */
+            overflow-y: auto;
+        }
+
+        /* Add CSS styles for the popup */
+        .popup {
+            position: fixed;
+            top: 50%; /* Adjust the top position as needed */
+            left: 50%; /* Adjust the left position as needed */
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            z-index: 2; /* Ensure it's above other elements */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fiscalization</h1>
+
+        <div class="form-group">
+            <input type="text" name="searchBox" id="searchBox" class="form-control search-box" placeholder="Enter search criteria" />
+            <button type="submit" class="btn btn-primary ml-2">Search</button>
+        </div>
+
+        <div class="table-container" id="resultTable1" style="display: none;">
+            <!-- Table content will be displayed here -->
+            @if (!string.IsNullOrEmpty(ViewBag.p1))
+            {
+                using (Html.BeginForm("SaveFiscalization", "Fiscalization", FormMethod.Post))
+                {
+        <div style="display: flex; justify-content: center; align-items: center; height: 80vh;">
+            <div style="text-align: center; background-color: #e7e7ff;">
+                <table>
+                    <tr>
+                        <td>&nbsp;</td>
+
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+
+                    </tr>
+
+                    <tr>
+                        <td>@Html.Label("Numri Urdhrit")</td>
+                        <td>@Html.TextBox("PYMTORDNUM")</td>
+                        <td>@Html.Label("Invoice Date:")</td>
+                        <td>@Html.TextBoxFor(model => model.INVOICEDATE, new { @Value = ViewBag.p4 })</td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.LabelFor(model => model.NIVF)</td>
+                        <td>@Html.TextBoxFor(model => model.NIVF, new { @Value = ViewBag.p3, style = "width:400px;" })</td>
+
+                    </tr>
+
+
+                    <tr>
+                        <td>@Html.Label("NIPT Bleres:")</td>
+                        <td>@Html.TextBox("PAYERNIPT")</td>
+                        <td>@Html.LabelFor(model => model.SELLERNIPT)</td>
+                        <td>@Html.TextBoxFor(model => model.SELLERNIPT, new { @Value = ViewBag.p1 })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.Label("Emri Shites")</td>
+                        <td>@Html.TextBoxFor(model => model.TRANSACTIONCODE, new { @Value = ViewBag.p2, style = "width:400px;" })</td>
+                    </tr>
+
+
+                    <tr>
+                        <td>@Html.Label("Referenca e Teller:")</td>
+                        <td>@Html.TextBox("REFCODE")</td>
+                    </tr>
+
+
+
+
+
+
+                    <tr>
+                        <td>@Html.Label("Tipi i Pageses:")</td>
+                        <td>
+                            @Html.DropDownListFor(model => model.PYMTTYPE, new SelectList(new[]
+            {
+                                            new { Value = "CASH", Text = "CASH" },
+                                            new { Value = "NON_CASH", Text = "NON_CASH" }
+                                        }, "Value", "Text"), "CASH")
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>@Html.Label("Statusi i Pageses:")</td>
+
+                        <td>
+                            @Html.DropDownListFor(model => model.PYMTSTATUS, new SelectList(new[]
+            {
+                                            new { Value = "P1 Faturimi i dergesave te mallrave dhe sherbimeve kundrejt porosive te blerjes,bazuar ne  kontrate", Text = "P1 Faturimi i dergesave te mallrave dhe sherbimeve kundrejt porosive te blerjes,bazuar ne  kontrate" },
+                                            new { Value = "P2 Faturimi i dergesave te mallrave dhe sherbimeve bazuar ne nje kontrate", Text = "P2 Faturimi i dergesave te mallrave dhe sherbimeve bazuar ne nje kontrate" },
+                                            new { Value = "P3 Faturimi i dorezimit te porosise se blerjes se  rastesishme", Text = "P3 Faturimi i dorezimit te porosise se blerjes se  rastesishme" },
+                                            new { Value = "P4 Pagesa paraprake", Text = "P4 Pagesa paraprake" },
+                                            new { Value = "P5 Pagesa ne vend", Text = "P5 Pagesa ne vend" },
+                                            new { Value = "P6 Pagesa para dorezimit", Text = "P6 Pagesa para dorezimit" },
+                                            new { Value = "P7 Faturat me referenca ne shenimin e dergimit", Text = "P7 Faturat me referenca ne shenimin e dergimit" },
+                                            new { Value = "P8 Faturat me referenca ne shenimin e dergimit dhe shenimin e marrjes", Text = "P8 Faturat me referenca ne shenimin e dergimit dhe shenimin e marrjes" },
+                                            new { Value = "P9 Note kredie ose fatura me shuma negative, te leshuara per nje sere arsyesh,perfshire kthimin e", Text = "P9 Note kredie ose fatura me shuma negative, te leshuara per nje sere arsyesh,perfshire kthimin e" },
+
+                                            new { Value = "P10 Faturimi korrigjues(anullimi/korrigjimi i nje  fature)", Text = "P10 Faturimi korrigjues(anullimi/korrigjimi i nje  fature)" },
+                                            new { Value = "P11 Faturimi i pjesshem dhe perfundimtar", Text = "P11 Faturimi i pjesshem dhe perfundimtar" },
+
+                                        }, "Value", "Text"), "P1 Faturimi i dergesave te mallrave dhe sherbimeve kundrejt porosive te blerjes,bazuar ne  kontrate")
+                        </td>
+                    </tr>
+
+
+
+                    <tr>
+                        <td>@Html.Label("Monedha:")</td>
+                        <td>@Html.TextBoxFor(model => model.PAIDCUR, new { @Value = ViewBag.p7 })</td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.Label("Shuma e Paguar:")</td>
+                        <td>@Html.TextBoxFor(model => model.PAIDAMT, new { @Value = ViewBag.p6 })</td>
+                    </tr>
+
+
+                    <tr>
+                        <td>@Html.Label("IBAN & SWIFT:")</td>
+                        <td>@Html.TextBoxFor(model => model.IBANNR, new { @Value = ViewBag.p8 })</td>
+                        <td>@Html.TextBoxFor(model => model.BANKNAME, new { @Value = ViewBag.p10 })</td>
+                    </tr>
+                    <!-- Hidden input fields for properties not on the form -->
+                    @Html.HiddenFor(model => model.QRCODEVAL, new { Value = "1" })
+                    @Html.HiddenFor(model => model.STPROFILE, new { Value = "1" })
+                    @Html.HiddenFor(model => model.PYMTDATTIM, new { Value = "1" })
+                    @Html.HiddenFor(model => model.EINFIC, new { Value = "1" })
+                    @Html.HiddenFor(model => model.BANKNIPT, new { Value = "1" })
+                    @Html.HiddenFor(model => model.DATTIMSEND, new { Value = "1" })
+                    @Html.HiddenFor(model => model.OVERPAIDAMT, new { Value = "1" })
+                    @Html.HiddenFor(model => model.PYMTSTATUS, new { Value = "1" })
+                    @Html.HiddenFor(model => model.CODE, new { Value = "1" })
+                    @Html.HiddenFor(model => model.MESSAGE, new { Value = "1" })
+                    @Html.HiddenFor(model => model.USR, new { Value = "1" })
+                    @Html.HiddenFor(model => model.PYMTSTATUS, new { Value = "1" })
+                    @Html.HiddenFor(model => model.SELLERNIPT, new { Value = "1" })
+                    @Html.HiddenFor(model => model.SWIFTNR, new { Value = "1" })
+
+                    <!-- Add more hidd666664446en fields for other properties as needed -->
+
+                    <tr>
+                        <td>&nbsp;</td>
+
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+
+                    </tr>
+
+                </table>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Ruaj" class="btn btn-default" />
+                        <button type="button" onclick="deleteRow()" class="btn btn-default">Delete</button>
+                        <input type="reset" value="Skanim i Ri" class="btn btn-default" />
                     </div>
                 </div>
             </div>
+        </div>}
+                    }
+        </div>
+        <div class="form-group mt-4">
+            <input type="text" id="REFCODE" class="form-control search-box" placeholder="Enter REFCODE" />
+            <button id="searchByRefcode" class="btn btn-success ml-2">Search by REFCODE</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Add an event listener for the "Search by REFCODE" button
+            $("#searchByRefcode").click(function () {
+                var refcode = $("#REFCODE").val();
+                if (refcode !== "") {
+                    $.post("/Fiscalization/SearchByRefcode", { REFCODE: refcode }, function (data) {
+                        $("#resultTable").html(data);
+                        $("#resultTable").show();
+                    });
+                }
+            });
+        });
+
+        // JavaScript function to show the table
+        function showTable() {
+            document.getElementById("resultTable1").style.display = "block";
         }
-    }
-</div>
+
+        // JavaScript function to hide the table
+        function hideTable() {
+            document.getElementById("resultTable1").style.display = "none";
+        }
+    </script>
+</body>
 
 
 
-
-<script>
-    // JavaScript function to show the table
-    function showTable() {
-        document.getElementById("resultTable1").style.display = "block";
-    }
-
-    // JavaScript function to hide the table
-    function hideTable() {
-        document.getElementById("resultTable1").style.display = "none";
-    }
-</script>

@@ -1,22 +1,16 @@
-/* Add borders to the table */
-#resultTable table {
-    border-collapse: collapse;
-    width: 100%;
-    border: 1px solid #ccc;
-}
+<div class="container text-center">
+    <h1>Fiscalization</h1>
 
-#resultTable th, #resultTable td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: left;
-}
+    @using (Html.BeginForm("Index", "Fiscalization", FormMethod.Post))
+    {
+        <div class="form-group d-flex justify-content-center align-items-center">
+            <input type="text" name="searchBox" class="form-control" style="width: 200px;" placeholder="Enter search criteria" />
+            <button type="submit" class="btn btn-primary ml-2">Search</button>
+        </div>
+    }
 
-#resultTable th {
-    background-color: #f2f2f2;
-}
-
-/* Style the table container */
-#resultTable {
-    max-height: 300px; /* Adjust the max-height as needed */
-    overflow-y: auto;
-}
+    <div class="form-group mt-4">
+        <input type="text" id="REFCODE" class="form-control" style="width: 200px;" placeholder="Enter REFCODE" />
+        <button id="searchByRefcode" class="btn btn-success ml-2">Search by REFCODE</button>
+    </div>
+</div>

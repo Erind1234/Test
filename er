@@ -1,25 +1,272 @@
-$(document).ready(function () {
-                // Store the initial value of the search box
-                var initialSearchBoxValue = $("#searchBox").val();
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using InApps.Models;
+using System.Linq;
 
-                // Add an event listener for the "Search by REFCODE" button
-                $("#searchByRefcode").click(function () {
-                    var refcode = $("#REFCODE").val();
-                    if (refcode !== "") {
-                        // Clear the first search box value
-                        $("#searchBox").val("");
-                        
-                        // Make an AJAX request or perform your action here to replace the table content
-                        // For example, you can use $("#resultTable").html(newTableHTML);
-                    }
-                });
+namespace InApps.Repository
+{
+    public class EmpRepository
+    {
 
-   $("form").submit(function (event) {
-                    event.preventDefault(); // Prevent the form from submitting
-                    var searchTerm = $("#searchBox").val();
-                    if (searchTerm !== "") {
-                        // Make an AJAX request or perform your action here to display the table
-                        // For example, you can use $("#resultTable").html(tableHTML);
+        private SqlConnection con;
+
+
+        //To Handle connection related activities    
+        private void connection()
+        {
+            string constr = ConfigurationManager.ConnectionStrings["FacilegalConn"].ToString();
+            con = new SqlConnection(constr);
+
+        }
+
+        public int SaveFiscalization(EmpModel emp)
+        {
+            connection();
+            con.Open();
+            try
+            {
+                SqlCommand com = new SqlCommand("AddNewFiscal2", con);
+                com.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter outputParameter = new SqlParameter("@NewlyInsertedID", SqlDbType.Int);
+                outputParameter.Direction = ParameterDirection.Output;
+                com.Parameters.Add(outputParameter);
+
+
+                //com.Parameters.AddWithValue("@ID", emp.ID);
+                com.Parameters.AddWithValue("@REFCODE", emp.REFCODE);
+                com.Parameters.AddWithValue("@DATTIMSEND", emp.DATTIMSEND);
+                com.Parameters.AddWithValue("@BANKNIPT", emp.BANKNIPT);
+                com.Parameters.AddWithValue("@PYMTORDNUM", emp.PYMTORDNUM);
+                com.Parameters.AddWithValue("@PAYERNIPT", emp.PAYERNIPT);
+                com.Parameters.AddWithValue("@EINFIC", emp.EINFIC);
+                com.Parameters.AddWithValue("@PYMTDATTIM", emp.PYMTDATTIM);
+                com.Parameters.AddWithValue("@PAIDAMT", emp.PAIDAMT);
+                com.Parameters.AddWithValue("@OVERPAIDAMT", emp.OVERPAIDAMT);
+                com.Parameters.AddWithValue("@PAIDCUR", emp.PAIDCUR);
+                com.Parameters.AddWithValue("@TRANSACTIONCODE", emp.TRANSACTIONCODE);
+                com.Parameters.AddWithValue("@PYMTTYPE", emp.PYMTTYPE);
+                com.Parameters.AddWithValue("@PYMTSTATUS", emp.PYMTSTATUS);
+                com.Parameters.AddWithValue("@CODE", emp.CODE);
+                com.Parameters.AddWithValue("@MESSAGE", emp.MESSAGE);
+                com.Parameters.AddWithValue("@USR", emp.USR);
+                com.Parameters.AddWithValue("@SELLERNIPT", emp.SELLERNIPT);
+                com.Parameters.AddWithValue("@INVOICEDATE", emp.INVOICEDATE);
+                com.Parameters.AddWithValue("@IBANNR", emp.IBANNR);
+                com.Parameters.AddWithValue("@SWIFTNR", emp.SWIFTNR);
+                com.Parameters.AddWithValue("@BANKNAME", emp.BANKNAME);
+                com.Parameters.AddWithValue("@QRCODEVAL", emp.QRCODEVAL);
+                com.Parameters.AddWithValue("@NIVF", emp.NIVF);
+                com.Parameters.AddWithValue("@STPROFILE", emp.STPROFILE);
+
+                //int i = com.ExecuteNonQuery();
+
+
+
+                // con.Close();
+                // if (i >= 1)
+
+                // {
+
+
+
+                //     return true;
+
+                // }
+                // else
+                // {
+
+                //     return false;
+                // }
+                int rowAffected = com.ExecuteNonQuery();
+                if (rowAffected > 0)
+                {
+                    return Convert.ToInt32(outputParameter.Value);
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                con.Close();
+            }
+
+        }
+
+        public EmpModel GetFiscalizationById(int ID)
+        {
+            connection();
+            con.Open();
+
+            SqlCommand com = new SqlCommand("GetFiscalizationById", con);
+            com.CommandType = CommandType.StoredProcedure;
+            com.Parameters.AddWithValue("@ID", ID);
+
+            SqlDataReader reader = com.ExecuteReader();
+            EmpModel emp = new EmpModel();
+
+            while (reader.Read())
+            {
+                // Populate emp object with data from the database
+                emp.ID = Convert.ToInt32(reader["ID"]);
+                emp.REFCODE = reader["REFCODE"].ToString();
+                emp.PYMTORDNUM = reader["PYMTORDNUM"].ToString();
+                emp.DATTIMSEND = reader["DATTIMSEND"].ToString();
+                emp.BANKNIPT = reader["BANKNIPT"].ToString();
+                emp.PAYERNIPT = reader["PAYERNIPT"].ToString();
+                emp.EINFIC = reader["EINFIC"].ToString();
+                emp.PYMTDATTIM = reader["PYMTDATTIM"].ToString();
+                emp.PAIDAMT = reader["PAIDAMT"].ToString();
+                emp.OVERPAIDAMT = reader["OVERPAIDAMT"].ToString();
+                emp.PAIDCUR = reader["PAIDCUR"].ToString();
+                emp.TRANSACTIONCODE = reader["TRANSACTIONCODE"].ToString();
+                emp.PYMTTYPE = reader["PYMTTYPE"].ToString();
+                emp.PYMTSTATUS = reader["PYMTSTATUS"].ToString();
+                emp.CODE = reader["CODE"].ToString();
+                emp.MESSAGE = reader["MESSAGE"].ToString();
+                emp.USR = reader["USR"].ToString();
+                emp.SELLERNIPT = reader["SELLERNIPT"].ToString();
+                emp.INVOICEDATE = reader["INVOICEDATE"].ToString();
+                emp.IBANNR = reader["IBANNR"].ToString();
+                emp.SWIFTNR = reader["SWIFTNR"].ToString();
+                emp.BANKNAME = reader["BANKNAME"].ToString();
+                emp.QRCODEVAL = reader["QRCODEVAL"].ToString();
+                emp.NIVF = reader["NIVF"].ToString();
+                emp.STPROFILE = reader["STPROFILE"].ToString();
+            }
+
+            con.Close();
+            return emp;
+        }
+
+        public bool UpdateFiscalization(EmpModel emp)
+        {
+            connection();
+            con.Open();
+
+            SqlCommand com = new SqlCommand("UpdateFiscalization", con);
+            com.CommandType = CommandType.StoredProcedure;
+            com.Parameters.AddWithValue("@ID", emp.ID);
+            com.Parameters.AddWithValue("@REFCODE", emp.REFCODE);
+            com.Parameters.AddWithValue("@DATTIMSEND", emp.DATTIMSEND);
+            com.Parameters.AddWithValue("@BANKNIPT", emp.BANKNIPT);
+            com.Parameters.AddWithValue("@PYMTORDNUM", emp.PYMTORDNUM);
+            com.Parameters.AddWithValue("@PAYERNIPT", emp.PAYERNIPT);
+            com.Parameters.AddWithValue("@EINFIC", emp.EINFIC);
+            com.Parameters.AddWithValue("@PYMTDATTIM", emp.PYMTDATTIM);
+            com.Parameters.AddWithValue("@PAIDAMT", emp.PAIDAMT);
+            com.Parameters.AddWithValue("@OVERPAIDAMT", emp.OVERPAIDAMT);
+            com.Parameters.AddWithValue("@PAIDCUR", emp.PAIDCUR);
+            com.Parameters.AddWithValue("@TRANSACTIONCODE", emp.TRANSACTIONCODE);
+            com.Parameters.AddWithValue("@PYMTTYPE", emp.PYMTTYPE);
+            com.Parameters.AddWithValue("@PYMTSTATUS", emp.PYMTSTATUS);
+            com.Parameters.AddWithValue("@CODE", emp.CODE);
+            com.Parameters.AddWithValue("@MESSAGE", emp.MESSAGE);
+            com.Parameters.AddWithValue("@USR", emp.USR);
+            com.Parameters.AddWithValue("@SELLERNIPT", emp.SELLERNIPT);
+            com.Parameters.AddWithValue("@INVOICEDATE", emp.INVOICEDATE);
+            com.Parameters.AddWithValue("@IBANNR", emp.IBANNR);
+            com.Parameters.AddWithValue("@SWIFTNR", emp.SWIFTNR);
+            com.Parameters.AddWithValue("@BANKNAME", emp.BANKNAME);
+            com.Parameters.AddWithValue("@QRCODEVAL", emp.QRCODEVAL);
+            com.Parameters.AddWithValue("@NIVF", emp.NIVF);
+            com.Parameters.AddWithValue("@STPROFILE", emp.STPROFILE);
+
+
+            int rowsAffected = com.ExecuteNonQuery();
+            con.Close();
+
+            return rowsAffected > 0;
+        }
+
+
+
+
+        internal bool AddFiscalization(EmpModel emp)
+        {
+            throw new NotImplementedException();
+        }
+        //To Update Employee details    
+
+        public bool DeleteFiscalization(int ID)
+        {
+            connection();
+            
+            
+                con.Open();
+                SqlCommand com = new SqlCommand("DeleteFiscalization", con);
+                com.CommandType = CommandType.StoredProcedure;
+                com.Parameters.AddWithValue("@ID", ID);
+
+                int rowsAffected = com.ExecuteNonQuery();
+                return rowsAffected > 0;
+            
+        }
+
+
+        public List<EmpModel> SearchByRefcode(string REFCODE)
+        {
+            List<EmpModel> searchResults = new List<EmpModel>();
+            try { 
+            connection();
+
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand("GetFiscalDataByRefcode", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                    // Add parameters to the stored procedure
+
+                    cmd.Parameters.AddWithValue("@REFCODE", REFCODE);
+                    
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            EmpModel emp = new EmpModel
+                            {
+                                ID = (int)reader["ID"],
+                                USR = reader["USR"].ToString(),
+                                REFCODE = reader["REFCODE"].ToString(),
+                                INVOICEDATE = reader["INVOICEDATE"].ToString(),
+                                PYMTORDNUM = reader["PYMTORDNUM"].ToString(),
+                                PAYERNIPT = reader["PAYERNIPT"].ToString(),
+                                NIVF = reader["NIVF"].ToString(),
+                                PAIDAMT = reader["PAIDAMT"].ToString(),
+                                PAIDCUR = reader["PAIDCUR"].ToString(),
+                                TRANSACTIONCODE = reader["TRANSACTIONCODE"].ToString(),
+                                PYMTTYPE = reader["PYMTTYPE"].ToString(),
+                                SELLERNIPT = reader["SELLERNIPT"].ToString(),
+                            };
+                            searchResults.Add(emp);
+                        }
                     }
-                });
-            });
+                }
+            }
+        
+       catch (Exception ex)
+    {
+        // Handle any exceptions here
+        // You can log the exception, throw it, or handle it as needed
+        // For example: throw new Exception("An error occurred: " + ex.Message);
+    }
+
+    return searchResults; // Return the list of results
+}
+
+
+
+
+}
+}

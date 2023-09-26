@@ -1,5 +1,7 @@
 @model InApps.Models.EmpModel
 
+<!DOCTYPE html>
+<html>
 <head>
     <!-- ... your existing head content ... -->
     <style>
@@ -51,7 +53,7 @@
             left: 100px; /* Adjust the left position as needed */
             width: calc(100% - 250px); /* Adjust the width as needed */
             max-height: 100px; /* Adjust the max-height as needed */
-           /* overflow-y: auto;
+            /* overflow-y: auto;
             z-index: 1;*/
         }
 
@@ -210,7 +212,7 @@
                                         @Html.HiddenFor(model => model.SELLERNIPT, new { Value = "1" })
                                         @Html.HiddenFor(model => model.SWIFTNR, new { Value = "1" })
 
-                                        <!-- Add more hidd666664446en fields for other properties as needed -->
+                                        <!-- Add more hidden fields for other properties as needed -->
 
                                         <tr>
                                             <td>&nbsp;</td>

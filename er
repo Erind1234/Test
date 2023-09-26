@@ -1,303 +1,46 @@
-@model InApps.Models.EmpModel
-
-<head>
-    <!-- ... your existing head content ... -->
-    <style>
-        /* Add CSS styles for centering the content */
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            height: 120vh;
-        }
-
-        .form-group {
-            display: flex;
-            align-items: center;
-            
-        }
-
-        .search-group {
-            display: flex;
-            align-items: center;
-        }
-
-        .search-box {
-            width: 300px;
-        }
-
-        /* Add other CSS styles as needed */
-
-        /* Add CSS styles for the freezing search box */
-        .freeze-search-box {
-            position: absolute;
-            top: 0;
-            left: 0;
-            background-color: white;
-            z-index: 1;
-        }
-
-        /* Add CSS styles for the table container */
-        .table-container {
-            margin-top: 20px;
-            margin-left: 350px; /* Adjust the margin-left as needed */
-            width: calc(100% - 350px); /* Adjust the width as needed */
-        }
-
-        /* Adjust the width as needed */
-        .fixed-table {
-            position: absolute;
-            top: 220px; /* Adjust the top position as needed */
-          /*  left: 100px;*/ /* Adjust the left position as needed */
-            width: 40%; /* Adjust the width as needed, e.g., 70% */
-             /* Adjust the max-height as needed */
-            border: 1px solid #ccc; /* Add border styling */
-            /* Other styles... */
-        }
-        /* Add borders to the table elements */
-        table {
-            border-collapse: collapse;
-            width: 70%;
-        }
-
-        tr, td {
-            border: 1px solid #ccc;
-            padding: 1px;
-        }
-        /* Add CSS styles for the popup */
-        .popup {
-            /* ... your existing popup styles ... */
-            z-index: 2;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="search-group">
-            @using (Html.BeginForm("Index", "Fiscalization", FormMethod.Post))
-            {
-                <br />
-                <br />
-                <div class="form-group">
-                    <input type="text" name="searchBox" class="form-control search-box" placeholder="Klikoni per te skanuar:" />
-                    <button type="submit" class="btn btn-primary ml-2">Scan</button>
-                </div>
+<script>
+    $(document).ready(function () {
+        // Add an event listener for the "Search by Refcode" button
+        $("#searchByRefcode").click(function () {
+            var refcode = $("#REFCODE").val();
+            if (refcode !== "") {
+                // Hide the table for "Something Else" search if it's currently visible
+                $("#tab1").hide();
+                $.post("/Fiscalization/SearchByRefcode", { REFCODE: refcode }, function (data) {
+                    // Hide the table for "Something Else" search if it's currently visible
+                    $("#tab1").hide();
+                    // Show the table for "Refcode" search
+                    $("#reftab").html(data).show();
+                });
             }
-            <div class="freeze-search-box" id="freezeSearchBox" style="display: none;"></div>
-        </div>
+        });
 
-        <div class="form-group mt-4">
-            <input type="text" id="REFCODE" class="form-control search-box" placeholder="Enter REFCODE" />
-            <button id="searchByRefcode" class="btn btn-success ml-2">Kerko me Teller Reference</button>
-        </div>
+        // Add an event listener for the "Search by Something Else" button
+        $("#searchBySomethingElse").click(function () {
+            var searchBox = $("#searchBox").val();
+            if (searchBox !== "") {
+                // Hide the table for "Refcode" search if it's currently visible
+                $("#reftab").hide();
+                // Perform your search for "Something Else" and display the corresponding table
+                // You would need to replace this part with your actual logic
+                $.post("/Fiscalization/SearchBySomethingElse", { SomethingElse: searchBox }, function (data) {
+                    // Hide the table for "Refcode" search if it's currently visible
+                    $("#reftab").hide();
+                    // Show the table for "Something Else" search
+                    $("#tab1").html(data).show();
+                });
+            }
+        });
+    });
 
-        <div id="resultTable" class="table-container" style="display: none;">
-            <!-- Table content will be displayed here -->
-        </div>
+    // Function to delete row
+    function deleteRow() {
+        if (confirm("Are you sure you want to delete this row?")) {
+            // Add your delete logic here
+        }
+    }
 
-        <div class="fixed-table" id="tab1">
-            @if (!string.IsNullOrEmpty(ViewBag.p1))
-                    {
-                        using (Html.BeginForm("SaveFiscalization", "Fiscalization", FormMethod.Post))
-                        {
-
-
-                            @*<div style="display: flex; justify-content: center; align-items: center; height: 80vh;">
-
-                                <div style="text-align: center; background-color: #e7e7ff;">*@
-
-
-                                    <table>
-                                      
-                                        <tr>
-                                            <td>@Html.Label("Numri Urdhrit")</td>
-                                            <td>@Html.TextBox("PYMTORDNUM")</td>
-                                            </tr>
-                                        <tr>
-                                            <td>@Html.Label("Invoice Date:")</td>
-                                            <td>@Html.TextBoxFor(model => model.INVOICEDATE, new { @Value = ViewBag.p4 })</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>@Html.LabelFor(model => model.NIVF)</td>
-                                            <td>@Html.TextBoxFor(model => model.NIVF, new { @Value = ViewBag.p3, style = "width:400px;" })</td>
-
-                                        </tr>
-
-
-                                        <tr>
-                                            <td>@Html.Label("NIPT Bleres:")</td>
-                                            <td>@Html.TextBox("PAYERNIPT")</td></tr>
-                                        <tr>
-                                            <td>@Html.LabelFor(model => model.SELLERNIPT)</td>
-                                            <td>@Html.TextBoxFor(model => model.SELLERNIPT, new { @Value = ViewBag.p1 })</td>
-                                        </tr>
-                                        <tr>
-                                            <td>@Html.Label("Emri Shites")</td>
-                                            <td>@Html.TextBoxFor(model => model.TRANSACTIONCODE, new { @Value = ViewBag.p2, style = "width:400px;" })</td>
-                                        </tr>
-
-
-                                        <tr>
-                                            <td>@Html.Label("Referenca e Teller:")</td>
-                                            <td>@Html.TextBox("REFCODE")</td>
-                                        </tr>
-
-
-
-
-
-
-                                        <tr>
-                                            <td>@Html.Label("Tipi i Pageses:")</td>
-                                            <td>
-                                                @Html.DropDownListFor(model => model.PYMTTYPE, new SelectList(new[]
-                           {
-                                                                new { Value = "CASH", Text = "CASH" },
-                                                                new { Value = "NON_CASH", Text = "NON_CASH" }
-                                                            }, "Value", "Text"), "")
-                                            </td>
-
-                                        </tr>
-                                        <tr>
-                                            <td>@Html.Label("Statusi i Pageses:")</td>
-
-                                            <td>
-                                                @Html.DropDownListFor(model => model.PYMTSTATUS, new SelectList(new[]
-                           {
-                                                                new { Value = "P1 Faturimi i dergesave te mallrave dhe sherbimeve kundrejt porosive te blerjes,bazuar ne  kontrate", Text = "P1 Faturimi i dergesave te mallrave dhe sherbimeve kundrejt porosive te blerjes,bazuar ne  kontrate" },
-                                                                new { Value = "P2 Faturimi i dergesave te mallrave dhe sherbimeve bazuar ne nje kontrate", Text = "P2 Faturimi i dergesave te mallrave dhe sherbimeve bazuar ne nje kontrate" },
-                                                                new { Value = "P3 Faturimi i dorezimit te porosise se blerjes se  rastesishme", Text = "P3 Faturimi i dorezimit te porosise se blerjes se  rastesishme" },
-                                                                new { Value = "P4 Pagesa paraprake", Text = "P4 Pagesa paraprake" },
-                                                                new { Value = "P5 Pagesa ne vend", Text = "P5 Pagesa ne vend" },
-                                                                new { Value = "P6 Pagesa para dorezimit", Text = "P6 Pagesa para dorezimit" },
-                                                                new { Value = "P7 Faturat me referenca ne shenimin e dergimit", Text = "P7 Faturat me referenca ne shenimin e dergimit" },
-                                                                new { Value = "P8 Faturat me referenca ne shenimin e dergimit dhe shenimin e marrjes", Text = "P8 Faturat me referenca ne shenimin e dergimit dhe shenimin e marrjes" },
-                                                                new { Value = "P9 Note kredie ose fatura me shuma negative, te leshuara per nje sere arsyesh,perfshire kthimin e", Text = "P9 Note kredie ose fatura me shuma negative, te leshuara per nje sere arsyesh,perfshire kthimin e" },
-
-                                                                new { Value = "P10 Faturimi korrigjues(anullimi/korrigjimi i nje  fature)", Text = "P10 Faturimi korrigjues(anullimi/korrigjimi i nje  fature)" },
-                                                                new { Value = "P11 Faturimi i pjesshem dhe perfundimtar", Text = "P11 Faturimi i pjesshem dhe perfundimtar" },
-
-                                                            }, "Value", "Text"), "P1 Faturimi i dergesave te mallrave dhe sherbimeve kundrejt porosive te blerjes,bazuar ne  kontrate")
-                                            </td>
-                                        </tr>
-
-
-
-                                        <tr>
-                                            <td>@Html.Label("Monedha:")</td>
-                                            <td>@Html.TextBoxFor(model => model.PAIDCUR, new { @Value = ViewBag.p7 })</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>@Html.Label("Shuma e Paguar:")</td>
-                                            <td>@Html.TextBoxFor(model => model.PAIDAMT, new { @Value = ViewBag.p6 })</td>
-                                        </tr>
-
-
-                                        <tr>
-                                            <td>@Html.Label("IBAN & SWIFT:")</td>
-                                            <td>@Html.TextBoxFor(model => model.IBANNR, new { @Value = ViewBag.p8 })
-                                            @Html.TextBoxFor(model => model.BANKNAME, new { @Value = ViewBag.p10 })</td>
-                                        </tr>
-                                        <!-- Hidden input fields for properties not on the form -->
-                                        @Html.HiddenFor(model => model.QRCODEVAL, new { Value = "1" })
-                                        @Html.HiddenFor(model => model.STPROFILE, new { Value = "1" })
-                                        @Html.HiddenFor(model => model.PYMTDATTIM, new { Value = "1" })
-                                        @Html.HiddenFor(model => model.EINFIC, new { Value = "1" })
-                                        @Html.HiddenFor(model => model.BANKNIPT, new { Value = "1" })
-                                        @Html.HiddenFor(model => model.DATTIMSEND, new { Value = "1" })
-                                        @Html.HiddenFor(model => model.OVERPAIDAMT, new { Value = "1" })
-                                        @Html.HiddenFor(model => model.PYMTSTATUS, new { Value = "1" })
-                                        @Html.HiddenFor(model => model.CODE, new { Value = "1" })
-                                        @Html.HiddenFor(model => model.MESSAGE, new { Value = "1" })
-                                        @Html.HiddenFor(model => model.USR, new { Value = "1" })
-                                        @Html.HiddenFor(model => model.PYMTSTATUS, new { Value = "1" })
-                                        @Html.HiddenFor(model => model.SELLERNIPT, new { Value = "1" })
-                                        @Html.HiddenFor(model => model.SWIFTNR, new { Value = "1" })
-
-                                    <tr><td></td>
-    <td><button type="submit" class="btn btn-primary ml-2">Ruaj</button>
-
-
-    <button type="reset" id="resetButton" class="btn btn-primary ml-2">Skanim i Ri</button>
-
-</td></tr>
-                                        
-
-
-                                    </table>
-
-                                    @*<div class="form-group">
-                                        <div class="col-md-offset-2 col-md-10">
-
-
-                                            <button type="submit" class="btn btn-primary ml-2">Ruaj</button>
-
-
-                                            <button type="reset" id="resetButton" class="btn btn-primary ml-2">Skanim i Ri</button>
-
-
-                                        </div>
-                                    </div>*@
-                                @*</div>
-                            </div>*@
-                        }
-                    }
-                    
-
-                    <div class="popup" id="popupWindow" style="display: none;">
-                        <h3>Saved Data</h3>
-                        <p> @ViewBag.savedData</p>
-                    </div>
-               
-
-                            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-                           
-                            <script>
-                                $(document).ready(function () {
-                                    // Add an event listener for the "Search by Refcode" button
-                                    $("#searchByRefcode").click(function () {
-                                        var refcode = $("#REFCODE").val();
-                                        if (refcode !== "") {
-                                            $.post("/Fiscalization/SearchByRefcode", { REFCODE: refcode }, function (data) {
-                                                // Hide the table for "Something Else" search if it's currently visible
-                                                $("#tab1").hide();
-                                                // Show the table for "Refcode" search
-                                                $("reftab").html(data).show();
-                                            });
-                                        }
-                                    });
-
-                                    // Add an event listener for the "Search by Something Else" button
-                                    $("#tab1").click(function () {
-                                        var searchBox = $("#searchBox").val();
-                                        if (searchBox !== "") {
-                                            // Hide the table for "Refcode" search if it's currently visible
-                                            $("#reftab").hide();
-                                            // Perform your search for "Something Else" and display the corresponding table
-                                            // You would need to replace this part with your actual logic
-                                            $.post("/Fiscalization/SaveFiscalization", { searchBox: searchBox }, function (data) {
-                                                $("#searchBox").html(data).show();
-                                            });
-                                        }
-                                    });
-                                });
-
-                                // Function to delete row
-                                function deleteRow() {
-                                    if (confirm("Are you sure you want to delete this row?")) {
-                                        // Add your delete logic here
-                                    }
-                                }
-
-                                $("#resetButton").click(function () {
-                                    window.location.href = "/Fiscalization/Index";
-                                });
-                            </script>
-                            
-</body>
-</html>
+    $("#resetButton").click(function () {
+        window.location.href = "/Fiscalization/Index";
+    });
+</script>

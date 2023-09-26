@@ -273,23 +273,24 @@
 
 
                     // Add an event listener for the first search box
-                    $("input[name='searchBox']").on("input", function () {
-                        var searchTerm = $(this).val();
-                        $("#freezeSearchBox").text(searchTerm);
-                    });
+                    //$("input[name='searchBox']").on("input", function () {
+                    //    var searchTerm = $(this).val();
+                    //    $("#freezeSearchBox").text(searchTerm);
+                    //});
 
                     // Prevent the form from submitting and handle it via JavaScript
                     $("form").submit(function (e) {
                         e.preventDefault();
                         var searchTerm = $("input[name='searchBox']").val();
-                        $("#freezeSearchBox").text(searchTerm)
-                    });
-                
-                    $("input[name='searchBox']").on("input", function () {
-                        var searchTerm = $(this).val();
-                        $("#freezeSearchBox").text(searchTerm).show();
+                        $("#freezeSearchBox").text(searchTerm).show
                     });
                 });
+                
+                //    $("input[name='searchBox']").on("input", function () {
+                    //    var searchTerm = $(this).val();
+                    //    $("#freezeSearchBox").text(searchTerm).show();
+                    //});
+                //});
 
                 // Function to delete row
                 function deleteRow() {
@@ -297,7 +298,7 @@
                         // Add your delete logic here
                     }
                 }
-                $(".fixed_table").addClass("show");
+                /*$(".fixed_table").addClass("show");*/
             </script>
 </body>
 </html>

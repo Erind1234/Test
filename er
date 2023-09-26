@@ -1,44 +1,25 @@
-<script>
-    $(document).ready(function () {
-        var searchBox = $("input[name='searchBox']");
-        var freezeSearchBox = $("#freezeSearchBox");
-        var resultTable = $("#resultTable");
+$(document).ready(function () {
+                // Store the initial value of the search box
+                var initialSearchBoxValue = $("#searchBox").val();
 
-        // Store the initial value of the search box
-        var initialSearchBoxValue = searchBox.val();
-
-        // Add an event listener for the "Search by REFCODE" button
-        $("#searchByRefcode").click(function () {
-            var refcode = $("#REFCODE").val();
-            if (refcode !== "") {
-                // Store the search box value in a data attribute
-                searchBox.data("prevValue", searchBox.val());
-                $.post("/Fiscalization/SearchByRefcode", { REFCODE: refcode }, function (data) {
-                    resultTable.html(data);
-                    resultTable.show();
-                    // Restore the search box value
-                    searchBox.val(searchBox.data("prevValue"));
+                // Add an event listener for the "Search by REFCODE" button
+                $("#searchByRefcode").click(function () {
+                    var refcode = $("#REFCODE").val();
+                    if (refcode !== "") {
+                        // Clear the first search box value
+                        $("#searchBox").val("");
+                        
+                        // Make an AJAX request or perform your action here to replace the table content
+                        // For example, you can use $("#resultTable").html(newTableHTML);
+                    }
                 });
-            }
-        });
 
-        // Add an event listener for pressing Enter in the first search box
-        searchBox.keypress(function (e) {
-            if (e.which === 13) { // Check if Enter key is pressed
-                e.preventDefault(); // Prevent the form from submitting
-                var searchTerm = searchBox.val();
-                if (searchTerm !== "") {
-                    // Store the search box value in a data attribute
-                    searchBox.data("prevValue", searchTerm);
-                    // Trigger the "Search by REFCODE" button click
-                    $("#searchByRefcode").click();
-                }
-            }
-        });
-
-        // Restore the initial search box value when the table is hidden
-        resultTable.on("hide.bs.table", function () {
-            searchBox.val(initialSearchBoxValue);
-        });
-    });
-</script>
+   $("form").submit(function (event) {
+                    event.preventDefault(); // Prevent the form from submitting
+                    var searchTerm = $("#searchBox").val();
+                    if (searchTerm !== "") {
+                        // Make an AJAX request or perform your action here to display the table
+                        // For example, you can use $("#resultTable").html(tableHTML);
+                    }
+                });
+            });

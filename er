@@ -1,41 +1,25 @@
 <script>
-    $(document).ready(function () {
-        // Add an event listener for the "Search by Refcode" button
-        $("#searchByRefcode").click(function () {
-            var refcode = $("#REFCODE").val();
-            if (refcode !== "") {
-                $.post("/Fiscalization/SearchByRefcode", { REFCODE: refcode }, function (data) {
-                    // Hide the table for "Something Else" search if it's currently visible
-                    $("#tableForSomethingElse").hide();
-                    // Show the table for "Refcode" search
-                    $("#tableForRefcode").html(data).show();
-                });
-            }
-        });
-
-        // Add an event listener for the "Search by Something Else" button
-        $("#searchBySomethingElse").click(function () {
-            var somethingElse = $("#searchBox2").val();
-            if (somethingElse !== "") {
-                // Hide the table for "Refcode" search if it's currently visible
-                $("#tableForRefcode").hide();
-                // Perform your search for "Something Else" and display the corresponding table
-                // You would need to replace this part with your actual logic
-                $.post("/Fiscalization/SearchBySomethingElse", { SomethingElse: somethingElse }, function (data) {
-                    $("#tableForSomethingElse").html(data).show();
-                });
-            }
-        });
-    });
-
-    // Function to delete row
-    function deleteRow() {
-        if (confirm("Are you sure you want to delete this row?")) {
-            // Add your delete logic here
-        }
-    }
-
-    $("#resetButton").click(function () {
-        window.location.href = "/Fiscalization/Index";
-    });
-</script>
+                              
+                                        
+                                $(document).ready(function () {
+                                    // Add an event listener for the "Search by REFCODE" button
+                                    $("#searchByRefcode").click(function () {
+                                        var refcode = $("#REFCODE").val();
+                                        if (refcode !== "") {
+                                            $.post("/Fiscalization/SearchByRefcode", { REFCODE: refcode }, function (data) {
+                                                $("#resultTable").html(data);
+                                                $("#resultTable").show();
+                                            });
+                                        }
+                                    });
+                                });
+                                // Function to delete row
+                                function deleteRow() {
+                                    if (confirm("Are you sure you want to delete this row?")) {
+                                        // Add your delete logic here
+                                    }
+                                }
+                                $("#resetButton").click(function (){
+                                    window.location.href = "/Fiscalization/Index";
+                                });
+                            </script>

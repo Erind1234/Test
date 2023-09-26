@@ -91,9 +91,9 @@
                         {
 
 
-                            <div style="display: flex; justify-content: center; align-items: center; height: 80vh;">
+                            @*<div style="display: flex; justify-content: center; align-items: center; height: 80vh;">
 
-                                <div style="text-align: center; background-color: #e7e7ff;">
+                                <div style="text-align: center; background-color: #e7e7ff;">*@
 
 
                                     <table>
@@ -109,6 +109,8 @@
                                         <tr>
                                             <td>@Html.Label("Numri Urdhrit")</td>
                                             <td>@Html.TextBox("PYMTORDNUM")</td>
+                                            </tr>
+                                        <tr>
                                             <td>@Html.Label("Invoice Date:")</td>
                                             <td>@Html.TextBoxFor(model => model.INVOICEDATE, new { @Value = ViewBag.p4 })</td>
                                         </tr>
@@ -122,7 +124,8 @@
 
                                         <tr>
                                             <td>@Html.Label("NIPT Bleres:")</td>
-                                            <td>@Html.TextBox("PAYERNIPT")</td>
+                                            <td>@Html.TextBox("PAYERNIPT")</td></tr>
+                                        <tr>
                                             <td>@Html.LabelFor(model => model.SELLERNIPT)</td>
                                             <td>@Html.TextBoxFor(model => model.SELLERNIPT, new { @Value = ViewBag.p1 })</td>
                                         </tr>
@@ -149,7 +152,7 @@
                            {
                                                                 new { Value = "CASH", Text = "CASH" },
                                                                 new { Value = "NON_CASH", Text = "NON_CASH" }
-                                                            }, "Value", "Text"), "CASH")
+                                                            }, "Value", "Text"), "")
                                             </td>
 
                                         </tr>
@@ -191,8 +194,8 @@
 
                                         <tr>
                                             <td>@Html.Label("IBAN & SWIFT:")</td>
-                                            <td>@Html.TextBoxFor(model => model.IBANNR, new { @Value = ViewBag.p8 })</td>
-                                            <td>@Html.TextBoxFor(model => model.BANKNAME, new { @Value = ViewBag.p10 })</td>
+                                            <td>@Html.TextBoxFor(model => model.IBANNR, new { @Value = ViewBag.p8 })
+                                            @Html.TextBoxFor(model => model.BANKNAME, new { @Value = ViewBag.p10 })</td>
                                         </tr>
                                         <!-- Hidden input fields for properties not on the form -->
                                         @Html.HiddenFor(model => model.QRCODEVAL, new { Value = "1" })
@@ -236,8 +239,8 @@
 
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                @*</div>
+                            </div>*@
                         }
                     }
                     

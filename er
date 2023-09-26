@@ -1,10 +1,19 @@
-/* Add borders to the table elements */
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
+$(document).ready(function () {
+    var searchBox = $("input[name='searchBox']");
+    var freezeSearchBox = $("#freezeSearchBox");
 
-tr, td {
-    border: 1px solid #ccc;
-    padding: 8px;
-}
+    // Add an event listener for the "Search by REFCODE" button
+    $("#searchByRefcode").click(function () {
+        var refcode = $("#REFCODE").val();
+        if (refcode !== "") {
+            // Store the search box value in a data attribute
+            searchBox.data("prevValue", searchBox.val());
+            $.post("/Fiscalization/SearchByRefcode", { REFCODE: refcode }, function (data) {
+                $("#resultTable").html(data);
+                $("#resultTable").show();
+                // Restore the search box value
+                searchBox.val(searchBox.data("prevValue"));
+            });
+        }
+    });
+});

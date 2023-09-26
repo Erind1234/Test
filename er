@@ -3,44 +3,15 @@
     position: fixed;
     top: 140px; /* Adjust the top position as needed */
     left: 100px; /* Adjust the left position as needed */
-    width: 200px; /* Adjust the width as needed */
-    height: 150px; /* Adjust the height as needed */
-    border: 1px solid #ccc; /* Add borders to the table */
+    width: 200px; /* Adjust the initial width as needed */
+    height: 0; /* Start with a height of 0 */
     background-color: #f9f9f9; /* Set background color */
     overflow-y: auto; /* Enable vertical scrolling if needed */
     z-index: 1;
 }
 
-
-$(document).ready(function () {
-    // Add an event listener for the "Search by REFCODE" button
-    $("#searchByRefcode").click(function () {
-        var refcode = $("#REFCODE").val();
-        if (refcode !== "") {
-            $.post("/Fiscalization/SearchByRefcode", { REFCODE: refcode }, function (data) {
-                $("#resultTable").html(data);
-                $("#resultTable").show();
-            });
-        }
-    });
-
-    // Add an event listener for the first search box
-    $("input[name='searchBox']").on("input", function () {
-        var searchTerm = $(this).val();
-        $("#freezeSearchBox").text(searchTerm).show();
-    });
-
-    // Prevent the form from submitting and handle it via JavaScript
-    $("form").submit(function (e) {
-        e.preventDefault();
-        var searchTerm = $("input[name='searchBox']").val();
-        $("#freezeSearchBox").text(searchTerm).show();
-
-        // Here, you can add code to submit the form data via AJAX and show the fixed table.
-        // Example:
-        // $.post("/Fiscalization/Index", { searchBox: searchTerm }, function (data) {
-        //     $("#resultTable").html(data);
-        //     $("#resultTable").show();
-        // });
-    });
-});
+/* Add CSS styles to show the table when needed */
+.fixed-table.show {
+    height: 150px; /* Adjust the height when the table is shown */
+    border: 1px solid #ccc; /* Add borders when the table is shown */
+}

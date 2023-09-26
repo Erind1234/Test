@@ -1,10 +1,10 @@
-/* Adjust the width as needed */
-.fixed-table {
-    position: fixed;
-    top: 80px; /* Adjust the top position as needed */
-    left: 100px; /* Adjust the left position as needed */
-    width: 70%; /* Adjust the width as needed, e.g., 70% */
-    max-height: 100px; /* Adjust the max-height as needed */
-    border: 1px solid #ccc; /* Add border styling */
-    /* Other styles... */
+/* Add borders to the table elements */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+tr, td {
+    border: 1px solid #ccc;
+    padding: 8px;
 }

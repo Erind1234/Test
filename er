@@ -1,46 +1,402 @@
-<script>
-    $(document).ready(function () {
-        // Add an event listener for the "Search by Refcode" button
-        $("#searchByRefcode").click(function () {
-            var refcode = $("#REFCODE").val();
-            if (refcode !== "") {
-                // Hide the table for "Something Else" search if it's currently visible
-                $("#tab1").hide();
-                $.post("/Fiscalization/SearchByRefcode", { REFCODE: refcode }, function (data) {
-                    // Hide the table for "Something Else" search if it's currently visible
-                    $("#tab1").hide();
-                    // Show the table for "Refcode" search
-                    $("#reftab").html(data).show();
-                });
-            }
-        });
+using InApps.Models;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.tool.xml;
+using OpenHtmlToPdf;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
 
-        // Add an event listener for the "Search by Something Else" button
-        $("#searchBySomethingElse").click(function () {
-            var searchBox = $("#searchBox").val();
-            if (searchBox !== "") {
-                // Hide the table for "Refcode" search if it's currently visible
-                $("#reftab").hide();
-                // Perform your search for "Something Else" and display the corresponding table
-                // You would need to replace this part with your actual logic
-                $.post("/Fiscalization/SearchBySomethingElse", { SomethingElse: searchBox }, function (data) {
-                    // Hide the table for "Refcode" search if it's currently visible
-                    $("#reftab").hide();
-                    // Show the table for "Something Else" search
-                    $("#tab1").html(data).show();
-                });
-            }
-        });
-    });
+namespace InApps.Controllers
+{
+    [RequireHttps]
+    public class DirectDebitController : Controller
+    {
+        // GET: DirectDebit
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.DirectDebitContractNormal + "," + Tools.DirectDebitContractAdmin + "," + Tools.DirectDebitContractNormalAdmin)]
+        public ActionResult Contracts()
+        {
+            ViewBag.AllowedTabs = Tools.GetAllowedTabs();
+            return View();
+        }
 
-    // Function to delete row
-    function deleteRow() {
-        if (confirm("Are you sure you want to delete this row?")) {
-            // Add your delete logic here
+        [NoCache]
+        [HttpPost]
+        //[ValidateInput(false)]
+        [CustomAuthorize(Roles = Tools.DirectDebitContractNormal + "," + Tools.DirectDebitContractAdmin + "," + Tools.DirectDebitContractNormalAdmin)]
+        public FileResult Export(string DownloadId, string DownTypeId)
+        {
+            try
+            {
+                var contract = ContractsLogic.Get(Convert.ToInt64(DownloadId));
+                string html = Tools.DirectDebitHtml(contract, DownTypeId, User.Identity.Name);
+                byte[] bytes = Pdf.From(html).Content();
+                return File(bytes.ToArray(), "application/pdf", contract.ContractReference + "_" + DownTypeId.ToLower() + ".pdf");
+            }
+            catch (Exception ex)
+            {
+                MethodBase method = MethodBase.GetCurrentMethod();
+                Logs.DirectDebitLog.Error(method.DeclaringType.FullName + "." + method.Name + " Error:" + ex.Message + "; Trace: " + ex.StackTrace);
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                Response.TrySkipIisCustomErrors = true;
+                return File("", "application/pdf", "");
+            }
+
+        }
+
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.DirectDebitContractNormal + "," + Tools.DirectDebitContractAdmin + "," + Tools.DirectDebitContractNormalAdmin)]
+        public JsonResult ListContracts(int UtilityId, int StatusId, string SearchValue)
+        {
+            try
+            {
+                ContractsCollection contractsCollection = ContractsCollection.GetAll();
+                List<Contracts> utilityBased = null;
+                List<Contracts> statusBased = null;
+                List<Contracts> searchBased = null;
+                List<Contracts> final = null;
+
+                if (UtilityId != 0)
+                    utilityBased = contractsCollection.Where(contract => contract.UtilityId.Equals(UtilityId.ToString())).ToList();
+                else
+                    utilityBased = contractsCollection.ToList();
+
+                if (StatusId != 0)
+                    statusBased = utilityBased.Where(contract => contract.ApprovalStatusId.Equals(StatusId)).ToList();
+                else
+                    statusBased = utilityBased;
+
+
+                searchBased = statusBased.Where(contract => contract.ClientName.Contains(SearchValue) || contract.ServiceSearchValue.Contains(SearchValue) || contract.Identification.Contains(SearchValue)).ToList();
+
+                final = searchBased;
+
+                Response.StatusCode = (int)HttpStatusCode.OK;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(final, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                MethodBase method = MethodBase.GetCurrentMethod();
+                Logs.DirectDebitLog.Error(method.DeclaringType.FullName + "." + method.Name + " Error:" + ex.Message + "; Trace: " + ex.StackTrace);
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.DirectDebitContractNormal + "," + Tools.DirectDebitContractAdmin + "," + Tools.DirectDebitContractNormalAdmin)]
+        public JsonResult GetContract(long Id)
+        {
+            try
+            {
+                Response.StatusCode = (int)HttpStatusCode.OK;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ContractsLogic.Get(Id), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                MethodBase method = MethodBase.GetCurrentMethod();
+                Logs.DirectDebitLog.Error(method.DeclaringType.FullName + "." + method.Name + " Error:" + ex.Message + "; Trace: " + ex.StackTrace);
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.DirectDebitContractNormal + "," + Tools.DirectDebitContractNormalAdmin)]
+        public JsonResult AddContract(Contracts contract)
+        {
+            try
+            {
+                var allCurrencies = CurrenciesCollection.GetAll();
+                var currency = allCurrencies.Find(cur => cur.Id.Equals(Convert.ToInt32(contract.CurrencyId)));
+                contract.Currency = currency.Cur;
+
+                var allUtilities = UtilitiesCollection.GetAll();
+                var utility = allUtilities.Find(ut => ut.Id.Equals(Convert.ToInt32(contract.UtilityId)));
+                contract.UtilityName = utility.Utility;
+
+                bool existsContract = ContractsLogic.CheckContract(contract.UtilityId, contract.ServiceSearchValue);
+
+                if (!existsContract)
+                {
+                    bool exists = Tools.CheckAccount(contract.Branch, contract.BasicNo, contract.Suffix, contract.Currency);
+                    if (exists)
+                    {
+                        Response.StatusCode = (int)HttpStatusCode.OK;
+                        Response.TrySkipIisCustomErrors = true;
+                        return Json(ContractsLogic.Add(contract, User.Identity.Name), JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        Response.TrySkipIisCustomErrors = true;
+                        return Json("Account does not exist!", JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    Response.TrySkipIisCustomErrors = true;
+                    return Json("This contract does exist!", JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                MethodBase method = MethodBase.GetCurrentMethod();
+                Logs.DirectDebitLog.Error(method.DeclaringType.FullName + "." + method.Name + " Error:" + ex.Message + "; Trace: " + ex.StackTrace);
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.DirectDebitContractNormal + "," + Tools.DirectDebitContractNormalAdmin)]
+        public JsonResult UpdateContract(Contracts contract)
+        {
+            try
+            {
+                var allCurrencies = CurrenciesCollection.GetAll();
+                var currency = allCurrencies.Find(cur => cur.Id.Equals(Convert.ToInt32(contract.CurrencyId)));
+                contract.Currency = currency.Cur;
+
+
+                bool exists = Tools.CheckAccount(contract.Branch, contract.BasicNo, contract.Suffix, contract.Currency);
+                if (exists)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.OK;
+                    Response.TrySkipIisCustomErrors = true;
+                    return Json(ContractsLogic.Update(contract, User.Identity.Name), JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    Response.TrySkipIisCustomErrors = true;
+                    return Json("Account does not exist!", JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                MethodBase method = MethodBase.GetCurrentMethod();
+                Logs.DirectDebitLog.Error(method.DeclaringType.FullName + "." + method.Name + " Error:" + ex.Message + "; Trace: " + ex.StackTrace);
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.DirectDebitContractNormal + "," + Tools.DirectDebitContractAdmin + "," + Tools.DirectDebitContractNormalAdmin)]
+        public JsonResult DeleteContract(long Id)
+        {
+            try
+            {
+                Response.StatusCode = (int)HttpStatusCode.OK;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ContractsLogic.Delete(Id, User.Identity.Name), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                MethodBase method = MethodBase.GetCurrentMethod();
+                Logs.DirectDebitLog.Error(method.DeclaringType.FullName + "." + method.Name + " Error:" + ex.Message + "; Trace: " + ex.StackTrace);
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.DirectDebitContractAdmin + "," + Tools.DirectDebitContractNormalAdmin)]
+        public JsonResult CancelContract(long Id)
+        {
+            try
+            {
+                Response.StatusCode = (int)HttpStatusCode.OK;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ContractsLogic.Cancel(Id, User.Identity.Name), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                MethodBase method = MethodBase.GetCurrentMethod();
+                Logs.DirectDebitLog.Error(method.DeclaringType.FullName + "." + method.Name + " Error:" + ex.Message + "; Trace: " + ex.StackTrace);
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.DirectDebitContractNormal + "," + Tools.DirectDebitContractNormalAdmin)]
+        public JsonResult MarkForDeletionContract(long Id)
+        {
+            try
+            {
+                Response.StatusCode = (int)HttpStatusCode.OK;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ContractsLogic.MarkForDeletion(Id, User.Identity.Name), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                MethodBase method = MethodBase.GetCurrentMethod();
+                Logs.DirectDebitLog.Error(method.DeclaringType.FullName + "." + method.Name + " Error:" + ex.Message + "; Trace: " + ex.StackTrace);
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.DirectDebitContractAdmin + "," + Tools.DirectDebitContractNormalAdmin)]
+        public JsonResult UnmarkDeletionContract(long Id)
+        {
+            try
+            {
+                Response.StatusCode = (int)HttpStatusCode.OK;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ContractsLogic.UnmarkDeletion(Id, User.Identity.Name), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                MethodBase method = MethodBase.GetCurrentMethod();
+                Logs.DirectDebitLog.Error(method.DeclaringType.FullName + "." + method.Name + " Error:" + ex.Message + "; Trace: " + ex.StackTrace);
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.DirectDebitContractAdmin + "," + Tools.DirectDebitContractNormalAdmin)]
+        public JsonResult UpdateApprovalStatus(ContractApprovalStatusObj obj)
+        {
+            try
+            {
+                Response.StatusCode = (int)HttpStatusCode.OK;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ContractsLogic.ApprovalStatusUpdate(obj.ContractId, obj.StatusId, User.Identity.Name), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                MethodBase method = MethodBase.GetCurrentMethod();
+                Logs.DirectDebitLog.Error(method.DeclaringType.FullName + "." + method.Name + " Error:" + ex.Message + "; Trace: " + ex.StackTrace);
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.DirectDebitContractNormal + "," + Tools.DirectDebitContractNormalAdmin)]
+        public JsonResult SearchAccountDetails(Contracts contract)
+        {
+            try
+            {
+                var allCurrencies = CurrenciesCollection.GetAll();
+                var currency = allCurrencies.Find(cur => cur.Id.Equals(Convert.ToInt32(contract.CurrencyId)));
+                contract.Currency = currency.Cur;
+
+                var allClientsTypes = ContractTypesCollection.GetAll();
+                var clientType = allClientsTypes.Find(clT => clT.Id.Equals(Convert.ToInt32(contract.ClientTypeId)));
+                contract.ClientType = clientType.Type;
+
+
+                Contracts contractAfter = Tools.SearchAccount(contract.Branch, contract.BasicNo, contract.Suffix, contract.Currency, contract.ClientType);
+                if (contractAfter != null)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.OK;
+                    Response.TrySkipIisCustomErrors = true;
+                    return Json(contractAfter, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    Response.TrySkipIisCustomErrors = true;
+                    return Json("Account does not exist!", JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                MethodBase method = MethodBase.GetCurrentMethod();
+                Logs.DirectDebitLog.Error(method.DeclaringType.FullName + "." + method.Name + " Error:" + ex.Message + "; Trace: " + ex.StackTrace);
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.DirectDebitContractNormal + "," + Tools.DirectDebitContractNormalAdmin)]
+        public JsonResult GetUserBranch()
+        {
+            try
+            {
+                string userBranch = Tools.GetUserBranch(User.Identity.Name);
+                Response.StatusCode = (int)HttpStatusCode.OK;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(userBranch == "" ? "0010" : userBranch, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                MethodBase method = MethodBase.GetCurrentMethod();
+                Logs.DirectDebitLog.Error(method.DeclaringType.FullName + "." + method.Name + " Error:" + ex.Message + "; Trace: " + ex.StackTrace);
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.DirectDebitContractNormal + "," + Tools.DirectDebitContractNormalAdmin)]
+        public JsonResult HasMultiSearch(int Id)
+        {
+            try
+            {
+                Response.StatusCode = (int)HttpStatusCode.OK;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(UtilitiesLogic.GetHasMultiSearch(Id), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                MethodBase method = MethodBase.GetCurrentMethod();
+                Logs.DirectDebitLog.Error(method.DeclaringType.FullName + "." + method.Name + " Error:" + ex.Message + "; Trace: " + ex.StackTrace);
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.DirectDebitContractNormal + "," + Tools.DirectDebitContractNormalAdmin)]
+        public JsonResult GetSearchTypes(int Id)
+        {
+            try
+            {
+                Response.StatusCode = (int)HttpStatusCode.OK;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(UtilitiesCollection.DropdownSearchByUtilityId(Id), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                MethodBase method = MethodBase.GetCurrentMethod();
+                Logs.DirectDebitLog.Error(method.DeclaringType.FullName + "." + method.Name + " Error:" + ex.Message + "; Trace: " + ex.StackTrace);
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
         }
     }
-
-    $("#resetButton").click(function () {
-        window.location.href = "/Fiscalization/Index";
-    });
-</script>
+}

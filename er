@@ -2,9 +2,20 @@
     $(document).ready(function () {
         // Function to update DATTIMSEND field with the current local date and time
         function updateDATTIMSEND() {
-            var currentDate = new Date();
-            var formattedDate = currentDate.toISOString().slice(0, 19).replace("T", " "); // Format as "yyyy-mm-dd HH:mm:ss"
+            var currentDate = new Date(); // Get current date and time in the user's timezone
+            var formattedDate = formatDate(currentDate); // Format the date as needed
             $("#DATTIMSEND").val(formattedDate);
+        }
+
+        // Function to format the date as "yyyy-mm-dd HH:mm:ss"
+        function formatDate(date) {
+            var year = date.getFullYear();
+            var month = String(date.getMonth() + 1).padStart(2, "0");
+            var day = String(date.getDate()).padStart(2, "0");
+            var hours = String(date.getHours()).padStart(2, "0");
+            var minutes = String(date.getMinutes()).padStart(2, "0");
+            var seconds = String(date.getSeconds()).padStart(2, "0");
+            return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
         }
 
         // Handle the click event for any button with type="submit"

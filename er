@@ -1,14 +1,8 @@
 $("#searchBy").click(function () {
     var searchBox = $("#searchBox").val();
     if (searchBox !== "") {
-        // Create a hidden input field for QRCODEVAL
-        var hiddenInput = $("<input>")
-            .attr("type", "hidden")
-            .attr("name", "QRCODEVAL")
-            .val(searchBox);
-
-        // Append the hidden input field to the form
-        $("form").append(hiddenInput);
+        // Set the value of the QRCODEVAL input field
+        $("#QRCODEVAL").val(searchBox);
 
         // Submit the form
         $("form").submit();

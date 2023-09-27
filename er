@@ -1,1 +1,9 @@
-@*@Html.HiddenFor(model => model.PYMTDATTIM, new { Value = Model })
+@Html.HiddenFor(model => model.PYMTDATTIM)
+
+<script>
+    // This script sets the value of PYMTDATTIM to SENDINDATIM when the page loads
+    $(document).ready(function () {
+        var sendinDatimValue = "@Model.SENDINDATIM"; // Assuming SENDINDATIM is a string
+        $("#PYMTDATTIM").val(sendinDatimValue);
+    });
+</script>

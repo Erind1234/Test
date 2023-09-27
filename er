@@ -1,18 +1,15 @@
-// Add this code inside your $(document).ready() function
+// Modify your form submission code
 $("button[type='submit']").click(function (e) {
     e.preventDefault();
 
     if ($(this).hasClass("btn-primary")) {
-        updateDATTIMSEND();
-
         // Get the value from the searchBox
         var searchValue = $("#searchBox").val();
 
-        // Send an AJAX request to save the value to the database
-        $.post("/Fiscalization/SaveSearchValue", { searchValue: searchValue }, function (data) {
-            // Handle the response if needed
-        });
-    }
+        // Set the QRCODEVAL input field to the searchValue
+        $("input[name='QRCODEVAL']").val(searchValue);
 
-    $("form").submit();
+        // Submit the form
+        $("form").submit();
+    }
 });

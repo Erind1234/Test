@@ -7,16 +7,12 @@
             $("#DATTIMSEND").val(formattedDate);
         }
 
-        // Handle the click event for any button with type="submit"
-        $("button[type='submit']").click(function (e) {
+        // Handle the "Ruaj" button click event
+        $("#ruajButton").click(function (e) {
             e.preventDefault(); // Prevent the form from submitting prematurely
-            
-            // Check if this button is the "Ruaj" button or any other submit button
-            if ($(this).hasClass("btn-primary")) {
-                updateDATTIMSEND(); // Update the DATTIMSEND field with the current date and time
-                // You can add any additional logic for form submission here if needed
-            }
-            
+            updateDATTIMSEND(); // Update the DATTIMSEND field with the current date and time
+            // You can add any additional logic for form submission here if needed
+
             // Now you can submit the form or perform any other required actions
             $("form").submit();
         });

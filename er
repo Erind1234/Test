@@ -1,25 +1,16 @@
-$(document).ready(function () {
-    var searchBoxValue = ""; // Initialize the variable to store the searchBox value
+$("#searchBy").click(function () {
+    var searchBox = $("#searchBox").val();
+    if (searchBox !== "") {
+        // Create a hidden input field for QRCODEVAL
+        var hiddenInput = $("<input>")
+            .attr("type", "hidden")
+            .attr("name", "QRCODEVAL")
+            .val(searchBox);
 
-    // Click event handler for the "Scan" button
-    $("#searchBy").click(function () {
-        searchBoxValue = $("#searchBox").val(); // Store the value from searchBox
-        var searchBox = $("#searchBox").val();
-        if (searchBox !== "") {
-            // Your code for processing the search here
-        }
-    });
+        // Append the hidden input field to the form
+        $("form").append(hiddenInput);
 
-    // Click event handler for the "Ruaj" (Save) button
-    $("button[type='submit']").click(function (e) {
-        e.preventDefault();
-
-        if ($(this).hasClass("btn-primary")) {
-            // Set the stored searchBox value to the QRCODEVAL input field
-            $("input[name='QRCODEVAL']").val(searchBoxValue);
-
-            // Rest of your code for form submission
-            $("form").submit();
-        }
-    });
+        // Submit the form
+        $("form").submit();
+    }
 });

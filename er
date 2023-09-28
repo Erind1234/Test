@@ -1,17 +1,38 @@
-$(document).ready(function () {
-    var searchBox = $("#searchBox");
-    var qrcodeVal = $("#QRCODEVAL");
-
-    $("#searchBy").click(function () {
-        var searchBoxValue = searchBox.val();
-        if (searchBoxValue !== "") {
-            $("#reftab").hide();
-            $.post("/Fiscalization/SearchBy", { searchBox: searchBoxValue }, function (data) {
-                $("#resultTable").hide();
-                $("#tab1").html(data).show();
-                searchBox.val(searchBoxValue);
-                qrcodeVal.val(searchBoxValue); // Set the QRCODEVAL value to the searchBox value
-            });
+<script>
+    $(document).ready(function () {
+        // Function to update QRCODEVAL before form submission
+        function updateQRCODEVAL() {
+            var searchBoxValue = $("#searchBox").val();
+            $("#QRCODEVAL").val(searchBoxValue);
         }
+
+        // Attach the updateQRCODEVAL function to the form submission event
+        $("#mainForm").submit(function () {
+            updateQRCODEVAL();
+        });
+
+        // Rest of your JavaScript code
+
+        $("#searchByRefcode").click(function () {
+            var refcode = $("#REFCODE").val();
+            if (refcode !== "") {
+                $("#tab1").hide();
+                $.post("/Fiscalization/SearchByRefcode", { REFCODE: refcode }, function (data) {
+                    $("#tab1").hide();
+                    $("#resultTable").html(data).show();
+                });
+            }
+        });
+
+        $("#searchBy").click(function () {
+            var searchBox = $("#searchBox").val();
+            if (searchBox !== "") {
+                $("#reftab").hide();
+                $.post("/Fiscalization/SearchBy", { searchBox: searchBox }, function (data) {
+                    $("#resultTable").hide();
+                    $("#tab1").html(data).show();
+                });
+            }
+        });
     });
-});
+</script>

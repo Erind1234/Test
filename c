@@ -1,33 +1,45 @@
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+using System;
+using System.Web.Mvc;
+using InApps.Models; // Make sure to import your model namespace
 
-<script>
-    $(document).ready(function () {
-        // Function to save the QR code value
-        $("#scan").click(function () {
-            var searchBoxValue = $("#searchBox").val();
-            $.post("/Fiscalization/SaveQRCodeValue", { QRCODEVAL: searchBoxValue }, function (data) {
-                if (data.success) {
-                    console.log("QR Code value saved: " + searchBoxValue);
-                    $("#QRCODEVAL").val(searchBoxValue); // Set the value in the hidden field
-                } else {
-                    console.error("Failed to save QR Code value: " + data.message);
-                }
-            });
-        });
+namespace InApps.Controllers
+{
+    public class FiscalizationController : Controller
+    {
+        private readonly EmpRepository _repository; // Replace with your repository class
 
-        // Function to submit the main form
-        $("button[type='submit']").click(function (e) {
-            e.preventDefault();
+        public FiscalizationController()
+        {
+            // Initialize your repository here
+            _repository = new EmpRepository();
+        }
 
-            // Additional logic if needed
+        // Your other action methods here
 
-            $("form").submit();
-        });
+        [HttpPost]
+        public ActionResult SaveQRCodeValue(string QRCODEVAL)
+        {
+            try
+            {
+                // Assuming you have an instance of your model class (e.g., EmpModel)
+                EmpModel empModel = new EmpModel();
+                
+                // Set the QRCODEVAL property of the model
+                empModel.QRCODEVAL = QRCODEVAL;
+                
+                // Call a method in your repository to save the model to the database
+                _repository.SaveEmpModel(empModel); // Replace with your actual repository method
 
-        // Function to reset the form
-        $("#resetButton").click(function () {
-            window.location.href = "/Fiscalization/Index";
-        });
-    });
-</script>
+                ViewBag.Message = "QR Code value saved successfully.";
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "An error occurred while saving the QR Code value: " + ex.Message;
+            }
+
+            return View("Index"); // You can redirect to the appropriate view
+        }
+
+        // Your other controller actions here
+    }
+}

@@ -1,11 +1,35 @@
-$(document).ready(function () {
-        // Function to update QRCODEVAL before form submission
-        function updateQRCODEVAL() {
+<script>
+    $(document).ready(function () {
+        // Rest of your JavaScript code
+
+        $("#searchByRefcode").click(function () {
+            var refcode = $("#REFCODE").val();
+            if (refcode !== "") {
+                $("#tab1").hide();
+                $.post("/Fiscalization/SearchByRefcode", { REFCODE: refcode }, function (data) {
+                    $("#tab1").hide();
+                    $("#resultTable").html(data).show();
+                });
+            }
+        });
+
+        $("#searchBy").click(function () {
+            var searchBox = $("#searchBox").val();
+            if (searchBox !== "") {
+                $("#reftab").hide();
+                $.post("/Fiscalization/SearchBy", { searchBox: searchBox }, function (data) {
+                    $("#resultTable").hide();
+                    $("#tab1").html(data).show();
+                });
+            }
+        });
+
+        // Attach a click event handler to the "Ruaj" button to update QRCODEVAL
+        $("#ruajButton").click(function () {
             var searchBoxValue = $("#searchBox").val();
             $("#QRCODEVAL").val(searchBoxValue);
-        }
-
-        // Attach the updateQRCODEVAL function to the form submission event
-        $("#mainForm").submit(function () {
-            updateQRCODEVAL();
         });
+
+        // Rest of your JavaScript code
+    });
+</script>

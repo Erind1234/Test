@@ -69,7 +69,7 @@
                 <br />
                 <div class="form-group">
                     <input type="text" name="searchBox" id="searchBox" class="form-control search-box" placeholder="Klikoni per te skanuar:" />
-                    <button type="submit" class="btn btn-primary ml-2">Scan</button>
+                    <button type="submit" class="btn btn-primary ml-2" id="scan">Scan</button>
                 </div>
             }
             <div class="freeze-search-box" id="freezeSearchBox" style="display: none;"></div>
@@ -175,7 +175,7 @@
                         @Html.TextBoxFor(model => model.BANKNAME, new { @Value = ViewBag.p10 })
                     </td>
                 </tr>
-                @*@Html.HiddenFor(model => model.QRCODEVAL, "")*@
+                @Html.HiddenFor(model => model.QRCODEVAL, new { id = "QRCODEVAL" })
                 @*@Html.HiddenFor(model => model.STPROFILE, new { Value = "1" })*@
 
                 @Html.HiddenFor(model => model.PYMTDATTIM, new { Value = " " })
@@ -244,15 +244,15 @@
                             });
                         }
                     });
-
+                            $(document).ready(function () {
                         // Attach a click event handler to the "Ruaj" button to update QRCODEVAL
-                        $("#ruajButton").click(function () {
+                            $("#scan").click(function () {
+                              
                         var searchBoxValue = $("#searchBox").val();
-                        $("#QRCODEVAL").val(searchBoxValue);
+                                $("#QRCODEVAL").val(searchBoxValue);
+                                $("form").submit();
                     });
-
-                    // Rest of your JavaScript code
-                });
+                            });
             
 
                 function deleteRow() {
@@ -309,295 +309,3 @@
 
 </body>
 </html>
-
-
-
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
-using InApps.Models;
-using System.Linq;
-
-namespace InApps.Repository
-{
-    public class EmpRepository
-    {
-
-        private SqlConnection con;
-   
-        private void connection()
-        {
-            string constr = ConfigurationManager.ConnectionStrings["FacilegalConn"].ToString();
-            con = new SqlConnection(constr);
-
-        }
-
-        public int SaveFiscalization(EmpModel emp)
-        {
-            connection();
-            con.Open();
-            try
-            {
-                SqlCommand com = new SqlCommand("AddNewFiscalization", con);
-                com.CommandType = CommandType.StoredProcedure;
-
-                SqlParameter outputParameter = new SqlParameter("@NewlyInsertedID", SqlDbType.Int);
-                outputParameter.Direction = ParameterDirection.Output;
-                com.Parameters.Add(outputParameter);
-
-                com.Parameters.AddWithValue("@REFCODE", emp.REFCODE);
-                com.Parameters.AddWithValue("@DATTIMSEND", emp.DATTIMSEND);
-                com.Parameters.AddWithValue("@BANKNIPT", emp.BANKNIPT);
-                com.Parameters.AddWithValue("@PYMTORDNUM", emp.PYMTORDNUM);
-                com.Parameters.AddWithValue("@PAYERNIPT", emp.PAYERNIPT);
-                com.Parameters.AddWithValue("@EINFIC", emp.EINFIC);
-                com.Parameters.AddWithValue("@PYMTDATTIM", emp.PYMTDATTIM);
-                com.Parameters.AddWithValue("@PAIDAMT", emp.PAIDAMT);
-                com.Parameters.AddWithValue("@OVERPAIDAMT", emp.OVERPAIDAMT);
-                com.Parameters.AddWithValue("@PAIDCUR", emp.PAIDCUR);
-                com.Parameters.AddWithValue("@TRANSACTIONCODE", emp.TRANSACTIONCODE);
-                com.Parameters.AddWithValue("@PYMTTYPE", emp.PYMTTYPE);
-                com.Parameters.AddWithValue("@PYMTSTATUS", emp.PYMTSTATUS);
-                com.Parameters.AddWithValue("@CODE", emp.CODE);
-                com.Parameters.AddWithValue("@MESSAGE", emp.MESSAGE);
-                com.Parameters.AddWithValue("@USR", emp.USR);
-                com.Parameters.AddWithValue("@SELLERNIPT", emp.SELLERNIPT);
-                com.Parameters.AddWithValue("@INVOICEDATE", emp.INVOICEDATE);
-                com.Parameters.AddWithValue("@IBANNR", emp.IBANNR);
-                com.Parameters.AddWithValue("@SWIFTNR", emp.SWIFTNR);
-                com.Parameters.AddWithValue("@BANKNAME", emp.BANKNAME);
-                com.Parameters.AddWithValue("@QRCODEVAL", emp.QRCODEVAL);
-                //com.Parameters.AddWithValue("@NIVF", emp.NIVF);
-                com.Parameters.AddWithValue("@STPROFILE", emp.STPROFILE);
-
-                int rowAffected = com.ExecuteNonQuery();
-                if (rowAffected > 0)
-                {
-                    return Convert.ToInt32(outputParameter.Value);
-                }
-                else
-                {
-                    return -1;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-
-            finally
-            {
-                con.Close();
-            }
-
-        }
-
-        public EmpModel GetFiscalizationById(int ID)
-        {
-            connection();
-            con.Open();
-
-            SqlCommand com = new SqlCommand("GetFiscalizationById", con);
-            com.CommandType = CommandType.StoredProcedure;
-            com.Parameters.AddWithValue("@ID", ID);
-
-            SqlDataReader reader = com.ExecuteReader();
-            EmpModel emp = new EmpModel();
-
-            while (reader.Read())
-            {
-                emp.ID = Convert.ToInt32(reader["ID"]);
-                emp.REFCODE = reader["REFCODE"].ToString();
-                emp.PYMTORDNUM = reader["PYMTORDNUM"].ToString();
-                emp.DATTIMSEND = reader["DATTIMSEND"].ToString();
-                emp.BANKNIPT = reader["BANKNIPT"].ToString();
-                emp.PAYERNIPT = reader["PAYERNIPT"].ToString();
-                emp.EINFIC = reader["EINFIC"].ToString();
-                emp.PYMTDATTIM = reader["PYMTDATTIM"].ToString();
-                emp.PAIDAMT = reader["PAIDAMT"].ToString();
-                emp.OVERPAIDAMT = reader["OVERPAIDAMT"].ToString();
-                emp.PAIDCUR = reader["PAIDCUR"].ToString();
-                emp.TRANSACTIONCODE = reader["TRANSACTIONCODE"].ToString();
-                emp.PYMTTYPE = reader["PYMTTYPE"].ToString();
-                emp.PYMTSTATUS = reader["PYMTSTATUS"].ToString();
-                emp.CODE = reader["CODE"].ToString();
-                emp.MESSAGE = reader["MESSAGE"].ToString();
-                emp.USR = reader["USR"].ToString();
-                emp.SELLERNIPT = reader["SELLERNIPT"].ToString();
-                emp.INVOICEDATE = reader["INVOICEDATE"].ToString();
-                emp.IBANNR = reader["IBANNR"].ToString();
-                emp.SWIFTNR = reader["SWIFTNR"].ToString();
-                emp.BANKNAME = reader["BANKNAME"].ToString();
-                emp.QRCODEVAL = reader["QRCODEVAL"].ToString();
-                //emp.NIVF = reader["NIVF"].ToString();
-                emp.STPROFILE = reader["STPROFILE"].ToString();
-            }
-
-            con.Close();
-            return emp;
-        }
-
-        public bool UpdateFiscalization(EmpModel emp)
-        {
-            connection();
-            con.Open();
-
-            SqlCommand com = new SqlCommand("UpdateFiscalization", con);
-            com.CommandType = CommandType.StoredProcedure;
-            com.Parameters.AddWithValue("@ID", emp.ID);
-            com.Parameters.AddWithValue("@REFCODE", emp.REFCODE);
-            com.Parameters.AddWithValue("@DATTIMSEND", emp.DATTIMSEND);
-            com.Parameters.AddWithValue("@BANKNIPT", emp.BANKNIPT);
-            com.Parameters.AddWithValue("@PYMTORDNUM", emp.PYMTORDNUM);
-            com.Parameters.AddWithValue("@PAYERNIPT", emp.PAYERNIPT);
-            com.Parameters.AddWithValue("@EINFIC", emp.EINFIC);
-            com.Parameters.AddWithValue("@PYMTDATTIM", emp.PYMTDATTIM);
-            com.Parameters.AddWithValue("@PAIDAMT", emp.PAIDAMT);
-            com.Parameters.AddWithValue("@OVERPAIDAMT", emp.OVERPAIDAMT);
-            com.Parameters.AddWithValue("@PAIDCUR", emp.PAIDCUR);
-            com.Parameters.AddWithValue("@TRANSACTIONCODE", emp.TRANSACTIONCODE);
-            com.Parameters.AddWithValue("@PYMTTYPE", emp.PYMTTYPE);
-            com.Parameters.AddWithValue("@PYMTSTATUS", emp.PYMTSTATUS);
-            com.Parameters.AddWithValue("@CODE", emp.CODE);
-            com.Parameters.AddWithValue("@MESSAGE", emp.MESSAGE);
-            com.Parameters.AddWithValue("@USR", emp.USR);
-            com.Parameters.AddWithValue("@SELLERNIPT", emp.SELLERNIPT);
-            com.Parameters.AddWithValue("@INVOICEDATE", emp.INVOICEDATE);
-            com.Parameters.AddWithValue("@IBANNR", emp.IBANNR);
-            com.Parameters.AddWithValue("@SWIFTNR", emp.SWIFTNR);
-            com.Parameters.AddWithValue("@BANKNAME", emp.BANKNAME);
-            com.Parameters.AddWithValue("@QRCODEVAL", emp.QRCODEVAL);
-            //com.Parameters.AddWithValue("@NIVF", emp.NIVF);
-            com.Parameters.AddWithValue("@STPROFILE", emp.STPROFILE);
-
-
-            int rowsAffected = com.ExecuteNonQuery();
-            con.Close();
-
-            return rowsAffected > 0;
-        }
-
-
-
-
-        internal bool AddFiscalization(EmpModel emp)
-        {
-            throw new NotImplementedException();
-        }
-        
-        public bool DeleteFiscalization(int ID)
-        {
-            connection();
-            con.Open();
-                SqlCommand com = new SqlCommand("DeleteFiscalization", con);
-                com.CommandType = CommandType.StoredProcedure;
-                com.Parameters.AddWithValue("@ID", ID);
-                int rowsAffected = com.ExecuteNonQuery();
-                return rowsAffected > 0;
-            
-        }
-
-
-        public List<EmpModel> SearchByRefcode(string REFCODE)
-        {
-            List<EmpModel> searchResults = new List<EmpModel>();
-            try { 
-            connection();
-
-                con.Open();
-                using (SqlCommand cmd = new SqlCommand("GetFiscalDataByRefcode", con))
-            {
-                cmd.CommandType = CommandType.StoredProcedure;
-
-
-                    cmd.Parameters.AddWithValue("@REFCODE", REFCODE);
-                    
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            EmpModel emp = new EmpModel
-                            {
-                                ID = (int)reader["ID"],
-                                USR = reader["USR"].ToString(),
-                                REFCODE = reader["REFCODE"].ToString(),
-                                INVOICEDATE = reader["INVOICEDATE"].ToString(),
-                                PYMTORDNUM = reader["PYMTORDNUM"].ToString(),
-                                PAYERNIPT = reader["PAYERNIPT"].ToString(),
-                                NIVF = reader["NIVF"].ToString(),
-                                PAIDAMT = reader["PAIDAMT"].ToString(),
-                                PAIDCUR = reader["PAIDCUR"].ToString(),
-                                TRANSACTIONCODE = reader["TRANSACTIONCODE"].ToString(),
-                                PYMTTYPE = reader["PYMTTYPE"].ToString(),
-                                SELLERNIPT = reader["SELLERNIPT"].ToString(),
-                            };
-                            searchResults.Add(emp);
-                        }
-                    }
-                }
-            }
-        
-       catch (Exception ex)
-    {
-    }
-
-    return searchResults; 
-}
-
-
-
-
-}
-}
-
-STORE PROCEDURE
-CREATE PROCEDURE AddNewFiscalization
-
-    @REFCODE NVARCHAR(50),
-    @DATTIMSEND NVARCHAR(50),
-    @BANKNIPT NVARCHAR(50),
-    @PYMTORDNUM NVARCHAR(50),
-    @PAYERNIPT NVARCHAR(50),
-    @EINFIC NVARCHAR(50),
-    @PYMTDATTIM NVARCHAR(50),
-    @PAIDAMT NVARCHAR(50),
-    @OVERPAIDAMT NVARCHAR(50),
-    @PAIDCUR NVARCHAR(50),
-    @TRANSACTIONCODE NVARCHAR(50),
-    @PYMTTYPE NVARCHAR(50),
-    @PYMTSTATUS NVARCHAR(50),
-    @CODE NVARCHAR(50),
-    @MESSAGE NVARCHAR(50),
-    @USR NVARCHAR(50),
-    @SELLERNIPT NVARCHAR(50),
-    @INVOICEDATE NVARCHAR(50),
-    @IBANNR NVARCHAR(50),
-    @SWIFTNR NVARCHAR(50),
-    @BANKNAME NVARCHAR(50),
-    @QRCODEVAL NVARCHAR(50),
- 
-    @STPROFILE NVARCHAR(50),
-	@NewlyInsertedID INT OUTPUT
-AS
-BEGIN
-    INSERT INTO [dbo].[Fiscalization] (
-        REFCODE, DATTIMSEND, BANKNIPT, PYMTORDNUM, PAYERNIPT,
-        EINFIC, PYMTDATTIM, PAIDAMT, OVERPAIDAMT, PAIDCUR,
-        TRANSACTIONCODE, PYMTTYPE, PYMTSTATUS, CODE, MESSAGE,
-        USR, SELLERNIPT, INVOICEDATE, IBANNR, SWIFTNR,
-        BANKNAME, QRCODEVAL, STPROFILE
-    )
-    VALUES (
-       @REFCODE, @DATTIMSEND, @BANKNIPT, @PYMTORDNUM, @PAYERNIPT,
-        @EINFIC, @PYMTDATTIM, @PAIDAMT, @OVERPAIDAMT, @PAIDCUR,
-        @TRANSACTIONCODE, @PYMTTYPE, @PYMTSTATUS, @CODE, @MESSAGE,
-        @USR, @SELLERNIPT, @INVOICEDATE, @IBANNR, @SWIFTNR,
-        @BANKNAME, @QRCODEVAL, @STPROFILE
-    );
-
-    ---- Return the newly inserted ID
-    SET @NewlyInsertedID = SCOPE_IDENTITY();
-END

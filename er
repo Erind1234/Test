@@ -1,10 +1,18 @@
+[HttpPost]
+public ActionResult SaveQRCodeValue(string QRCODEVAL)
+{
+    try
+    {
+        // Here, you can save the QRCODEVAL to your database or perform any other necessary operations
+        // For example, you can call your repository method to save it
+        // empRepo.SaveQRCodeValue(QRCODEVAL);
 
-                    $("#scan").click(function () {
-                        var searchBoxValue = $("#searchBox").val();
-                        // Save the value in the database by making an AJAX POST request
-                        $.post("/Fiscalization/SaveQRCodeValue", { QRCODEVAL: searchBoxValue }, function (data) {
-                            // Handle the response from the server if needed
-
-                            console.log("QR Code value saved: " + searchBoxValue);
-                        });
-                    });
+        // Optionally, you can return a response to the client if needed
+        return Json(new { success = true, message = "QR Code value saved successfully" });
+    }
+    catch (Exception ex)
+    {
+        // Handle any errors that occur during the saving process
+        return Json(new { success = false, message = "An error occurred while saving the QR Code value: " + ex.Message });
+    }
+}

@@ -1,16 +1,18 @@
-<div class="container text-center">
-    <h1>Fiscalization</h1>
-
-    @using (Html.BeginForm("Index", "Fiscalization", FormMethod.Post))
+[HttpPost]
+public ActionResult SaveQRCodeValue(string QRCODEVAL)
+{
+    try
     {
-        <div class="form-group d-flex justify-content-center align-items-center">
-            <input type="text" name="searchBox" class="form-control" style="width: 200px;" placeholder="Enter search criteria" />
-            <button type="submit" class="btn btn-primary ml-2">Search</button>
-        </div>
-    }
+        // Here, you can save the QRCODEVAL to your database or perform any other necessary operations
+        // For example, you can call your repository method to save it
+        // empRepo.SaveQRCodeValue(QRCODEVAL);
 
-    <div class="form-group mt-4">
-        <input type="text" id="REFCODE" class="form-control" style="width: 200px;" placeholder="Enter REFCODE" />
-        <button id="searchByRefcode" class="btn btn-success ml-2">Search by REFCODE</button>
-    </div>
-</div>
+        // Optionally, you can return a response to the client if needed
+        return Json(new { success = true, message = "QR Code value saved successfully" });
+    }
+    catch (Exception ex)
+    {
+        // Handle any errors that occur during the saving process
+        return Json(new { success = false, message = "An error occurred while saving the QR Code value: " + ex.Message });
+    }
+}

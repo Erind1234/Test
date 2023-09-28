@@ -1,1 +1,12 @@
-{"Procedure or function 'AddNewFiscalization' expects parameter '@QRCODEVAL', which was not supplied."}
+$("#searchBy").click(function () {
+    searchBoxValue = $("#searchBox").val(); // Save the searchBox value
+    if (searchBoxValue !== "") {
+        $("#reftab").hide();
+        $.post("/Fiscalization/SearchBy", { searchBox: searchBoxValue }, function (data) {
+            $("#resultTable").hide();
+            $("#tab1").html(data).show();
+            // Set the searchBox value back after populating the table
+            $("#searchBox").val(searchBoxValue);
+        });
+    }
+});

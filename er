@@ -1,14 +1,8 @@
-$(document).ready(function () {
-    // Function to save the QR code value
-    $("#scan").click(function () {
-        var searchBoxValue = $("#searchBox").val();
-        $("#QRCODEVAL").val(searchBoxValue); // Set the value in the hidden field
-    });
+ // Function to submit the main form
+    $("button[type='submit']").click(function (e) {
+        e.preventDefault();
 
-    // ... Other JavaScript code ...
+        // Additional logic if needed
 
-    // Function to reset the form
-    $("#resetButton").click(function () {
-        window.location.href = "/Fiscalization/Index";
+        $("form").submit();
     });
-});

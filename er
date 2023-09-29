@@ -1,17 +1,9 @@
-<script>
-    $(document).ready(function () {
-        // Function to update the hidden field with the search box value when "Ruaj" button is clicked
-        $("#ruajButton").click(function () {
-            var searchBoxValue = $("#searchBox").val();
-            $("#hiddenQRCodeVal").val(searchBoxValue);
-            // Optionally, you can also alert the user or perform other actions here
-            alert("QR Code value saved: " + searchBoxValue);
-        });
+        if (emp.SWIFTNR != null)
+                {
+                    com.Parameters.AddWithValue("@SWIFTNR", emp.SWIFTNR);
+                }
+                else
+                {
+                    com.Parameters.AddWithValue("@SWIFTNR","");
 
-        // ... Other JavaScript code ...
-    });
-</script>
-
-
-
-@Html.HiddenFor(model => model.QRCODEVAL, new { id = "hiddenQRCodeVal" })
+                }

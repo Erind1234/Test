@@ -1,18 +1,6 @@
-@using (Html.BeginForm("Save", "YourControllerName", FormMethod.Post))
-{
-    @Html.TextBox("searchBox", null, new { @class = "form-control search-box", placeholder = "Klikoni per te skanuar:", id = "searchBox" })
-    <input type="hidden" id="hiddenValue" name="hiddenValue" value="" />
-    <button type="button" id="saveButton">Save</button>
-    <button type="submit">Perform Action</button>
-}
-
-
-
 <script>
-    $(document).ready(function () {
-        $("#saveButton").click(function () {
-            var enteredValue = $("#searchBox").val();
-            $("#hiddenValue").val(enteredValue);
-        });
-    });
+function getValue() {
+    var searchBoxValue = document.getElementById("searchBox").value;
+    alert("Value entered: " + searchBoxValue);
+}
 </script>

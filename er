@@ -1,151 +1,108 @@
-@model InApps.Models.EmpModel
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
 
-<head>
-    <style>
+namespace InApps.Models
+{
+    public class EmpModel
+    {
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            height: 160vh;
+        //[Display(Name = "ID")]
+        //public int Empid { get; set; }
+
+        [Display(Name = "ID")]
+        [Key]
+
+        public int ID { get; set; }
+
+        public string searchBox { get; set; }
+        public string refcodeSearchBox { get; set; }
+        //[Required(ErrorMessage = "REFCODE is required.")]
+        public string REFCODE { get; set; }
+
+        //[Required(ErrorMessage = "DATTIMSEND is required.")]
+        public string DATTIMSEND { get; set; }
+
+
+        //[Required(ErrorMessage = "BANKNIPT is required.")]
+        public string BANKNIPT { get; set; }
+
+        //[Required(ErrorMessage = "PYMTORDNUM  is required.")]
+        public string PYMTORDNUM { get; set; }
+        
+
+        //[Required(ErrorMessage = "PAYERNIPT is required.")]
+        public string PAYERNIPT { get; set; }
+
+        //[Required(ErrorMessage = "EINFIC  is required.")]
+        public string EINFIC { get; set; }
+
+        //[Required(ErrorMessage = "PYMTDATTIM  is required.")]
+        public string PYMTDATTIM { get; set; }
+
+        //[Required(ErrorMessage = "PAIDAMT  is required.")]
+        public string PAIDAMT { get; set; }
+                                                                                         
+        public string OVERPAIDAMT { get; set; }
+
+        //[Required(ErrorMessage = "PAIDCUR  is required.")]
+        public string PAIDCUR { get; set; }
+
+        //[Required(ErrorMessage = "TRANSACTIONCODE  is required.")]
+        public string TRANSACTIONCODE { get; set; }
+
+        //[Required(ErrorMessage = "PYMTTYPE  is required.")]
+        public string PYMTTYPE { get; set; }
+
+        //[Required(ErrorMessage = "PYMTSTATUS  is required.")]
+        public string PYMTSTATUS { get; set; }
+
+        //[Required(ErrorMessage = "CODE  is required.")]
+        public string CODE { get; set; }
+        public string Textbox1 { get; set; }
+        public string Textbox2 { get; set; }
+
+
+        //[Required(ErrorMessage = "MESSAGE  is required.")]
+        public string MESSAGE { get; set; }
+
+        internal bool SaveFiscalization()
+        {
+            throw new NotImplementedException();
         }
 
-        .form-group {
-            display: flex;
-            align-items: center;
-        }
+        //[Required(ErrorMessage = "USR  is required.")]
+        public string USR { get; set; }
 
-        .search-group {
-            display: flex;
-            align-items: center;
-        }
+        //[Required(ErrorMessage = "SELLERNIPT  is required.")]
+        public string SELLERNIPT { get; set; }
 
-        .search-box {
-            width: 400px;
-        }
-
-        .freeze-search-box {
-            position: absolute;
-            top: 0;
-            left: 0;
-            background-color: white;
-            z-index: 1;
-        }
-
-        .table-container {
-            margin-top: 20px;
-            /*margin-left: 350px;*/
-            width: auto;
-        }
-
-        .fixed-table {
-            position: absolute;
-            top: 250px;
-            width: 60%;
-            border: 1px solid white;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 70%;
-        }
-
-        tr, td {
-            border: 1px solid #ccc;
-            padding: 1px;
-        }
-
-        .popup {
-            z-index: 2;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <h2>Edit Fiscalization</h2>
-
-        <div class="fixed-table" id="tab1">
-            @using (Html.BeginForm("UpdateFiscalization", "Fiscalization", FormMethod.Post))
-            {
-                @Html.HiddenFor(model => model.ID)
-         
-                <table>
-
-                    <tr>
-                        <td>@Html.Label("Numri Urdhrit")</td>
-                        <td>@Html.TextBoxFor(model => model.PYMTORDNUM)</td>
-                    </tr>
-                    <tr>
-                        <td>@Html.Label("Invoice Date:")</td>
-                        <td>@Html.TextBoxFor(model => model.INVOICEDATE, new {@disable = "disable" })</td>
-                    </tr>
-
-                    <tr>
-                        <td>@Html.Label("NIVF")</td>
-                        <td>@Html.TextBoxFor(model => model.EINFIC, new { @disable = "disable" })</td>
-
-                    </tr>
-                               <tr>
-                        <td>@Html.Label("NIPT Bleres:")</td>
-                        <td>@Html.TextBoxFor(model => model.PAYERNIPT)</td>
-                    </tr>
-                    <tr>
-                        <td>@Html.Label("Shites")</td>
-                        <td>@Html.TextBoxFor(model => model.SELLERNIPT, new { @disable = "disable" })</td>
-                    </tr>
-                    <tr>
-                        <td>@Html.Label("Emri Shites")</td>
-                        <td>@Html.TextBoxFor(model => model.TRANSACTIONCODE, new { @disable = "disable" })</td>
-                    </tr>
-                    <tr>
-                        <td>@Html.Label("Referenca e Teller:")</td>
-                        <td>@Html.TextBoxFor(model => model.REFCODE)</td>
-                    </tr>
-                    <tr>
-                        <td>@Html.Label("Tipi i Pageses:")</td>
-                        <td>
-                            @Html.TextBoxFor(model => model.PYMTTYPE)
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td>@Html.Label("Statusi i Pageses:")</td>
-
-                        <td>
-                            @Html.TextBoxFor(model => model.STPROFILE)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>@Html.Label("Monedha:")</td>
-                        <td>@Html.TextBoxFor(model => model.PAIDCUR, new {@disable = "disable" })</td>
-                    </tr>
-
-                    <tr>
-                        <td>@Html.Label("Shuma e Paguar:")</td>
-                        <td>@Html.TextBoxFor(model => model.PAIDAMT)</td>
-                    </tr>
+        //[Required(ErrorMessage = "INVOICEDATE  is required.")]
+        public string INVOICEDATE { get; set; }
 
 
-                    <tr>
-                        <td>@Html.Label("IBAN & SWIFT:")</td>
-                        <td>
-                            @Html.TextBoxFor(model => model.IBANNR, new { @disable = "disable" })
+        //[Required(ErrorMessage = "IBANNR  is required.")]
+        public string IBANNR { get; set; }
 
-                            @Html.TextBoxFor(model => model.BANKNAME, new {@disable = "disable" })
-                        </td>
-                    </tr>
-                     <tr>
-                        <button type="submit" class="btn btn-primary">Update</button>
-                    </tr>
-                </table>
+        //[Required(ErrorMessage = "SWIFTNR  is required.")]
+        public string SWIFTNR { get; set; }
+
+        //[Required(ErrorMessage = "BANKNAME  is required.")]
+        public string BANKNAME { get; set; }
 
 
-                }
+        //[Required(ErrorMessage = "QRCODEVAL  is required.")]
+        public string QRCODEVAL { get; set; }
 
-</div>
+        //[Required(ErrorMessage = "STPROFILE  is required.")]
+        public string STPROFILE { get; set; }
+        public string NIVF { get; set; }
 
-   
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+        public List<EmpModel> TableData { get; set; }
+
+
+    }
+}

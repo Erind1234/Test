@@ -1,10 +1,205 @@
-Server Error in '/' Application.
-The view 'SaveFiscalization' or its master was not found or no view engine supports the searched locations. The following locations were searched:
-~/Views/Fiscalization/SaveFiscalization.aspx
-~/Views/Fiscalization/SaveFiscalization.ascx
-~/Views/Shared/SaveFiscalization.aspx
-~/Views/Shared/SaveFiscalization.ascx
-~/Views/Fiscalization/SaveFiscalization.cshtml
-~/Views/Fiscalization/SaveFiscalization.vbhtml
-~/Views/Shared/SaveFiscalization.cshtml
-~/Views/Shared/SaveFiscalization.vbhtml
+using InApps.Models;
+using InApps.Repository;
+using System;
+using System.Collections.Generic;
+using System.Web.Mvc;
+
+namespace InApps.Controllers
+{
+
+
+    public class FiscalizationController : Controller
+    {
+
+        private EmpRepository empRepo;
+        public string searchBoxValue;
+        public FiscalizationController()
+        {
+            empRepo = new EmpRepository();
+        }
+
+
+        public ActionResult Index()
+        {
+            EmpModel emp = new EmpModel();
+
+            return View(emp);
+
+        }
+
+
+        private const string connectionString = "FacilegalConn";
+        [HttpGet]
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.StatementStatementNormal)]
+        public ActionResult AddFiscalization()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.StatementStatementNormal)]
+        public ActionResult Index(string searchBox)
+        {
+            try
+            {
+                searchBoxValue = searchBox;
+                string[] splitValues = searchBox.Split(';');
+
+                ViewBag.p1 = splitValues.Length > 0 ? splitValues[0] : string.Empty;
+                ViewBag.p2 = splitValues.Length > 1 ? splitValues[1] : string.Empty;
+                ViewBag.p3 = splitValues.Length > 2 ? splitValues[2] : string.Empty;
+                ViewBag.p4 = splitValues.Length > 3 ? splitValues[3] : string.Empty;
+                ViewBag.p5 = splitValues.Length > 4 ? splitValues[4] : string.Empty;
+                ViewBag.p6 = splitValues.Length > 5 ? splitValues[5] : string.Empty;
+                ViewBag.p7 = splitValues.Length > 6 ? splitValues[6] : string.Empty;
+                ViewBag.p8 = splitValues.Length > 7 ? splitValues[7] : string.Empty;
+                ViewBag.p9 = splitValues.Length > 8 ? splitValues[8] : string.Empty;
+                ViewBag.p10 = splitValues.Length > 9 ? splitValues[9] : string.Empty;
+                ViewBag.p11 = splitValues.Length > 10 ? splitValues[10] : string.Empty;
+
+                return View("");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "An error occurred: " + ex.Message;
+                return View();
+            }
+        }
+
+
+
+
+        [HttpPost]
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.StatementStatementNormal)]
+        public ActionResult SaveFiscalization(EmpModel emp)
+        {
+            if (ModelState.IsValid)
+            {
+
+                try
+                {
+                    emp.USR = User.Identity.Name;
+                    int newlyInsertedID = empRepo.SaveFiscalization(emp);
+                    if (newlyInsertedID > 0)
+                    {
+                        emp.ID = newlyInsertedID;
+                        return View("Popup", emp);
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Failed to save fiscalization details.";
+                    }
+
+                    return View("Popup");
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Error = "An error occurred: " + ex.Message;
+                    return View("Index");
+                }
+            }
+
+            else
+            {
+                return View(emp);
+            }
+        }
+
+
+
+
+
+
+    [HttpGet]
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.StatementStatementNormal)]
+        public ActionResult EditFiscalization(int ID)
+        {
+            EmpModel emp = empRepo.GetFiscalizationById(ID);
+
+            if (emp == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(emp);
+        }
+
+        [HttpPost]
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.StatementStatementNormal)]
+        public ActionResult UpdateFiscalization(EmpModel emp)
+        {
+            try
+            {
+
+                bool isUpdated = empRepo.UpdateFiscalization(emp);
+
+                if (isUpdated)
+                {
+                    return View("Popup", emp);
+                }
+                else
+                {
+                    ViewBag.Message = "Failed to update fiscalization details.";
+                }
+                return View("Index");
+            }
+
+
+            catch (Exception ex)
+            {
+                ViewBag.Error = "An error occurred: " + ex.Message;
+                return View("Index", emp);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult DeleteFiscalization(int ID)
+        {
+            try
+            {
+                bool isDeleted = empRepo.DeleteFiscalization(ID);
+
+                if (isDeleted)
+                {
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Failed to delete fiscalization record." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "An error occurred: " + ex.Message });
+            }
+        }
+        [HttpPost]
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.StatementStatementNormal)]
+        public ActionResult SearchByRefcode(string REFCODE)
+        {
+            try
+            {
+                List<EmpModel> searchResults = empRepo.SearchByRefcode(REFCODE);
+                return PartialView("_SearchResults", searchResults);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "An error occurred: " + ex.Message;
+                return View("Index");
+            }
+        }
+
+
+
+
+
+
+    }
+}

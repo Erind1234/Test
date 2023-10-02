@@ -1,10 +1,54 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation/1.19.2/jquery.validate.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
+
+namespace InApps.Models
+{
+    public class EmpModel
+    {
+
+        [Display(Name = "ID")]
+        [Key]
+
+        public int ID { get; set; }
+       public string searchBox { get; set; }
+        public string refcodeSearchBox { get; set; }
+       public string REFCODE { get; set; }
+       public string DATTIMSEND { get; set; }
+       public string BANKNIPT { get; set; }
+       [Required(ErrorMessage = "Numri Urdhrit is required")]
+        public string PYMTORDNUM { get; set; }
+       public string PAYERNIPT { get; set; }
+       public string EINFIC { get; set; }
+       public string PYMTDATTIM { get; set; }
+       public string PAIDAMT { get; set; }
+       public string OVERPAIDAMT { get; set; }
+       public string PAIDCUR { get; set; }
+       public string TRANSACTIONCODE { get; set; }
+       public string PYMTTYPE { get; set; }
+       public string PYMTSTATUS { get; set; }
+       public string CODE { get; set; }
+       public string MESSAGE { get; set; }
+       internal bool SaveFiscalization()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string USR { get; set; }
+        public string SELLERNIPT { get; set; }
+        public string INVOICEDATE { get; set; }
+        public string IBANNR { get; set; }
+        public string SWIFTNR { get; set; }
+        public string BANKNAME { get; set; }
+        public string QRCODEVAL { get; set; }
+        public string STPROFILE { get; set; }
+        public string NIVF { get; set; }
+
+        public List<EmpModel> TableData { get; set; }
 
 
-<div class="form-group">
-    @Html.LabelFor(model => model.REFCODE)
-    @Html.TextBoxFor(model => model.REFCODE, new { @class = "form-control" })
-    @Html.ValidationMessageFor(model => model.REFCODE, "", new { @class = "text-danger" })
-</div>
+    }
+}

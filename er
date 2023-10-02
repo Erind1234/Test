@@ -1,54 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
-
-namespace InApps.Models
-{
-    public class EmpModel
-    {
-
-        [Display(Name = "ID")]
-        [Key]
-
-        public int ID { get; set; }
-       public string searchBox { get; set; }
-        public string refcodeSearchBox { get; set; }
-       public string REFCODE { get; set; }
-       public string DATTIMSEND { get; set; }
-       public string BANKNIPT { get; set; }
-       [Required(ErrorMessage = "Numri Urdhrit is required")]
-        public string PYMTORDNUM { get; set; }
-       public string PAYERNIPT { get; set; }
-       public string EINFIC { get; set; }
-       public string PYMTDATTIM { get; set; }
-       public string PAIDAMT { get; set; }
-       public string OVERPAIDAMT { get; set; }
-       public string PAIDCUR { get; set; }
-       public string TRANSACTIONCODE { get; set; }
-       public string PYMTTYPE { get; set; }
-       public string PYMTSTATUS { get; set; }
-       public string CODE { get; set; }
-       public string MESSAGE { get; set; }
-       internal bool SaveFiscalization()
-        {
-            throw new NotImplementedException();
-        }
-
-        public string USR { get; set; }
-        public string SELLERNIPT { get; set; }
-        public string INVOICEDATE { get; set; }
-        public string IBANNR { get; set; }
-        public string SWIFTNR { get; set; }
-        public string BANKNAME { get; set; }
-        public string QRCODEVAL { get; set; }
-        public string STPROFILE { get; set; }
-        public string NIVF { get; set; }
-
-        public List<EmpModel> TableData { get; set; }
-
-
-    }
-}
+Server Error in '/' Application.
+The view 'SaveFiscalization' or its master was not found or no view engine supports the searched locations. The following locations were searched:
+~/Views/Fiscalization/SaveFiscalization.aspx
+~/Views/Fiscalization/SaveFiscalization.ascx
+~/Views/Shared/SaveFiscalization.aspx
+~/Views/Shared/SaveFiscalization.ascx
+~/Views/Fiscalization/SaveFiscalization.cshtml
+~/Views/Fiscalization/SaveFiscalization.vbhtml
+~/Views/Shared/SaveFiscalization.cshtml
+~/Views/Shared/SaveFiscalization.vbhtml

@@ -1,5 +1,1 @@
-  <tr>
-                            <td>@Html.Label("NIPT Bleres:")</td>
-                            <td>@Html.TextBox("PAYERNIPT")
-                            @Html.ValidationMessageFor(model => model.PAYERNIPT, "", new { @class = "text-danger" })</td>
-                        </tr>
+        <input type="text" id="PAYERNIPT" name="PAYERNIPT" pattern="^[A-Za-z][0-9]{8}[A-Za-z]$" required />

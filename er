@@ -1,18 +1,431 @@
-public class EmpModel
-{
-    [Required(ErrorMessage = "Numri i Urdherit duhet plotesuar")]
-    public string PYMTORDNUM { get; set; }
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
 
-    // Other properties and validation attributes
+namespace InApps.Models
+{
+    public class EmpModel
+    {
+
+        [Display(Name = "ID")]
+        [Key]
+
+        public int ID { get; set; }
+       public string searchBox { get; set; }
+        public string refcodeSearchBox { get; set; }
+       public string REFCODE { get; set; }
+       public string DATTIMSEND { get; set; }
+       public string BANKNIPT { get; set; }
+        [Required(ErrorMessage = "Numri Urdhrit is required")]
+        public string PYMTORDNUM { get; set; }
+        [RegularExpression(@"^[A-Za-z]\d{8}[A-Za-z]$", ErrorMessage = "Invalid format. It should start with a letter, have 8 numbers, and end with a letter.")]
+        public string PAYERNIPT { get; set; }
+       public string EINFIC { get; set; }
+       public string PYMTDATTIM { get; set; }
+       public string PAIDAMT { get; set; }
+       public string OVERPAIDAMT { get; set; }
+       public string PAIDCUR { get; set; }
+       public string TRANSACTIONCODE { get; set; }
+       public string PYMTTYPE { get; set; }
+       public string PYMTSTATUS { get; set; }
+       public string CODE { get; set; }
+       public string MESSAGE { get; set; }
+       internal bool SaveFiscalization()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string USR { get; set; }
+        public string SELLERNIPT { get; set; }
+        public string INVOICEDATE { get; set; }
+        public string IBANNR { get; set; }
+        public string SWIFTNR { get; set; }
+        public string BANKNAME { get; set; }
+        public string QRCODEVAL { get; set; }
+        public string STPROFILE { get; set; }
+        public string NIVF { get; set; }
+
+        public List<EmpModel> TableData { get; set; }
+
+
+    }
 }
 
 
+my index 
+@model InApps.Models.EmpModel
+
+<head>
+   <style>
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 120vh;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            
+        }
+
+        .search-group {
+            display: flex;
+            align-items: center;
+        }
+        .search-box {
+            width: 300px;
+        }
+
+        .freeze-search-box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: white;
+            z-index: 1;
+        }
+
+        .table-container {
+            margin-top: 20px;
+            /*margin-left: 350px;*/
+            width: auto;
+        }
+        .fixed-table {
+            position: absolute;
+            top: 250px; 
+            width: 40%; 
+            border: 1px solid white; 
+          
+        }
+        table {
+            border-collapse: collapse;
+            width: 70%;
+        }
+
+        tr, td {
+            border: 1px solid #ccc;
+            padding: 1px;
+        }
+        .popup {
+            
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="search-group">
+            @using (Html.BeginForm("Index", "Fiscalization", FormMethod.Post))
+            {
+                <br />
+                <br />
+                <div class="form-group">
+                    @Html.TextBox("searchBox", null, new { @class = "form-control search-box", placeholder = "Klikoni per te skanuar:", id = "searchBox" })
+                    <button type="submit" class="btn btn-primary ml-2" id="scan">Scan</button>
+                </div>
+
+            }
+            <div class="freeze-search-box" id="freezeSearchBox" style="display: none;"></div>
+        </div>
+
+        <div class="form-group mt-4">
+            <input type="text" id="REFCODE" class="form-control search-box" placeholder="Enter REFCODE" />
+            <button id="searchByRefcode" class="btn btn-success ml-2">Kerko me Teller Reference</button>
+        </div>
+
+        <div id="resultTable" class="table-container" style="display: none;">
+      
+        </div>
+
+        <div class="fixed-table" id="tab1">
+            @if (!string.IsNullOrEmpty(ViewBag.p1))
+            {
+                using (Html.BeginForm("SaveFiscalization", "Fiscalization", FormMethod.Post))
+                {
+
+                    <table>
+
+                        <tr>
+                            <td>@Html.Label("Numri Urdhrit")</td>
+                            <td>@Html.TextBox("PYMTORDNUM")
+                            @Html.ValidationMessageFor(model => model.PYMTORDNUM, "Numri i Urdherit duhet plotesuar", new { @class = "text-danger" })</td>
+
+                        </tr>
+                        <tr>
+                            <td>@Html.Label("Invoice Date:")</td>
+                            <td>@Html.TextBoxFor(model => model.INVOICEDATE, new { @Value = ViewBag.p4, @readonly = "readonly" })</td>
+                        </tr>
+
+                        <tr>
+                            <td>@Html.LabelFor(model => model.NIVF)</td>
+                            <td>@Html.TextBoxFor(model => model.EINFIC, new { @Value = ViewBag.p3, @readonly = "readonly", style = "width:400px;" })</td>
+
+                        </tr>
 
 
-<tr>
-    <td>@Html.Label("Numri Urdhrit")</td>
-    <td>
-        @Html.TextBoxFor(model => model.PYMTORDNUM)
-        @Html.ValidationMessageFor(model => model.PYMTORDNUM, "", new { @class = "text-danger" })
-    </td>
-</tr>
+                        <tr>
+                            <td>@Html.Label("NIPT Bleres:")</td>
+                            <td>@Html.TextBox("PAYERNIPT")
+                            @Html.ValidationMessageFor(model => model.PAYERNIPT, "NIPT-i i Bleresit duhet plotesuar", new { @class = "text-danger" })</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.Label("Shites")</td>
+                            <td>@Html.TextBoxFor(model => model.SELLERNIPT, new { @Value = ViewBag.p1, @readonly = "readonly" })</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.Label("Emri Shites")</td>
+                            <td>@Html.TextBoxFor(model => model.TRANSACTIONCODE, new { @Value = ViewBag.p2, @readonly = "readonly", style = "width:400px;" })</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.Label("Referenca e Teller:")</td>
+                            <td>@Html.TextBox("REFCODE")
+                            @Html.ValidationMessageFor(model => model.REFCODE, "Referenca e Teller-it duhet plotesuar", new { @class = "text-danger" })</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.Label("Tipi i Pageses:")</td>
+                            <td>
+                                @Html.DropDownListFor(model => model.PYMTTYPE, new SelectList(new[]
+           {
+                                                new { Value = "CASH", Text = "CASH" },
+                                                new { Value = "NON_CASH", Text = "NON_CASH" }
+                                            }, "Value", "Text"), "")
+                            
+                            @Html.ValidationMessageFor(model => model.PYMTTYPE, "Zgjidhni tipin e Pageses", new { @class = "text-danger" })</td>
+
+                        </tr>
+                        <tr>
+                            <td>@Html.Label("Statusi i Pageses:")</td>
+
+                            <td>
+                                @Html.DropDownListFor(model => model.STPROFILE, new SelectList(new[]
+           {
+                                                new { Value = "P1 Faturimi i dergesave te mallrave dhe sherbimeve kundrejt porosive te blerjes,bazuar ne  kontrate", Text = "P1 Faturimi i dergesave te mallrave dhe sherbimeve kundrejt porosive te blerjes,bazuar ne  kontrate" },
+                                                new { Value = "P2 Faturimi i dergesave te mallrave dhe sherbimeve bazuar ne nje kontrate", Text = "P2 Faturimi i dergesave te mallrave dhe sherbimeve bazuar ne nje kontrate" },
+                                                new { Value = "P3 Faturimi i dorezimit te porosise se blerjes se  rastesishme", Text = "P3 Faturimi i dorezimit te porosise se blerjes se  rastesishme" },
+                                                new { Value = "P4 Pagesa paraprake", Text = "P4 Pagesa paraprake" },
+                                                new { Value = "P5 Pagesa ne vend", Text = "P5 Pagesa ne vend" },
+                                                new { Value = "P6 Pagesa para dorezimit", Text = "P6 Pagesa para dorezimit" },
+                                                new { Value = "P7 Faturat me referenca ne shenimin e dergimit", Text = "P7 Faturat me referenca ne shenimin e dergimit" },
+                                                new { Value = "P8 Faturat me referenca ne shenimin e dergimit dhe shenimin e marrjes", Text = "P8 Faturat me referenca ne shenimin e dergimit dhe shenimin e marrjes" },
+                                                new { Value = "P9 Note kredie ose fatura me shuma negative, te leshuara per nje sere arsyesh,perfshire kthimin e", Text = "P9 Note kredie ose fatura me shuma negative, te leshuara per nje sere arsyesh,perfshire kthimin e" },
+
+                                                new { Value = "P10 Faturimi korrigjues(anullimi/korrigjimi i nje  fature)", Text = "P10 Faturimi korrigjues(anullimi/korrigjimi i nje  fature)" },
+                                                new { Value = "P11 Faturimi i pjesshem dhe perfundimtar", Text = "P11 Faturimi i pjesshem dhe perfundimtar" },
+
+                                            }, "Value", "Text"), "", new { @class = "form-control" })
+                            
+                            @Html.ValidationMessageFor(model => model.STPROFILE, "Zgjidhni statusin e pageses", new { @class = "text-danger" })</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.Label("Monedha:")</td>
+                            <td>@Html.TextBoxFor(model => model.PAIDCUR, new { @Value = ViewBag.p7, @readonly = "readonly" })</td>
+                        </tr>
+
+                        <tr>
+                            <td>@Html.Label("Shuma e Paguar:")</td>
+                            <td>@Html.TextBoxFor(model => model.PAIDAMT, new { @Value = ViewBag.p6 })</td>
+                        </tr>
+
+
+                        <tr>
+                            <td>@Html.Label("IBAN & SWIFT:")</td>
+                            <td>
+                                @Html.TextBoxFor(model => model.IBANNR, new { @Value = ViewBag.p8, @readonly = "readonly" })
+                                @Html.TextBoxFor(model => model.BANKNAME, new { @Value = ViewBag.p10, @readonly = "readonly" })
+                            </td>
+                        </tr>
+
+                        @Html.HiddenFor(model => model.QRCODEVAL, new { id = "hiddenQRCodeVal" })                        @*@Html.HiddenFor(model => model.STPROFILE, new { Value = "1" })*@
+                        <!--@Html.HiddenFor(model => model.INVOICEDATE, new { Value = ViewBag.p4 })
+                @Html.HiddenFor(model => model.EINFIC, new { Value = ViewBag.p3 })-->
+                        @Html.HiddenFor(model => model.SELLERNIPT, new { Value = ViewBag.p1 })
+                        <!--@Html.HiddenFor(model => model.TRANSACTIONCODE, new { Value = ViewBag.p2 })
+                @Html.HiddenFor(model => model.PAIDCUR, new { Value = ViewBag.p7 })
+                @Html.HiddenFor(model => model.IBANNR, new { Value = ViewBag.p8 })
+                @Html.HiddenFor(model => model.BANKNAME, new { Value = ViewBag.p10 })-->
+
+
+
+                        @Html.HiddenFor(model => model.PYMTDATTIM)
+                        @*@Html.HiddenFor(model => model.EINFIC, new { Value = "1" })*@
+                        @Html.HiddenFor(model => model.BANKNIPT, new { Value = ViewBag.p1 })
+                        @Html.HiddenFor(model => model.DATTIMSEND)
+                        @Html.HiddenFor(model => model.OVERPAIDAMT, new { Value = "0.00" })
+
+                        @Html.HiddenFor(model => model.CODE, new { Value = " " })
+                        @Html.HiddenFor(model => model.MESSAGE, new { Value = " " })
+                        @Html.HiddenFor(model => model.PYMTSTATUS, new { Value = "PAYMENT" })
+                        @*@Html.HiddenFor(model => model.SELLERNIPT, new { Value = "1" })*@
+                        @Html.HiddenFor(model => model.SWIFTNR, new { Value = ViewBag.p9 })
+
+                        <tr>
+                            <td></td>
+                            <td>
+                                <button type="submit" id="ruajButton" class="btn btn-primary ml-2">Ruaj</button>
+                                <button type="reset" id="resetButton" class="btn btn-primary ml-2">Skanim i Ri</button>
+                            </td>
+                        </tr>
+                    </table>
+
+
+                }
+            }
+
+
+            <div class="popup" id="popupWindow" style="display: none;">
+                <h3>Saved Data</h3>
+                <p> @ViewBag.savedData</p>
+            </div>
+
+
+
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation/1.19.2/jquery.validate.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+
+
+
+
+
+            @*// ... Other JavaScript code ...
+
+                // Function to reset the form
+                $("#resetButton").click(function () {
+                    window.location.href = "/Fiscalization/Index";
+                });
+            });
+
+                // Function to reset the form
+                $("#resetButton").click(function () {
+                    window.location.href = "/Fiscalization/Index";
+                });
+            });
+        </script>*@
+
+            <script>
+
+                $(document).ready(function () {
+                    $("#searchByRefcode").click(function () {
+                        var refcode = $("#REFCODE").val();
+                        if (refcode !== "") {
+                            $("#tab1").hide();
+                            $.post("/Fiscalization/SearchByRefcode", { REFCODE: refcode }, function (data) {
+                                $("#tab1").hide();
+
+                                $("#resultTable").html(data).show();
+                            });
+                        }
+                    });
+
+
+
+                    $("#searchBy").click(function () {
+                        var searchBox = $("#searchBox").val();
+                        if (searchBox !== "") {
+                            $("#reftab").hide();
+                            $.post("/Fiscalization/SearchBy", { searchBox: searchBox }, function (data) {
+                                $("#resultTable").hide();
+                                $("#tab1").html(data).show();
+                            });
+                        }
+                    });
+
+
+
+                    function deleteRow() {
+                        if (confirm("Are you sure you want to delete this row?")) {
+
+                        }
+                    }
+
+                    $("#resetButton").click(function () {
+                        window.location.href = "/Fiscalization/Index";
+                    });
+                });
+
+            </script>
+            <script>
+                $(document).ready(function () {
+                    function updateDATTIMSEND() {
+                        var currentDate = new Date();
+                        var formattedDate = formatDate(currentDate);
+                        $("#DATTIMSEND").val(formattedDate);
+                        $("#PYMTDATTIM").val(formattedDate);
+                    }
+
+                    function formatDate(date) {
+                        var year = date.getFullYear();
+                        var month = String(date.getMonth() + 1).padStart(2, "0");
+                        var day = String(date.getDate()).padStart(2, "0");
+                        var hours = String(date.getHours()).padStart(2, "0");
+                        var minutes = String(date.getMinutes()).padStart(2, "0");
+                        var seconds = String(date.getSeconds()).padStart(2, "0");
+                        return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+                    }
+                    $("form").submit(function () {
+
+                        updateDATTIMSEND();
+
+                    });
+                });
+            </script>
+            <script>
+                $(document).ready(function () {
+                    // Function to update the hidden field with the search box value when "Ruaj" button is clicked
+                    $("#ruajButton").click(function () {
+                        var searchBoxValue = $("#searchBox").val();
+                        $("#hiddenQRCodeVal").val(searchBoxValue);
+                    });
+                });
+            </script>
+
+
+</body>
+</html>
+
+the controller
+
+        [HttpPost]
+        [NoCache]
+        [CustomAuthorize(Roles = Tools.StatementStatementNormal)]
+        public ActionResult SaveFiscalization(EmpModel emp)
+        {
+            if (ModelState.IsValid)
+            {
+
+                try
+                {
+                    emp.USR = User.Identity.Name;
+                    int newlyInsertedID = empRepo.SaveFiscalization(emp);
+                    if (newlyInsertedID > 0)
+                    {
+                        emp.ID = newlyInsertedID;
+                        return View("Popup", emp);
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Failed to save fiscalization details.";
+                    }
+
+                    return View("Popup");
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Error = "An error occurred: " + ex.Message;
+                    return View("Index");
+                }
+            }
+
+            else
+            {
+                return View(emp);
+            }
+        }

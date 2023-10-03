@@ -1,36 +1,49 @@
-    [HttpPost]
-        [NoCache]
-        [CustomAuthorize(Roles = Tools.StatementStatementNormal)]
-        public ActionResult SaveFiscalization(EmpModel emp)
+[HttpPost]
+[NoCache]
+[CustomAuthorize(Roles = Tools.StatementStatementNormal)]
+public ActionResult SaveFiscalization(EmpModel emp)
+{
+    if (string.IsNullOrWhiteSpace(emp.REFCODE) || string.IsNullOrWhiteSpace(emp.PYMTORDNUM) || string.IsNullOrWhiteSpace(emp.PAYERNIPT))
+    {
+        // Add validation error messages for the required fields.
+        if (string.IsNullOrWhiteSpace(emp.REFCODE))
         {
-            if (ModelState.IsValid)
+            ModelState.AddModelError("REFCODE", "REFCODE is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(emp.PYMTORDNUM))
+        {
+            ModelState.AddModelError("PYMTORDNUM", "PYMTORDNUM is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(emp.PAYERNIPT))
+        {
+            ModelState.AddModelError("PAYERNIPT", "PAYERNIPT is required.");
+        }
+    }
+
+    if (ModelState.IsValid)
+    {
+        try
+        {
+            emp.USR = User.Identity.Name;
+            int newlyInsertedID = empRepo.SaveFiscalization(emp);
+            if (newlyInsertedID > 0)
             {
-
-                try
-                {
-                    emp.USR = User.Identity.Name;
-                    int newlyInsertedID = empRepo.SaveFiscalization(emp);
-                    if (newlyInsertedID > 0)
-                    {
-                        emp.ID = newlyInsertedID;
-                        return View("Popup", emp);
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Failed to save fiscalization details.";
-                    }
-
-                    return View("Popup");
-                }
-                catch (Exception ex)
-                {
-                    ViewBag.Error = "An error occurred: " + ex.Message;
-                    return View("Index");
-                }
+                emp.ID = newlyInsertedID;
+                return View("Popup", emp);
             }
-
             else
             {
-                return View(emp);
+                ViewBag.Message = "Failed to save fiscalization details.";
             }
         }
+        catch (Exception ex)
+        {
+            ViewBag.Error = "An error occurred: " + ex.Message;
+        }
+    }
+
+    // Return the view with validation errors if any, or for further processing.
+    return View("Index", emp);
+}

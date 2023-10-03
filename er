@@ -1,1 +1,4 @@
-  [Required(ErrorMessage = "REFCODE is required")]
+var tableData = GetDataForTable();
+
+    // Pass both the EmpModel and tableData to the view
+    return View("Index", new { EmpModel = emp, TableData = tableData });

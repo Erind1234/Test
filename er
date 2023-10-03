@@ -1,25 +1,20 @@
-@Html.DropDownListFor(model => model.PYMTTYPE, new SelectList(new[]
-{
-                                    new { Value = "CASH", Text = "CASH" },
-                                    new { Value = "NON_CASH", Text = "NON_CASH" }
-                                }, "Value", "Text"), "")
+<label for="PYMTTYPE">PYMTTYPE:</label>
+<select id="PYMTTYPE" name="PYMTTYPE" class="form-control" required>
+    <option value="CASH">CASH</option>
+    <option value="NON_CASH">NON_CASH</option>
+</select>
 
-
-
-
-@Html.DropDownListFor(model => model.STPROFILE, new SelectList(new[]
-{
-                                    new { Value = "P1 Faturimi i dergesave te mallrave dhe sherbimeve kundrejt porosive te blerjes,bazuar ne  kontrate", Text = "P1 Faturimi i dergesave te mallrave dhe sherbimeve kundrejt porosive te blerjes,bazuar ne  kontrate" },
-                                    new { Value = "P2 Faturimi i dergesave te mallrave dhe sherbimeve bazuar ne nje kontrate", Text = "P2 Faturimi i dergesave te mallrave dhe sherbimeve bazuar ne nje kontrate" },
-                                    new { Value = "P3 Faturimi i dorezimit te porosise se blerjes se  rastesishme", Text = "P3 Faturimi i dorezimit te porosise se blerjes se  rastesishme" },
-                                    new { Value = "P4 Pagesa paraprake", Text = "P4 Pagesa paraprake" },
-                                    new { Value = "P5 Pagesa ne vend", Text = "P5 Pagesa ne vend" },
-                                    new { Value = "P6 Pagesa para dorezimit", Text = "P6 Pagesa para dorezimit" },
-                                    new { Value = "P7 Faturat me referenca ne shenimin e dergimit", Text = "P7 Faturat me referenca ne shenimin e dergimit" },
-                                    new { Value = "P8 Faturat me referenca ne shenimin e dergimit dhe shenimin e marrjes", Text = "P8 Faturat me referenca ne shenimin e dergimit dhe shenimin e marrjes" },
-                                    new { Value = "P9 Note kredie ose fatura me shuma negative, te leshuara per nje sere arsyesh,perfshire kthimin e", Text = "P9 Note kredie ose fatura me shuma negative, te leshuara per nje sere arsyesh,perfshire kthimin e" },
-
-                                    new { Value = "P10 Faturimi korrigjues(anullimi/korrigjimi i nje  fature)", Text = "P10 Faturimi korrigjues(anullimi/korrigjimi i nje  fature)" },
-                                    new { Value = "P11 Faturimi i pjesshem dhe perfundimtar", Text = "P11 Faturimi i pjesshem dhe perfundimtar" },
-
-                                }, "Value", "Text"), "", new { @class = "form-control" })
+<label for="STPROFILE">STPROFILE:</label>
+<select id="STPROFILE" name="STPROFILE" class="form-control" required>
+    <option value="P1 Faturimi i dergesave te mallrave dhe sherbimeve kundrejt porosive te blerjes,bazuar ne kontrate">P1 Faturimi i dergesave te mallrave dhe sherbimeve kundrejt porosive te blerjes, bazuar ne kontrate</option>
+    <option value="P2 Faturimi i dergesave te mallrave dhe sherbimeve bazuar ne nje kontrate">P2 Faturimi i dergesave te mallrave dhe sherbimeve bazuar ne nje kontrate</option>
+    <option value="P3 Faturimi i dorezimit te porosise se blerjes se rastesishme">P3 Faturimi i dorezimit te porosise se blerjes se rastesishme</option>
+    <option value="P4 Pagesa paraprake">P4 Pagesa paraprake</option>
+    <option value="P5 Pagesa ne vend">P5 Pagesa ne vend</option>
+    <option value="P6 Pagesa para dorezimit">P6 Pagesa para dorezimit</option>
+    <option value="P7 Faturat me referenca ne shenimin e dergimit">P7 Faturat me referenca ne shenimin e dergimit</option>
+    <option value="P8 Faturat me referenca ne shenimin e dergimit dhe shenimin e marrjes">P8 Faturat me referenca ne shenimin e dergimit dhe shenimin e marrjes</option>
+    <option value="P9 Note kredie ose fatura me shuma negative, te leshuara per nje sere arsyesh, perfshire kthimin e">P9 Note kredie ose fatura me shuma negative, te leshuara per nje sere arsyesh, perfshire kthimin e</option>
+    <option value="P10 Faturimi korrigjues(anullimi/korrigjimi i nje fature)">P10 Faturimi korrigjues(anullimi/korrigjimi i nje fature)</option>
+    <option value="P11 Faturimi i pjesshem dhe perfundimtar">P11 Faturimi i pjesshem dhe perfundimtar</option>
+</select>

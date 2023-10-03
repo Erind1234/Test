@@ -1,20 +1,5 @@
-<label for="PYMTTYPE">PYMTTYPE:</label>
-<select id="PYMTTYPE" name="PYMTTYPE" class="form-control" required>
-    <option value="CASH">CASH</option>
-    <option value="NON_CASH">NON_CASH</option>
-</select>
-
-<label for="STPROFILE">STPROFILE:</label>
-<select id="STPROFILE" name="STPROFILE" class="form-control" required>
-    <option value="P1 Faturimi i dergesave te mallrave dhe sherbimeve kundrejt porosive te blerjes,bazuar ne kontrate">P1 Faturimi i dergesave te mallrave dhe sherbimeve kundrejt porosive te blerjes, bazuar ne kontrate</option>
-    <option value="P2 Faturimi i dergesave te mallrave dhe sherbimeve bazuar ne nje kontrate">P2 Faturimi i dergesave te mallrave dhe sherbimeve bazuar ne nje kontrate</option>
-    <option value="P3 Faturimi i dorezimit te porosise se blerjes se rastesishme">P3 Faturimi i dorezimit te porosise se blerjes se rastesishme</option>
-    <option value="P4 Pagesa paraprake">P4 Pagesa paraprake</option>
-    <option value="P5 Pagesa ne vend">P5 Pagesa ne vend</option>
-    <option value="P6 Pagesa para dorezimit">P6 Pagesa para dorezimit</option>
-    <option value="P7 Faturat me referenca ne shenimin e dergimit">P7 Faturat me referenca ne shenimin e dergimit</option>
-    <option value="P8 Faturat me referenca ne shenimin e dergimit dhe shenimin e marrjes">P8 Faturat me referenca ne shenimin e dergimit dhe shenimin e marrjes</option>
-    <option value="P9 Note kredie ose fatura me shuma negative, te leshuara per nje sere arsyesh, perfshire kthimin e">P9 Note kredie ose fatura me shuma negative, te leshuara per nje sere arsyesh, perfshire kthimin e</option>
-    <option value="P10 Faturimi korrigjues(anullimi/korrigjimi i nje fature)">P10 Faturimi korrigjues(anullimi/korrigjimi i nje fature)</option>
-    <option value="P11 Faturimi i pjesshem dhe perfundimtar">P11 Faturimi i pjesshem dhe perfundimtar</option>
-</select>
+  <tr>
+                            <td>@Html.Label("NIPT Bleres:")</td>
+                            <td>@Html.TextBox("PAYERNIPT")
+                            @Html.ValidationMessageFor(model => model.PAYERNIPT, "", new { @class = "text-danger" })</td>
+                        </tr>

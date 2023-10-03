@@ -1,14 +1,25 @@
-if (string.IsNullOrWhiteSpace(emp.REFCODE) || string.IsNullOrWhiteSpace(emp.PYMTORDNUM) || string.IsNullOrWhiteSpace(emp.PAYERNIPT))
-    {
-        // At least one of the required fields is empty, add an error message
-        ModelState.AddModelError("", "Please fill in all required fields.");
-    }
+@Html.DropDownListFor(model => model.PYMTTYPE, new SelectList(new[]
+{
+                                    new { Value = "CASH", Text = "CASH" },
+                                    new { Value = "NON_CASH", Text = "NON_CASH" }
+                                }, "Value", "Text"), "")
 
 
 
-@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-<div id="resultTable" class="table-container" style="display: @(ViewData.ModelState.IsValid ? "none" : "block");">
-    <!-- Your split table code goes here -->
-</div>
+@Html.DropDownListFor(model => model.STPROFILE, new SelectList(new[]
+{
+                                    new { Value = "P1 Faturimi i dergesave te mallrave dhe sherbimeve kundrejt porosive te blerjes,bazuar ne  kontrate", Text = "P1 Faturimi i dergesave te mallrave dhe sherbimeve kundrejt porosive te blerjes,bazuar ne  kontrate" },
+                                    new { Value = "P2 Faturimi i dergesave te mallrave dhe sherbimeve bazuar ne nje kontrate", Text = "P2 Faturimi i dergesave te mallrave dhe sherbimeve bazuar ne nje kontrate" },
+                                    new { Value = "P3 Faturimi i dorezimit te porosise se blerjes se  rastesishme", Text = "P3 Faturimi i dorezimit te porosise se blerjes se  rastesishme" },
+                                    new { Value = "P4 Pagesa paraprake", Text = "P4 Pagesa paraprake" },
+                                    new { Value = "P5 Pagesa ne vend", Text = "P5 Pagesa ne vend" },
+                                    new { Value = "P6 Pagesa para dorezimit", Text = "P6 Pagesa para dorezimit" },
+                                    new { Value = "P7 Faturat me referenca ne shenimin e dergimit", Text = "P7 Faturat me referenca ne shenimin e dergimit" },
+                                    new { Value = "P8 Faturat me referenca ne shenimin e dergimit dhe shenimin e marrjes", Text = "P8 Faturat me referenca ne shenimin e dergimit dhe shenimin e marrjes" },
+                                    new { Value = "P9 Note kredie ose fatura me shuma negative, te leshuara per nje sere arsyesh,perfshire kthimin e", Text = "P9 Note kredie ose fatura me shuma negative, te leshuara per nje sere arsyesh,perfshire kthimin e" },
 
+                                    new { Value = "P10 Faturimi korrigjues(anullimi/korrigjimi i nje  fature)", Text = "P10 Faturimi korrigjues(anullimi/korrigjimi i nje  fature)" },
+                                    new { Value = "P11 Faturimi i pjesshem dhe perfundimtar", Text = "P11 Faturimi i pjesshem dhe perfundimtar" },
+
+                                }, "Value", "Text"), "", new { @class = "form-control" })

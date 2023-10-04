@@ -1,1 +1,15 @@
-        <input type="text" id="PAYERNIPT" name="PAYERNIPT" pattern="^[A-Za-z][0-9]{8}[A-Za-z]$" required />
+select * from openquery(live,'select * from xglintp.glap01')
+
+
+select * from openquery(live,'select * from xglintp.glap32')
+
+select * from openquery(live,'select * from xglintp.glap02')
+
+select * from openquery(live,'select * from xglintp.glap07')
+
+select * from openquery(live,'select * from xglintp.glap10')
+
+select * from openquery(live,'select * from xglintp.glap99')
+
+
+select * from openquery(live,'select * from xglintp.glap60')

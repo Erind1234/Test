@@ -1,15 +1,1 @@
-select * from openquery(live,'select * from xglintp.glap01')
-
-
-select * from openquery(live,'select * from xglintp.glap32')
-
-select * from openquery(live,'select * from xglintp.glap02')
-
-select * from openquery(live,'select * from xglintp.glap07')
-
-select * from openquery(live,'select * from xglintp.glap10')
-
-select * from openquery(live,'select * from xglintp.glap99')
-
-
-select * from openquery(live,'select * from xglintp.glap60')
+Error	1	Validation error. gLAP: gLAP: SSIS Error Code DTS_E_OLEDBERROR.  An OLE DB error has occurred. Error code: 0x80040E37.  	Package.dtsx	0	0	

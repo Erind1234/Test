@@ -1,1 +1,4 @@
-"\\\\C:\\exchange\\exchangeR\\glap" + "GLAP"+  (DT_WSTR, 4) year( DATEADD( "dd", 0, getdate()) ) +  right("00" +(DT_WSTR, 4) month(DATEADD( "dd", 0, getdate()) ),2) + right("00"+ (DT_WSTR, 4) day(DATEADD( "dd", 0, getdate()) ),2)+ ".xlsx"
+"\\\\C:\\exchange\\exchangeR\\glap" + "GLAP" + 
+right("00" + (DT_WSTR, 4) day(DATEADD("dd", 0, getdate())), 2) + 
+right("00" + (DT_WSTR, 4) month(DATEADD("dd", 0, getdate())), 2) + 
+(DT_WSTR, 4) year(DATEADD("dd", 0, getdate())) + ".xlsx"

@@ -1,2 +1,12 @@
-\Package.dtsx" due to error 0x80070003 "The system cannot find the path specified.".  This occurs when loading a package and the file cannot be opened or loaded correctly into the XML document. This can be the result of specifying an incorrect file name when calling LoadPackage or the specified XML file has an incorrect format.
- ({F726CBF4-ECF0-41A1-AB99-C2D577BE9E90})
+
+Error at Data Flow GLAP01 [Excel Destination [68]]: SSIS Error Code DTS_E_OLEDBERROR.  An OLE DB error has occurred. Error code: 0x80040E37.
+
+Error at Data Flow GLAP01 [Excel Destination [68]]: Opening a rowset for "GLAP01" failed. Check that the object exists in the database.
+
+Error at Data Flow GLAP01 [SSIS.Pipeline]: "Excel Destination" failed validation and returned validation status "VS_ISBROKEN".
+
+Error at Data Flow GLAP01 [SSIS.Pipeline]: One or more component failed validation.
+
+Error at Data Flow GLAP01: There were errors during task validation.
+
+ (Microsoft.DataTransformationServices.VsIntegration)

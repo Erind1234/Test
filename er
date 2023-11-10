@@ -1,12 +1,6 @@
 
-Error at Data Flow GLAP01 [Excel Destination [68]]: SSIS Error Code DTS_E_OLEDBERROR.  An OLE DB error has occurred. Error code: 0x80040E37.
+Message
+Executed as user: ALBANIA\PbaDevUsr. Microsoft (R) SQL Server Execute Package Utility 
+Version 11.0.7507.2 for 32-bit  Copyright (C) Microsoft Corporation. All rights reserved.
+Started:  4:35:53 PM  Error: 2023-11-10 16:35:54.35     Code: 0xC0016016     Source: Package      Description: Failed to decrypt protected XML node "DTS:Password" with error 0x8009000B "Key not valid for use in specified state.". You may not be authorized to access this information. This error occurs when there is a cryptographic error. Verify that the correct key is available.  End Error  Error: 2023-11-10 16:35:54.77     Code: 0xC0202009     Source: Package Connection manager "PBADBAL\DB1.SAPI_ACC"     Description: SSIS Error Code DTS_E_OLEDBERROR.  An OLE DB error has occurred. Error code: 0x80040E4D.  An OLE DB record is available.  Source: "Microsoft SQL Server Native Client 11.0"  Hresult: 0x80040E4D  Description: "Login failed for user 'TBApplUser'.".  End Error  Error: 2023-11-10 16:35:54.77     Code: 0xC020801C     Source: GLAP01 OLE DB Source [113]     Description: SSIS Error Code DTS_E_CANNOTACQUIRECONNECTIONFROMCONNECTIONMANAGER.  The AcquireConnection method call to the connection manager "PBADBAL\DB1.SAPI_ACC" failed with error code 0xC0202009.  There may be error messages posted before this with more information on why the AcquireConnection method call failed.  End Error  Error: 2023-11-10 16:35:54.77     Code: 0xC0047017     Source: GLAP01 SSIS.Pipeline     Description: OLE DB Source failed validation and returned error code 0xC020801C.  End Error  Error: 2023-11-10 16:35:54.77     Code: 0xC004700C     Source: GLAP01 SSIS.Pipeline     Description: One or more component failed validation.  End Error  Error: 2023-11-10 16:35:54.77     Code: 0xC0024107     Source: GLAP01      Description: There were errors during task validation.  End Error  DTExec: The package execution returned DTSER_FAILURE (1).  Started:  4:35:53 PM  Finished: 4:35:54 PM  Elapsed:  1.063 seconds.  The package execution failed.  The step failed.
 
-Error at Data Flow GLAP01 [Excel Destination [68]]: Opening a rowset for "GLAP01" failed. Check that the object exists in the database.
-
-Error at Data Flow GLAP01 [SSIS.Pipeline]: "Excel Destination" failed validation and returned validation status "VS_ISBROKEN".
-
-Error at Data Flow GLAP01 [SSIS.Pipeline]: One or more component failed validation.
-
-Error at Data Flow GLAP01: There were errors during task validation.
-
- (Microsoft.DataTransformationServices.VsIntegration)
